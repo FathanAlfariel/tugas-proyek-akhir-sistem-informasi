@@ -3,7 +3,6 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
-const bodyParser = require("body-parser");
 
 dotenv.config();
 
@@ -22,7 +21,7 @@ mongoose
 
 app.use(cookieParser());
 app.use(cors());
-app.use(bodyParser.json());
+app.use(express.json());
 
 // Running the server on
 app.listen(PORT, () => {
