@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+const authRoute = require("./routes/authRoute");
 
 dotenv.config();
 
@@ -20,8 +21,16 @@ mongoose
   });
 
 app.use(cookieParser());
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:5173/",
+    credentials: true,
+  })
+);
 app.use(express.json());
+
+// Auth route
+app.use("/api/auth", authRoute);
 
 // Running the server on
 app.listen(PORT, () => {
