@@ -1,4 +1,6 @@
 const Admin = require("../models/Admin");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 const login = async (req, res) => {
   const { username, password } = req.body;
@@ -14,7 +16,7 @@ const login = async (req, res) => {
       return res.status(401).json({ message: "Password incorrect" });
 
     // Create token with jsonwebtoken
-    jwt.sign({ id: findUser._id }, process.env.JSON_TOKEN, (error, token) => {
+    jwt.sign({ id: findUser._id }, process.env.JWT_TOKEN, (error, token) => {
       if (error)
         return res.status(500).json({ message: "Internal server error" });
 

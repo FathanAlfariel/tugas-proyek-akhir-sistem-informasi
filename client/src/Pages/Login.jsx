@@ -1,9 +1,13 @@
 import Button from "../Components/Button";
 import Input from "../Components/Input";
+import axios from "axios";
 import { useFormik } from "formik";
 import * as yup from "yup";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
+  const navigate = useNavigate();
+
   const formik = useFormik({
     initialValues: {
       username: "",
@@ -14,8 +18,20 @@ const Login = () => {
       password: yup.string().required("Tolong masukkan password."),
     }),
     onSubmit: async (values) => {
-      console.log(values.username);
-      console.log(values.password);
+      try {
+        await axios
+          .post("http://localhost:5000/api/auth/login", {
+            username: values.username,
+            password: values.password,
+          })
+          .then((results) => {
+            console.log(results);
+
+            navigate("/dashboard");
+          });
+      } catch (err) {
+        console.log(err);
+      }
     },
   });
 
