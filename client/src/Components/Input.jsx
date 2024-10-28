@@ -1,7 +1,17 @@
 import React, { useState } from "react";
 import { IoEye, IoEyeOff, IoWarning } from "react-icons/io5";
 
-const Input = ({ id, label, type, placeholder }) => {
+const Input = ({
+  id,
+  label,
+  type,
+  name,
+  placeholder,
+  value,
+  onChange,
+  onBlur,
+  errorMessage,
+}) => {
   // Handle Show / Hidden Password
   const [showPassword, setShowPassword] = useState(false);
   const handleShowPassword = () => {
@@ -23,7 +33,7 @@ const Input = ({ id, label, type, placeholder }) => {
 
             <input
               id={id}
-              className="outline-none"
+              name={name}
               type={
                 type === "password"
                   ? showPassword
@@ -31,7 +41,11 @@ const Input = ({ id, label, type, placeholder }) => {
                     : "password"
                   : type
               }
+              className="outline-none"
               placeholder={placeholder}
+              onChange={onChange}
+              onBlur={onBlur}
+              value={value}
             />
           </div>
 
@@ -57,11 +71,26 @@ const Input = ({ id, label, type, placeholder }) => {
 
           <input
             id={id}
-            className="outline-none"
+            name={name}
             type={type}
             placeholder={placeholder}
+            className="outline-none"
+            onChange={onChange}
+            onBlur={onBlur}
+            value={value}
           />
         </div>
+      )}
+
+      {errorMessage && (
+        <>
+          <div className="flex items-center mt-2">
+            <IoWarning className="text-xs text-red-600 dark:text-red-500" />
+            <p className="ml-1.5 text-xs text-red-600 dark:text-red-500">
+              {errorMessage}
+            </p>
+          </div>
+        </>
       )}
     </>
   );
