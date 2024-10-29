@@ -1,12 +1,16 @@
+import { useContext } from "react";
 import Button from "../Components/Button";
 import Input from "../Components/Input";
 import axios from "axios";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { useNavigate } from "react-router-dom";
+import { UserContext } from "../Config/UserConfig";
 
 const Login = () => {
   const navigate = useNavigate();
+
+  const { setUser } = useContext(UserContext);
 
   const formik = useFormik({
     initialValues: {
@@ -24,8 +28,8 @@ const Login = () => {
             username: values.username,
             password: values.password,
           })
-          .then((results) => {
-            console.log(results);
+          .then(({ data }) => {
+            setUser(data);
 
             navigate("/dashboard");
           });
