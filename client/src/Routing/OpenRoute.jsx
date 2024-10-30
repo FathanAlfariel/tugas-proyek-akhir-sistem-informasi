@@ -6,7 +6,8 @@ const OpenRoute = ({ children }) => {
   const { user } = useContext(UserContext);
 
   if (user) {
-    return <Navigate to="/admin" replace={true} />;
+    <Navigate to="/admin" replace={true} />;
+    return;
   }
 
   return children;
