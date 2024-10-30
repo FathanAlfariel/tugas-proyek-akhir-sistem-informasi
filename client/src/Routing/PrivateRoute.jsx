@@ -1,14 +1,15 @@
-import axios from "axios";
+import { useContext } from "react";
 import { Navigate } from "react-router-dom";
+import { UserContext } from "../Config/UserConfig";
 
 const PrivateRoute = ({ children }) => {
-  const { data } = axios.get("http://localhost:5000/api/auth/getToken");
+  const { user } = useContext(UserContext);
 
-  return data?.token !== null || data?.token !== undefined ? (
-    children
-  ) : (
-    <Navigate to={"/login"} replace={true} />
-  );
+  if (!user) {
+    return <Navigate to="/login" replace={true} />;
+  }
+
+  return children;
 };
 
 export default PrivateRoute;

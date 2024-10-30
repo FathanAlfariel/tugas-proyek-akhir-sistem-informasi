@@ -55,27 +55,4 @@ const getUser = async (req, res) => {
   }
 };
 
-// Get token
-const getToken = async (req, res) => {
-  const { token } = req.cookies;
-
-  try {
-    if (token) {
-      jwt.verify(token, process.env.JWT_TOKEN, {}, (err, decoded) => {
-        if (err)
-          return res.status(500).json({ message: "Internal server error" });
-
-        res.status(200).json({
-          message: "Successfully get token",
-          token,
-          decoded,
-        });
-      });
-    }
-  } catch (err) {
-    console.error("Error :", err);
-    return res.status(500).json({ message: "Internal server error" });
-  }
-};
-
 module.exports = { login, getUser, getToken };
