@@ -31,7 +31,7 @@ const Login = () => {
           .then(({ data }) => {
             setUser(data);
 
-            navigate("/dashboard");
+            navigate("/admin");
           });
       } catch (err) {
         console.log(err);
