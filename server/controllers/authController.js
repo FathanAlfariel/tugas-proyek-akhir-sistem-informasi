@@ -55,4 +55,4 @@ const getUser = async (req, res) => {
   }
 };
 
-module.exports = { login, getUser, getToken };
+module.exports = { login, getUser };
