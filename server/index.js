@@ -4,6 +4,7 @@ const dotenv = require("dotenv");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const authRoute = require("./routes/authRoute");
+const productRoute = require("./routes/productRoute");
 
 dotenv.config();
 
@@ -31,6 +32,9 @@ app.use(express.json());
 
 // Auth route
 app.use("/api/auth", authRoute);
+
+// Product route
+app.use("/api/product", productRoute);
 
 // Running the server on
 app.listen(PORT, () => {

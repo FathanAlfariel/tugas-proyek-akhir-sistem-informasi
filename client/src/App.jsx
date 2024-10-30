@@ -5,6 +5,7 @@ import Login from "./Pages/Login";
 import axios from "axios";
 import OpenRoute from "./Routing/OpenRoute";
 import PrivateRoute from "./Routing/PrivateRoute";
+import AddProduct from "./Pages/AddProduct";
 
 axios.defaults.withCredentials = true;
 
@@ -13,7 +14,7 @@ const App = () => {
     <BrowserRouter>
       <Routes>
         <Route
-          path="/dashboard"
+          path="/admin/*"
           element={
             <PrivateRoute>
               <Layout />
@@ -21,6 +22,7 @@ const App = () => {
           }
         >
           <Route index element={<Dashboard />} />
+          <Route path="product/add" element={<AddProduct />} />
         </Route>
         <Route
           path="/login"

@@ -3,29 +3,17 @@ import { Navigate } from "react-router-dom";
 import axios from "axios";
 
 const OpenRoute = ({ children }) => {
-  const [token, setToken] = useState(null);
+  const { data } = axios.get("http://localhost:5000/api/auth/getToken");
 
-  useEffect(() => {
-    axios
-      .get("http://localhost:5000/api/auth/getToken")
-      .then(({ data }) => {
-        setToken(data?.token);
-
-        console.log(data);
-      })
-      .catch((error) => {
-        console.log(error);
-        setToken(null);
-      });
-  }, []);
-
-  if (token === null || token === undefined || token === "") {
+  return data?.token === null ||
+    data?.token === undefined ||
+    data?.token === "" ? (
     // Allow access to the route if no token is present
-    return children;
-  } else {
+    children
+  ) : (
     // Redirect to home if the user already has a token
-    return <Navigate to={"/dashboard"} replace={true} />;
-  }
+    <Navigate to={"/admin"} replace={true} />
+  );
 };
 
 export default OpenRoute;
