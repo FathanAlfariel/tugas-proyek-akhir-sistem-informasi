@@ -55,4 +55,22 @@ const getUser = async (req, res) => {
   }
 };
 
-module.exports = { login, getUser };
+const getToken = async (req, res) => {
+  const { token } = req.cookies;
+
+  try {
+    jwt.verify(token, process.env.JWT_TOKEN, {}, (err, decoded) => {
+      if (err)
+        return res.status(500).json({ message: "Internal server error" });
+
+      res
+        .status(200)
+        .json({ message: "Get token successfully", token, decoded });
+    });
+  } catch (err) {
+    console.error("Error :", err);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+module.exports = { login, getUser, getToken };

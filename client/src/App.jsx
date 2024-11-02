@@ -3,8 +3,8 @@ import Dashboard from "./Pages/Dashboard";
 import Layout from "./Layout";
 import Login from "./Pages/Login";
 import axios from "axios";
-import OpenRoute from "./Routing/OpenRoute";
-import PrivateRoute from "./Routing/PrivateRoute";
+import PublicRoute from "./Routing/PublicRoute";
+import ProtectedRoute from "./Routing/ProtectedRoute";
 import AddProduct from "./Pages/AddProduct";
 
 axios.defaults.withCredentials = true;
@@ -16,9 +16,9 @@ const App = () => {
         <Route
           path="/admin/*"
           element={
-            <PrivateRoute>
+            <ProtectedRoute>
               <Layout />
-            </PrivateRoute>
+            </ProtectedRoute>
           }
         >
           <Route index element={<Dashboard />} />
@@ -27,9 +27,9 @@ const App = () => {
         <Route
           path="/login"
           element={
-            <OpenRoute>
+            <PublicRoute>
               <Login />
-            </OpenRoute>
+            </PublicRoute>
           }
         />
       </Routes>

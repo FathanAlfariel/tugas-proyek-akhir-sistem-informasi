@@ -9,4 +9,6 @@ router.post("/login", login);
 // Get User Data Route
 router.get("/getUser", getUser);
 
+router.get("/getToken", getToken);
+
 module.exports = router;
