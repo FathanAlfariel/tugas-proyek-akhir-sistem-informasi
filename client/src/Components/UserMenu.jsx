@@ -1,24 +1,55 @@
-import Button from "./Button";
+import { useContext, useEffect, useState } from "react";
+import { UserContext } from "../Config/UserConfig";
+import { MdLogout } from "react-icons/md";
 
 const UserMenu = () => {
+  const [showMenu, setShowMenu] = useState(false);
+
+  const { user } = useContext(UserContext);
+
+  useEffect(() => {
+    if (showMenu) {
+      window.addEventListener("click", (e) => {
+        if (!document.getElementById("user-menu").contains(e.target)) {
+          setShowMenu(false);
+        }
+      });
+    }
+  }, [showMenu]);
+
+  const handleShowMenu = () => {
+    setShowMenu((prev) => !prev);
+  };
+
   return (
     <>
-      <Button className="pl-6 py-2.5 pr-4 flex items-center gap-x-2 text-sm font-medium border rounded-full">
-        Fathan Alfariel
-        <span>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="18"
-            height="18"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            className="icon icon-tabler icons-tabler-filled icon-tabler-caret-down text-zinc-700"
-          >
-            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-            <path d="M18 9c.852 0 1.297 .986 .783 1.623l-.076 .084l-6 6a1 1 0 0 1 -1.32 .083l-.094 -.083l-6 -6l-.083 -.094l-.054 -.077l-.054 -.096l-.017 -.036l-.027 -.067l-.032 -.108l-.01 -.053l-.01 -.06l-.004 -.057v-.118l.005 -.058l.009 -.06l.01 -.052l.032 -.108l.027 -.067l.07 -.132l.065 -.09l.073 -.081l.094 -.083l.077 -.054l.096 -.054l.036 -.017l.067 -.027l.108 -.032l.053 -.01l.06 -.01l.057 -.004l12.059 -.002z" />
-          </svg>
-        </span>
-      </Button>
+      <div id="user-menu" className="relative">
+        <button
+          onClick={handleShowMenu}
+          className="p-1.5 rounded-full hover:bg-[#49454F]/[.08] active:[#49454F]/[.12] transition-all active:scale-90 duration-300"
+        >
+          <div className="w-7 h-7 flex justify-center items-center bg-[#6750A4] rounded-full">
+            <p className="text-base font-medium uppercase text-white">
+              {user?.data?.name[0]}
+            </p>
+          </div>
+        </button>
+
+        {showMenu && (
+          <div className="absolute top-auto right-0 shadow bg-white min-w-64 py-2.5 rounded-xl mt-1">
+            <ul>
+              <li>
+                <button className="flex items-center gap-x-4 w-full pl-4 pr-6 py-2 text-sm hover:bg-[#1D1B20]/[.08]">
+                  <span>
+                    <MdLogout className="text-2xl" />
+                  </span>
+                  Logout
+                </button>
+              </li>
+            </ul>
+          </div>
+        )}
+      </div>
     </>
   );
 };
