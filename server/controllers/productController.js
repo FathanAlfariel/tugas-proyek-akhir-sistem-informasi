@@ -24,17 +24,17 @@ const uploadImages = async (req, res) => {
 
 // Add Product Controller
 const addProduct = async (req, res) => {
-  const { name, images, colors } = req.body;
+  const { images, name, description, variants } = req.body;
 
   try {
     const addProduct = new Product({
-      name,
       images,
-      colors,
+      name,
+      description,
+      variants,
     });
 
-    console.log(addProduct);
-    // await addProduct.save();
+    await addProduct.save();
 
     res.status(200).json({ message: "Successfully added product", addProduct });
   } catch (err) {

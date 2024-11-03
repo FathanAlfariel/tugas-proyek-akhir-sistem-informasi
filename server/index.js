@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+const path = require("path");
 const authRoute = require("./routes/authRoute");
 const productRoute = require("./routes/productRoute");
 
@@ -29,6 +30,9 @@ app.use(
   })
 );
 app.use(express.json());
+
+// To access images that are in the public folder
+app.use("/public", express.static(path.join(__dirname, "public")));
 
 // Auth route
 app.use("/api/auth", authRoute);
