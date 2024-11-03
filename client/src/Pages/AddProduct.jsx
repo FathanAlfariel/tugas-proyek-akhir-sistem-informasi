@@ -6,6 +6,7 @@ import Input from "../Components/Input";
 import Button from "../Components/Button";
 import { FiPlus } from "react-icons/fi";
 import TextArea from "../Components/TextArea";
+import { IoWarning } from "react-icons/io5";
 
 const AddProduct = () => {
   const [images, setImages] = useState([]);
@@ -24,7 +25,10 @@ const AddProduct = () => {
       })
       .then(({ data }) => {
         for (let i = 0; i < data.files?.length; i++) {
-          setImages((prev) => [...prev, data.files[i]?.filename]);
+          formik.setFieldValue("images", [
+            ...formik.values.images,
+            data.files[i].filename,
+          ]);
         }
       })
       .catch((err) => {
@@ -34,11 +38,16 @@ const AddProduct = () => {
 
   const formik = useFormik({
     initialValues: {
+      images: [],
       name: "",
       description: "",
       variants: [],
     },
     validationSchema: yup.object({
+      images: yup
+        .array()
+        .of(yup.string().required("Gambar harus diisi."))
+        .min(1, "Gambar harus diisi."),
       name: yup.string().required("Nama produk harus diisi."),
       description: yup.string().required("Nama produk harus diisi."),
       variants: yup.array().of(
@@ -251,42 +260,51 @@ const AddProduct = () => {
 
           {/* Images */}
           <div className="col-span-5">
-            <div className="flex">
-              <div>
-                <ul className="flex items-center gap-x-2">
-                  {images &&
-                    images.map((name, key) => {
-                      return (
-                        <li key={key}>
-                          <img
-                            src={`http://localhost:5000/public/images/${name}`}
-                            alt={name}
-                            className="h-[70px] w-[70px] object-cover rounded-xl"
-                          />
-                        </li>
-                      );
-                    })}
-                  <li>
-                    {/* Add Images */}
-                    <div className="border-2 border-dashed rounded-xl">
-                      <label
-                        htmlFor="uploadImages"
-                        className="flex justify-center items-center p-6 cursor-pointer"
-                      >
-                        <input
-                          id="uploadImages"
-                          type="file"
-                          multiple
-                          className="hidden"
-                          onChange={uploadImages}
-                        />
-                        <FiPlus className="text-lg" />
-                      </label>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-            </div>
+            <h5 className="text-lg font-medium">Tambah gambar</h5>
+
+            <ul className="flex items-center gap-x-2 mt-4">
+              {formik.values.images &&
+                formik.values.images.map((name, key) => {
+                  return (
+                    <li key={key}>
+                      <img
+                        src={`http://localhost:5000/public/images/${name}`}
+                        alt={name}
+                        className="h-[70px] w-[70px] object-cover rounded-xl"
+                      />
+                    </li>
+                  );
+                })}
+              <li>
+                {/* Add Images */}
+                <div className="border-2 border-dashed rounded-xl">
+                  <label
+                    htmlFor="uploadImages"
+                    className="flex justify-center items-center p-6 cursor-pointer"
+                  >
+                    <input
+                      id="uploadImages"
+                      type="file"
+                      multiple
+                      className="hidden"
+                      onChange={uploadImages}
+                    />
+                    <FiPlus className="text-lg" />
+                  </label>
+                </div>
+              </li>
+            </ul>
+
+            {formik.touched.images && formik.errors.images && (
+              <>
+                <div className="flex items-center mt-2">
+                  <IoWarning className="text-xs text-red-600 dark:text-red-500" />
+                  <p className="ml-1.5 text-xs text-red-600 dark:text-red-500">
+                    {formik.errors.images}
+                  </p>
+                </div>
+              </>
+            )}
           </div>
         </div>
 
