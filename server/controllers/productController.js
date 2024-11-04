@@ -36,7 +36,9 @@ const addProduct = async (req, res) => {
 
     await addProduct.save();
 
-    res.status(200).json({ message: "Successfully added product", addProduct });
+    return res
+      .status(200)
+      .json({ message: "Successfully added product", addProduct });
   } catch (err) {
     console.error("Error :", err);
     return res.status(500).json({ message: "Internal server error" });
@@ -48,7 +50,7 @@ const getProducts = async (req, res) => {
   try {
     const getAllProducts = await Product.find();
 
-    res
+    return res
       .status(200)
       .json({ message: "Successfully get all the products", getAllProducts });
   } catch (err) {
@@ -57,4 +59,58 @@ const getProducts = async (req, res) => {
   }
 };
 
-module.exports = { uploadImages, addProduct, getProducts };
+// Update visibility product
+const updateVisibilityProduct = async (req, res) => {
+  const { id } = req.params;
+  const { visibility } = req.body;
+
+  try {
+    const updateVisibility = await Product.findByIdAndUpdate(
+      id,
+      {
+        visibility: visibility,
+      },
+      { new: true }
+    );
+
+    if (!updateVisibility) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    return res.status(200).json({
+      message: "Successfully update product visibility",
+      updateVisibility,
+    });
+  } catch (err) {
+    console.log("Error :" + err);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+// Delete product
+const deleteProduct = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const deleteProd = await Product.findByIdAndDelete(id, { new: true });
+
+    if (!deleteProd) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    return res
+      .status(200)
+      .json({ message: "Product deleted successfully", data: deleteProd });
+  } catch (err) {
+    console.log("Error :" + err);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+module.exports = {
+  uploadImages,
+  addProduct,
+  getProducts,
+  updateVisibilityProduct,
+  deleteProduct,
+};

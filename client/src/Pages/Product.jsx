@@ -5,9 +5,9 @@ import {
   HiOutlineTrash,
   HiOutlinePencil,
   HiOutlineGlobeAsiaAustralia,
-  HiOutlineArchiveBoxArrowDown,
 } from "react-icons/hi2";
 import { IoChevronDownOutline, IoCheckmarkSharp } from "react-icons/io5";
+import { PiLockKey } from "react-icons/pi";
 
 const Product = () => {
   const [products, setProducts] = useState(null);
@@ -15,6 +15,7 @@ const Product = () => {
   const [moreMenuProductId, setMoreMenuProductId] = useState(null);
   const [visibilityMenuProductId, setVisibilityMenuProductId] = useState(null);
 
+  // Get all products
   useEffect(() => {
     const fetchProducts = async () => {
       await axios
@@ -30,7 +31,44 @@ const Product = () => {
     fetchProducts();
   }, []);
 
-  console.log(products);
+  // Change visibility product
+  const handleChangeVisibility = async (id, visibility) => {
+    try {
+      const { data } = await axios.put(
+        `http://localhost:5000/api/product/${id}`,
+        {
+          visibility: visibility,
+        }
+      );
+
+      // Update visibility product
+      setProducts((prev) => {
+        return prev.map((product) => {
+          return product._id === id
+            ? { ...product, visibility: data.updateVisibility.visibility }
+            : product;
+        });
+      });
+
+      setVisibilityMenuProductId(null);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  // Delete product
+  const handleDeleteProduct = async (id) => {
+    try {
+      const { data } = await axios.delete(
+        `http://localhost:5000/api/product/${id}`
+      );
+
+      // Update data products
+      setProducts((prev) => prev.filter((product) => product._id !== id));
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const handleShowMoreMenu = (productId) => {
     setMoreMenuProductId((prev) => (prev === productId ? null : productId));
@@ -88,15 +126,17 @@ const Product = () => {
                     <tr key={key} className="border-b">
                       <td className="flex gap-x-4 pl-6 py-3">
                         <img
-                          src={`http://localhost:5000/public/images/${product.images[0]}`}
-                          alt={product.images[0]}
+                          src={`http://localhost:5000/public/images/${product?.images[0]}`}
+                          alt={product?.images[0]}
                           className="w-16 h-16 object-cover rounded-xl"
                         />
 
                         <div className="grow">
-                          <p className="text-sm line-clamp-2">{product.name}</p>
+                          <p className="text-sm line-clamp-2">
+                            {product?.name}
+                          </p>
                           <p className="text-xs text-[#606060] line-clamp-2 mt-0.5">
-                            {product.description}
+                            {product?.description}
                           </p>
                         </div>
 
@@ -104,15 +144,15 @@ const Product = () => {
                         <div id="more-menu" className="relative">
                           {/* Action / More menu button */}
                           <button
-                            onClick={() => handleShowMoreMenu(product._id)}
+                            onClick={() => handleShowMoreMenu(product?._id)}
                             className="p-2 hover:bg-[#49454F]/[.08] active:[#49454F]/[.12] rounded-full transition-all active:scale-90 duration-300"
                           >
                             <IoMdMore className="text-lg" />
                           </button>
 
                           {/* Action / More menu */}
-                          {moreMenuProductId === product._id && (
-                            <div className="absolute top-0 right-0 shadow bg-white min-w-40 py-2.5 rounded-xl border border-[#F1F1F1]">
+                          {moreMenuProductId === product?._id && (
+                            <div className="absolute top-0 right-0 shadow bg-white min-w-40 py-2.5 rounded-xl border border-[#F1F1F1] z-10">
                               <ul>
                                 <li>
                                   <button className="flex items-center gap-x-4 w-full pl-4 pr-6 py-2 text-sm hover:bg-[#1D1B20]/[.08]">
@@ -123,7 +163,12 @@ const Product = () => {
                                   </button>
                                 </li>
                                 <li>
-                                  <button className="flex items-center gap-x-4 w-full pl-4 pr-6 py-2 text-sm hover:bg-[#1D1B20]/[.08]">
+                                  <button
+                                    onClick={() =>
+                                      handleDeleteProduct(product?._id)
+                                    }
+                                    className="flex items-center gap-x-4 w-full pl-4 pr-6 py-2 text-sm hover:bg-[#1D1B20]/[.08]"
+                                  >
                                     <span>
                                       <HiOutlineTrash className="text-xl" />
                                     </span>
@@ -145,15 +190,27 @@ const Product = () => {
                           {/* Visibility menu button */}
                           <button
                             onClick={() =>
-                              handleShowVisibilityMenu(product._id)
+                              handleShowVisibilityMenu(product?._id)
                             }
                             className="group flex items-center gap-x-2 pl-3 pr-4 py-2.5 text-sm capitalize rounded-full hover:bg-[#6750A4]/[.08] active:bg-[#6750A4]/[.12] transition-all active:scale-90 duration-300"
                           >
-                            <span>
-                              <HiOutlineGlobeAsiaAustralia className="text-xl" />
-                            </span>
+                            {product?.visibility === "public" ? (
+                              <>
+                                <span>
+                                  <HiOutlineGlobeAsiaAustralia className="text-xl" />
+                                </span>
 
-                            {product.visibility}
+                                {product?.visibility}
+                              </>
+                            ) : (
+                              <>
+                                <span>
+                                  <PiLockKey className="text-xl" />
+                                </span>
+
+                                {product?.visibility}
+                              </>
+                            )}
 
                             <span className="invisible group-hover:visible">
                               <IoChevronDownOutline />
@@ -161,22 +218,42 @@ const Product = () => {
                           </button>
 
                           {/* Visibility menu */}
-                          {visibilityMenuProductId === product._id && (
+                          {visibilityMenuProductId === product?._id && (
                             <div className="absolute top-0 left-0 shadow bg-white min-w-40 py-2.5 rounded-xl border border-[#F1F1F1]">
                               <ul>
                                 <li>
-                                  <button className="flex items-center gap-x-4 w-full pl-4 pr-6 py-2 text-sm hover:bg-[#1D1B20]/[.08]">
-                                    {product.visibility === "public" && (
+                                  <button
+                                    onClick={() =>
+                                      handleChangeVisibility(
+                                        product?._id,
+                                        "public"
+                                      )
+                                    }
+                                    className="flex items-center gap-x-4 w-full pl-4 pr-6 py-2 text-sm hover:bg-[#1D1B20]/[.08]"
+                                  >
+                                    {product?.visibility === "public" ? (
                                       <span>
                                         <IoCheckmarkSharp className="text-xl" />
+                                      </span>
+                                    ) : (
+                                      <span>
+                                        <IoCheckmarkSharp className="invisible text-xl" />
                                       </span>
                                     )}
                                     Public
                                   </button>
                                 </li>
                                 <li>
-                                  <button className="flex items-center gap-x-4 w-full pl-4 pr-6 py-2 text-sm hover:bg-[#1D1B20]/[.08]">
-                                    {product.visibility === "private" ? (
+                                  <button
+                                    onClick={() =>
+                                      handleChangeVisibility(
+                                        product?._id,
+                                        "private"
+                                      )
+                                    }
+                                    className="flex items-center gap-x-4 w-full pl-4 pr-6 py-2 text-sm hover:bg-[#1D1B20]/[.08]"
+                                  >
+                                    {product?.visibility === "private" ? (
                                       <span>
                                         <IoCheckmarkSharp className="text-xl" />
                                       </span>
@@ -195,7 +272,7 @@ const Product = () => {
                       </td>
                       <td className="pl-6 py-3">
                         <p className="text-xs">
-                          {new Date(product.createdAt).toLocaleDateString(
+                          {new Date(product?.createdAt).toLocaleDateString(
                             "id-ID",
                             { day: "numeric", month: "long", year: "numeric" }
                           )}
