@@ -19,42 +19,49 @@ const Navigation = () => {
       iconSelected: <RiDashboardFill />,
       label: "Dashboard",
       link: "/admin",
+      end: true,
     },
     {
       icon: <VscGraphLine />,
       iconSelected: <VscGraphLine className="stroke-1" />,
       label: "Analisis",
       link: "/admin/analysis",
+      end: true,
     },
     {
       icon: <MdOutlineShoppingBag />,
       iconSelected: <MdShoppingBag />,
       label: "Produk",
       link: "/admin/product",
+      end: false,
     },
     {
       icon: <RiFileList2Line />,
       iconSelected: <RiFileList2Fill />,
       label: "Pemesanan",
       link: "/admin/order",
+      end: true,
     },
     {
       icon: <LuMinus />,
       iconSelected: <LuMinus />,
       label: "Pengeluaran",
       link: "/admin/expense",
+      end: true,
     },
     {
       icon: <PiYarn />,
       iconSelected: <PiYarnFill />,
       label: "Penjahit",
       link: "/admin/tailor",
+      end: true,
     },
     {
       icon: <IoBagAddOutline />,
       iconSelected: <IoBagAdd />,
       label: "Pembuatan produk",
       link: "/admin/make-product",
+      end: true,
     },
   ];
 
@@ -74,7 +81,7 @@ const Navigation = () => {
                         : "text-[#6750A4] bg-transparent hover:bg-[#6750A4]/[.08]"
                     }`
                   }
-                  end
+                  end={item.end}
                 >
                   {({ isActive }) => (
                     <>
