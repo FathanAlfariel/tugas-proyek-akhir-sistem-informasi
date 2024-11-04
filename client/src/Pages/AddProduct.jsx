@@ -9,8 +9,6 @@ import TextArea from "../Components/TextArea";
 import { IoWarning } from "react-icons/io5";
 
 const AddProduct = () => {
-  const [images, setImages] = useState([]);
-
   const uploadImages = async (e) => {
     const files = e.target.files;
     const data = new FormData();
@@ -24,12 +22,11 @@ const AddProduct = () => {
         "Content-Type": "multipart/form-data",
       })
       .then(({ data }) => {
-        for (let i = 0; i < data.files?.length; i++) {
-          formik.setFieldValue("images", [
-            ...formik.values.images,
-            data.files[i].filename,
-          ]);
+        const imagesName = [];
+        for (const file of data.files) {
+          imagesName.push(file.filename);
         }
+        formik.setFieldValue("images", imagesName);
       })
       .catch((err) => {
         console.log(err);
@@ -44,10 +41,7 @@ const AddProduct = () => {
       variants: [],
     },
     validationSchema: yup.object({
-      images: yup
-        .array()
-        .of(yup.string().required("Gambar harus diisi."))
-        .min(1, "Gambar harus diisi."),
+      images: yup.array().min(1, "Gambar harus diisi."),
       name: yup.string().required("Nama produk harus diisi."),
       description: yup.string().required("Nama produk harus diisi."),
       variants: yup.array().of(
@@ -66,7 +60,7 @@ const AddProduct = () => {
     onSubmit: async (values) => {
       await axios
         .post("http://localhost:5000/api/product", {
-          images: images,
+          images: values.images,
           name: values.name,
           description: values.description,
           variants: values.variants,

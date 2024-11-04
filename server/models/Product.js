@@ -29,6 +29,11 @@ const productSchema = new mongoose.Schema(
         },
       },
     ],
+    visibility: {
+      type: String,
+      enum: ["public", "archive"],
+      default: "public",
+    },
   },
   { timestamps: true }
 );
