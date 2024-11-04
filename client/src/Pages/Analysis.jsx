@@ -3,7 +3,9 @@ import React from "react";
 const Analysis = () => {
   return (
     <>
-      <div>Analysis</div>
+      <div>
+        <h1 className="text-[28px] leading-9 font-medium">Analisis</h1>
+      </div>
     </>
   );
 };

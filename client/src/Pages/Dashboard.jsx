@@ -2,7 +2,7 @@ const Dashboard = () => {
   return (
     <>
       <div>
-        <h1 className="text-3xl font-bold">Dashboard</h1>
+        <h1 className="text-[28px] leading-9 font-medium">Dashboard</h1>
       </div>
     </>
   );
