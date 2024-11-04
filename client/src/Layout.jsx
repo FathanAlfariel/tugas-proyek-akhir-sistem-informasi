@@ -15,7 +15,7 @@ const Layout = () => {
         </div>
       </header>
 
-      <main className="p-8 pt-6">
+      <main className="mx-6 mt-8">
         <Outlet />
         <AddFloatingButton />
       </main>
