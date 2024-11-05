@@ -10,10 +10,12 @@ const Layout = () => {
         {/* Dashboard header */}
         <Header />
 
-        <Navigation />
+        <div className="mt-6">
+          <Navigation />
+        </div>
       </header>
 
-      <main className="mx-6 mt-6 mb-8">
+      <main className="mx-6 my-8">
         <Outlet />
         <AddFloatingButton />
       </main>
