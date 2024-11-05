@@ -7,6 +7,7 @@ const path = require("path");
 const authRoute = require("./routes/authRoute");
 const productRoute = require("./routes/productRoute");
 const expenseRoute = require("./routes/expenseRoute");
+const tailorRoute = require("./routes/tailorRoute");
 
 dotenv.config();
 
@@ -43,6 +44,9 @@ app.use("/api/product", productRoute);
 
 // Expense route
 app.use("/api/expense", expenseRoute);
+
+// Tailor route
+app.use("/api/tailor", tailorRoute);
 
 // Running the server on
 app.listen(PORT, () => {
