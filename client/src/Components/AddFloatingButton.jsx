@@ -37,7 +37,7 @@ const AddFloatingButton = () => {
   return (
     <>
       {/* Add Floating Button  */}
-      <div className="fixed bottom-20 right-20">
+      <div className="fixed bottom-7 md:bottom-14 lg:bottom-20 right-7 md:right-14 lg:right-20">
         <div id="floating-button-menu" className="relative">
           <button
             onClick={handleShowMenu}
