@@ -9,9 +9,11 @@ import { FiPlus } from "react-icons/fi";
 import TextArea from "../Components/TextArea";
 import { IoWarning } from "react-icons/io5";
 import { MdClose } from "react-icons/md";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const AddProduct = () => {
+  const navigate = useNavigate();
+
   const uploadImages = async (e) => {
     const files = e.target.files;
     const data = new FormData();
@@ -69,7 +71,7 @@ const AddProduct = () => {
           variants: values.variants,
         })
         .then(({ data }) => {
-          console.log(data);
+          navigate("/admin/product");
         })
         .catch((err) => {
           console.log(err);

@@ -2,11 +2,11 @@ const mongoose = require("mongoose");
 
 const expenseSchema = new mongoose.Schema(
   {
-    nama: {
+    name: {
       type: String,
       required: true,
     },
-    harga: {
+    price: {
       type: Number,
       required: true,
     },

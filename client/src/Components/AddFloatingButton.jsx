@@ -70,9 +70,11 @@ const AddFloatingButton = () => {
                   </button>
                 </li>
                 <li>
-                  <button className="w-full pl-4 pr-6 py-2 text-left text-sm hover:bg-[#1D1B20]/[.08]">
-                    Tambah pengeluaran
-                  </button>
+                  <Link to={"/admin/expense/add"}>
+                    <button className="w-full pl-4 pr-6 py-2 text-left text-sm hover:bg-[#1D1B20]/[.08]">
+                      Tambah pengeluaran
+                    </button>
+                  </Link>
                 </li>
                 <li>
                   <button className="w-full pl-4 pr-6 py-2 text-left text-sm hover:bg-[#1D1B20]/[.08]">

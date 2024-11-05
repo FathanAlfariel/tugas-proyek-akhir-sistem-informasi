@@ -6,6 +6,7 @@ const cookieParser = require("cookie-parser");
 const path = require("path");
 const authRoute = require("./routes/authRoute");
 const productRoute = require("./routes/productRoute");
+const expenseRoute = require("./routes/expenseRoute");
 
 dotenv.config();
 
@@ -39,6 +40,9 @@ app.use("/api/auth", authRoute);
 
 // Product route
 app.use("/api/product", productRoute);
+
+// Expense route
+app.use("/api/expense", expenseRoute);
 
 // Running the server on
 app.listen(PORT, () => {
