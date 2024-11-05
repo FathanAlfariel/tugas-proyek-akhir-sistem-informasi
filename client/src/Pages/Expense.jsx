@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import IconButton from "../Components/IconButton";
 import { HiOutlinePencil, HiOutlineTrash } from "react-icons/hi2";
+import { Link } from "react-router-dom";
 
 const Expense = () => {
   const [expenses, setExpenses] = useState(null);
@@ -75,9 +76,11 @@ const Expense = () => {
                   </td>
                   <td className="pl-6 py-6">
                     <div className="flex items-center gap-x-1">
-                      <IconButton type="button">
-                        <HiOutlinePencil className="text-lg" />
-                      </IconButton>
+                      <Link to={`/admin/expense/edit/${expense._id}`}>
+                        <IconButton type="button">
+                          <HiOutlinePencil className="text-lg" />
+                        </IconButton>
+                      </Link>
                       <IconButton
                         onClick={() => {
                           handleDeleteExpense(expense._id);

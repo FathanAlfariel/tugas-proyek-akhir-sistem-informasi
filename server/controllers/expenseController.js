@@ -56,4 +56,31 @@ const deleteExpense = async (req, res) => {
   }
 };
 
-module.exports = { addExpense, getAllExpenses, deleteExpense };
+// Get expense data by id
+const getExpenseById = async (req, res) => {
+  const { id } = req.params;
+  const { name, price } = req.body;
+
+  try {
+    const query = await Expense.findByIdAndUpdate(
+      id,
+      {
+        name,
+        price,
+      },
+      { new: true }
+    );
+
+    // If expense doesn't exist
+    if (!query) return res.status(404).json({ message: "Expense not found" });
+
+    return res
+      .status(200)
+      .json({ message: "Successfully get product data", query });
+  } catch (err) {
+    console.log("Error :" + err);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+module.exports = { addExpense, getAllExpenses, deleteExpense, getExpenseById };

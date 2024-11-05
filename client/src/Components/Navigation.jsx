@@ -47,7 +47,7 @@ const Navigation = () => {
       iconSelected: <LuMinus />,
       label: "Pengeluaran",
       link: "/admin/expense",
-      end: true,
+      end: false,
     },
     {
       icon: <PiYarn />,
