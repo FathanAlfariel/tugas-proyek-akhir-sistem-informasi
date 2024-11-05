@@ -152,7 +152,8 @@ const EditProduct = () => {
               }
             />
 
-            <div className="w-full py-2 px-3 border-2 rounded-xl">
+            {/* Variants */}
+            <div className="w-full pt-2 px-3 border-2 rounded-xl max-h-[32rem] overflow-y-auto">
               <h5 className="text-sm">Variasi</h5>
 
               {/* variants */}
@@ -272,7 +273,7 @@ const EditProduct = () => {
                 );
               })}
 
-              <div className="mt-5">
+              <div className="sticky bottom-0 py-3 bg-white">
                 <Button
                   type="button"
                   buttonStyle="filled"
