@@ -8,6 +8,7 @@ import {
 } from "react-icons/hi2";
 import { IoChevronDownOutline, IoCheckmarkSharp } from "react-icons/io5";
 import { PiLockKey } from "react-icons/pi";
+import { Link } from "react-router-dom";
 
 const Product = () => {
   const [products, setProducts] = useState(null);
@@ -35,7 +36,7 @@ const Product = () => {
   const handleChangeVisibility = async (id, visibility) => {
     try {
       const { data } = await axios.put(
-        `http://localhost:5000/api/product/${id}`,
+        `http://localhost:5000/api/product/visibility/${id}`,
         {
           visibility: visibility,
         }
@@ -155,12 +156,16 @@ const Product = () => {
                             <div className="absolute top-0 right-0 shadow bg-white min-w-40 py-2.5 rounded-xl border border-[#F1F1F1] z-10">
                               <ul>
                                 <li>
-                                  <button className="flex items-center gap-x-4 w-full pl-4 pr-6 py-2 text-sm hover:bg-[#1D1B20]/[.08]">
-                                    <span>
-                                      <HiOutlinePencil className="text-xl" />
-                                    </span>
-                                    Edit
-                                  </button>
+                                  <Link
+                                    to={`/admin/product/edit/${product?._id}`}
+                                  >
+                                    <button className="flex items-center gap-x-4 w-full pl-4 pr-6 py-2 text-sm hover:bg-[#1D1B20]/[.08]">
+                                      <span>
+                                        <HiOutlinePencil className="text-xl" />
+                                      </span>
+                                      Edit
+                                    </button>
+                                  </Link>
                                 </li>
                                 <li>
                                   <button

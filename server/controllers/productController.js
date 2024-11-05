@@ -100,10 +100,62 @@ const deleteProduct = async (req, res) => {
 
     return res
       .status(200)
-      .json({ message: "Product deleted successfully", data: deleteProd });
+      .json({ message: "Product deleted successfully", deleteProd });
   } catch (err) {
     console.log("Error :" + err);
     return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+// Get product data by id
+const getProductById = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const getProduct = await Product.findById(id);
+
+    // If product doesn't exist
+    if (!getProduct) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    return res
+      .status(200)
+      .json({ message: "Successfully get product data", getProduct });
+  } catch (err) {
+    console.log("Error :" + err);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+// Update product
+const updateProduct = async (req, res) => {
+  const { id } = req.params;
+  const { images, name, description, variants } = req.body;
+
+  try {
+    const isProductExists = await Product.findById(id);
+    if (!isProductExists) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    const updateData = await Product.findByIdAndUpdate(
+      id,
+      {
+        images,
+        name,
+        description,
+        variants,
+      },
+      { new: true }
+    );
+
+    return res
+      .status(200)
+      .json({ message: "Successfully updated product", updateData });
+  } catch (err) {
+    console.log("Error :" + err);
+    return res.status(500).json();
   }
 };
 
@@ -113,4 +165,6 @@ module.exports = {
   getProducts,
   updateVisibilityProduct,
   deleteProduct,
+  getProductById,
+  updateProduct,
 };

@@ -7,6 +7,8 @@ const {
   getProducts,
   updateVisibilityProduct,
   deleteProduct,
+  getProductById,
+  updateProduct,
 } = require("../controllers/productController");
 
 // Upload images route
@@ -19,9 +21,15 @@ router.post("/", addProduct);
 router.get("/", getProducts);
 
 // Update product visibility
-router.put("/:id", updateVisibilityProduct);
+router.put("/visibility/:id", updateVisibilityProduct);
 
 // Delete product
 router.delete("/:id", deleteProduct);
+
+// Get product data by id
+router.get("/:id", getProductById);
+
+// Update product
+router.put("/:id", updateProduct);
 
 module.exports = router;

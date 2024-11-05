@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useFormik } from "formik";
 import * as yup from "yup";
@@ -7,8 +7,30 @@ import Button from "../Components/Button";
 import { FiPlus } from "react-icons/fi";
 import TextArea from "../Components/TextArea";
 import { IoWarning } from "react-icons/io5";
+import { useParams, useNavigate } from "react-router-dom";
 
 const EditProduct = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchProductData = async () => {
+      await axios
+        .get(`http://localhost:5000/api/product/${id}`)
+        .then(({ data }) => {
+          formik.setFieldValue("images", data.getProduct.images);
+          formik.setFieldValue("name", data.getProduct.name);
+          formik.setFieldValue("description", data.getProduct.description);
+          formik.setFieldValue("variants", data.getProduct.variants);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
+
+    fetchProductData();
+  }, [id]);
+
   const uploadImages = async (e) => {
     const files = e.target.files;
     const data = new FormData();
@@ -59,14 +81,14 @@ const EditProduct = () => {
     }),
     onSubmit: async (values) => {
       await axios
-        .post("http://localhost:5000/api/product", {
+        .put(`http://localhost:5000/api/product/${id}`, {
           images: values.images,
           name: values.name,
           description: values.description,
           variants: values.variants,
         })
         .then(({ data }) => {
-          console.log(data);
+          navigate("/admin/product");
         })
         .catch((err) => {
           console.log(err);
