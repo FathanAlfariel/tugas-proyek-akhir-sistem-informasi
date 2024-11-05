@@ -94,6 +94,7 @@ const deleteProduct = async (req, res) => {
   try {
     const deleteProd = await Product.findByIdAndDelete(id, { new: true });
 
+    // If product does'nt exist
     if (!deleteProd) {
       return res.status(404).json({ message: "Product not found" });
     }

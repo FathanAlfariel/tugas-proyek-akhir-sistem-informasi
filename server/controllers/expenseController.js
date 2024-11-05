@@ -35,4 +35,25 @@ const getAllExpenses = async (req, res) => {
   }
 };
 
-module.exports = { addExpense, getAllExpenses };
+// Delete expense controller
+const deleteExpense = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const query = await Expense.findByIdAndDelete(id);
+
+    // If expense does'nt exist
+    if (!query) {
+      return res.status(404).json({ message: "Expense not found" });
+    }
+
+    return res
+      .status(200)
+      .json({ message: "Expense deleted successfully", query });
+  } catch (err) {
+    console.log("Error :" + err);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+module.exports = { addExpense, getAllExpenses, deleteExpense };

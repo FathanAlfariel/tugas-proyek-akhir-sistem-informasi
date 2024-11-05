@@ -20,6 +20,18 @@ const Expense = () => {
 
     getAllExpenses();
   }, []);
+
+  const handleDeleteExpense = async (id) => {
+    await axios
+      .delete(`http://localhost:5000/api/expense/${id}`)
+      .then(({ data }) => {
+        setExpenses((prev) => prev.filter((expense) => expense._id !== id));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   return (
     <>
       <h1 className="text-[28px] leading-9 font-medium">Pengeluaran</h1>
@@ -66,7 +78,12 @@ const Expense = () => {
                       <IconButton type="button">
                         <HiOutlinePencil className="text-lg" />
                       </IconButton>
-                      <IconButton type="button">
+                      <IconButton
+                        onClick={() => {
+                          handleDeleteExpense(expense._id);
+                        }}
+                        type="button"
+                      >
                         <HiOutlineTrash className="text-lg" />
                       </IconButton>
                     </div>
