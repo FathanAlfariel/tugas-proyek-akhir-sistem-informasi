@@ -25,7 +25,7 @@ const AddFloatingButton = () => {
   return (
     <>
       {/* Add Floating Button  */}
-      <div className="fixed bottom-20 right-20">
+      <div className="">
         <div id="floating-button-menu" className="relative">
           <button
             onClick={handleShowMenu}
@@ -40,7 +40,7 @@ const AddFloatingButton = () => {
           </button>
 
           {showMenu && (
-            <div className="min-w-56 absolute bottom-full right-0 mb-1 rounded-xl bg-white shadow-md py-2.5 border border-[#F1F1F1]">
+            <div className="min-w-56 absolute top-auto right-0 mt-1 rounded-xl bg-white shadow-md py-2.5 border border-[#F1F1F1]">
               <ul>
                 <li>
                   <Link to={"/admin/product/add"}>

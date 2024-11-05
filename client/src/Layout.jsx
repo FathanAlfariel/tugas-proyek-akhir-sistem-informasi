@@ -10,14 +10,14 @@ const Layout = () => {
         {/* Dashboard header */}
         <Header />
 
-        <div className="mt-6">
+        <div className="flex justify-between items-center mt-6">
           <Navigation />
+          <AddFloatingButton />
         </div>
       </header>
 
-      <main className="mx-6 mt-8">
+      <main className="mx-6 mt-6 mb-8">
         <Outlet />
-        <AddFloatingButton />
       </main>
     </>
   );

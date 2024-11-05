@@ -37,7 +37,7 @@ const UserMenu = () => {
         </button>
 
         {showMenu && (
-          <div className="absolute top-auto right-0 shadow bg-white min-w-64 py-2.5 rounded-xl mt-1 border border-[#F1F1F1]">
+          <div className="absolute top-auto right-0 shadow bg-white min-w-64 py-2.5 rounded-xl mt-1 border border-[#F1F1F1] z-10">
             <ul>
               <li>
                 <button className="flex items-center gap-x-4 w-full pl-4 pr-6 py-2 text-sm hover:bg-[#1D1B20]/[.08]">

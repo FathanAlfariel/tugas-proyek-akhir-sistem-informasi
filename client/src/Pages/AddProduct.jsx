@@ -4,9 +4,12 @@ import { useFormik } from "formik";
 import * as yup from "yup";
 import Input from "../Components/Input";
 import Button from "../Components/Button";
+import IconButton from "../Components/IconButton";
 import { FiPlus } from "react-icons/fi";
 import TextArea from "../Components/TextArea";
 import { IoWarning } from "react-icons/io5";
+import { MdClose } from "react-icons/md";
+import { Link } from "react-router-dom";
 
 const AddProduct = () => {
   const uploadImages = async (e) => {
@@ -99,9 +102,11 @@ const AddProduct = () => {
 
   return (
     <>
+      <h1 className="text-[28px] leading-9 font-medium mb-6">Tambah produk</h1>
+
       <form onSubmit={formik.handleSubmit}>
-        <div className="grid grid-cols-12 gap-x-6">
-          <div className="col-span-7">
+        <div className="grid grid-cols-12 gap-x-6 ">
+          <div className="col-span-7 flex flex-col gap-y-4">
             <Input
               id="namaProduk"
               name="namaProduk"
@@ -134,11 +139,17 @@ const AddProduct = () => {
                 return (
                   <div
                     key={key}
-                    className="border-2 border-dashed rounded-lg p-4 my-3"
+                    className="border-2 border-dashed rounded-lg p-3 my-3"
                   >
-                    <button type="button" onClick={() => deletevariants(key)}>
-                      X
-                    </button>
+                    <div className="flex justify-end mb-4">
+                      <IconButton
+                        type="button"
+                        onClick={() => deletevariants(key)}
+                      >
+                        <MdClose />
+                      </IconButton>
+                    </div>
+
                     <Input
                       id={`warna-[${key}]`}
                       name={`variants[${key}].color`}
@@ -204,6 +215,7 @@ const AddProduct = () => {
 
                     <div className="mt-4">
                       <h5 className="text-sm">Stok & Harga</h5>
+
                       <div className="grid grid-cols-2 gap-x-4 mt-2">
                         <Input
                           id={`stok-${key}`}
@@ -252,58 +264,65 @@ const AddProduct = () => {
             </div>
           </div>
 
-          {/* Images */}
-          <div className="col-span-5">
-            <h5 className="text-lg font-medium">Tambah gambar</h5>
+          {/* Images and Action Button */}
+          <div className="col-span-5 flex flex-col justify-between">
+            {/* Images */}
+            <div>
+              <h5 className="text-lg font-medium">Tambah gambar</h5>
 
-            <ul className="flex items-center gap-x-2 mt-4">
-              {formik.values.images &&
-                formik.values.images.map((name, key) => {
-                  return (
-                    <li key={key}>
-                      <img
-                        src={`http://localhost:5000/public/images/${name}`}
-                        alt={name}
-                        className="h-[70px] w-[70px] object-cover rounded-xl"
+              <ul className="flex items-center gap-x-2 mt-4">
+                {formik.values.images &&
+                  formik.values.images.map((name, key) => {
+                    return (
+                      <li key={key}>
+                        <img
+                          src={`http://localhost:5000/public/images/${name}`}
+                          alt={name}
+                          className="h-[70px] w-[70px] object-cover rounded-xl"
+                        />
+                      </li>
+                    );
+                  })}
+                <li>
+                  {/* Add Images */}
+                  <div className="border-2 border-dashed rounded-xl">
+                    <label
+                      htmlFor="uploadImages"
+                      className="flex justify-center items-center p-6 cursor-pointer"
+                    >
+                      <input
+                        id="uploadImages"
+                        type="file"
+                        multiple
+                        className="hidden"
+                        onChange={uploadImages}
                       />
-                    </li>
-                  );
-                })}
-              <li>
-                {/* Add Images */}
-                <div className="border-2 border-dashed rounded-xl">
-                  <label
-                    htmlFor="uploadImages"
-                    className="flex justify-center items-center p-6 cursor-pointer"
-                  >
-                    <input
-                      id="uploadImages"
-                      type="file"
-                      multiple
-                      className="hidden"
-                      onChange={uploadImages}
-                    />
-                    <FiPlus className="text-lg" />
-                  </label>
-                </div>
-              </li>
-            </ul>
+                      <FiPlus className="text-lg" />
+                    </label>
+                  </div>
+                </li>
+              </ul>
 
-            {formik.touched.images && formik.errors.images && (
-              <>
-                <div className="flex items-center mt-2">
-                  <IoWarning className="text-xs text-red-600 dark:text-red-500" />
-                  <p className="ml-1.5 text-xs text-red-600 dark:text-red-500">
-                    {formik.errors.images}
-                  </p>
-                </div>
-              </>
-            )}
+              {formik.touched.images && formik.errors.images && (
+                <>
+                  <div className="flex items-center mt-2">
+                    <IoWarning className="text-xs text-red-600 dark:text-red-500" />
+                    <p className="ml-1.5 text-xs text-red-600 dark:text-red-500">
+                      {formik.errors.images}
+                    </p>
+                  </div>
+                </>
+              )}
+            </div>
           </div>
         </div>
 
-        <div>
-          <button type="button">Cancel</button>
+        <div className="fixed bottom-0 right-0 flex justify-end items-center gap-x-2 mt-8 mx-6 py-8">
+          <Link to={-1}>
+            <Button type="button" buttonStyle="text-button">
+              Cancel
+            </Button>
+          </Link>
           <Button type="submit" buttonStyle="filled">
             Submit
           </Button>
