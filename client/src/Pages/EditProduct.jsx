@@ -8,7 +8,7 @@ import { FiPlus } from "react-icons/fi";
 import TextArea from "../Components/TextArea";
 import { IoWarning } from "react-icons/io5";
 
-const AddProduct = () => {
+const EditProduct = () => {
   const uploadImages = async (e) => {
     const files = e.target.files;
     const data = new FormData();
@@ -313,4 +313,4 @@ const AddProduct = () => {
   );
 };
 
-export default AddProduct;
+export default EditProduct;
