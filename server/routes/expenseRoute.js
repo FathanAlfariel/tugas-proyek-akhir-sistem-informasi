@@ -6,6 +6,7 @@ const {
   getAllExpenses,
   deleteExpense,
   getExpenseById,
+  updateExpense,
 } = require("../controllers/expenseController");
 
 // Add expense route
@@ -17,7 +18,10 @@ router.get("/", getAllExpenses);
 // Delete expense route
 router.delete("/:id", deleteExpense);
 
-// Update expense route
+// Get expense data by id route
 router.get("/:id", getExpenseById);
+
+// Update expense route
+router.put("/:id", updateExpense);
 
 module.exports = router;

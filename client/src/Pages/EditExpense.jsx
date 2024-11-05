@@ -40,7 +40,7 @@ const AddExpense = () => {
     }),
     onSubmit: async (values) => {
       await axios
-        .post("http://localhost:5000/api/expense", {
+        .put(`http://localhost:5000/api/expense/${id}`, {
           name: values.name,
           price: values.price,
         })
