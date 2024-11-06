@@ -15,4 +15,4 @@ const tailorSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongooose.model("Tailor", tailorSchema);
+module.exports = mongoose.model("Tailor", tailorSchema);

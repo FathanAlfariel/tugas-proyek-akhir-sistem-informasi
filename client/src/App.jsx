@@ -15,6 +15,7 @@ import AddProduct from "./Pages/AddProduct";
 import EditProduct from "./Pages/EditProduct";
 import AddExpense from "./Pages/AddExpense";
 import EditExpense from "./Pages/EditExpense";
+import AddTailor from "./Pages/AddTailor";
 
 axios.defaults.withCredentials = true;
 
@@ -38,6 +39,7 @@ const App = () => {
           <Route path="expense/add" element={<AddExpense />} />
           <Route path="expense/edit/:id" element={<EditExpense />} />
           <Route path="tailor" element={<Tailor />} />
+          <Route path="tailor/add" element={<AddTailor />} />
           <Route path="make-product" element={<MakeProduct />} />
           <Route path="product/add" element={<AddProduct />} />
           <Route path="product/edit/:id" element={<EditProduct />} />
