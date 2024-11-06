@@ -20,10 +20,10 @@ const EditProduct = () => {
       await axios
         .get(`http://localhost:5000/api/product/${id}`)
         .then(({ data }) => {
-          formik.setFieldValue("images", data.getProduct.images);
-          formik.setFieldValue("name", data.getProduct.name);
-          formik.setFieldValue("description", data.getProduct.description);
-          formik.setFieldValue("variants", data.getProduct.variants);
+          formik.setFieldValue("images", data.results.images);
+          formik.setFieldValue("name", data.results.name);
+          formik.setFieldValue("description", data.results.description);
+          formik.setFieldValue("variants", data.results.variants);
         })
         .catch((err) => {
           console.log(err);

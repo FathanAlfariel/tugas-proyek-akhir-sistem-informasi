@@ -52,8 +52,8 @@ const AddFloatingButton = () => {
           </button>
 
           {showMenu && (
-            <div className="min-w-56 absolute bottom-full right-0 mb-1 rounded-xl bg-white shadow-md py-2.5 border border-[#F1F1F1]">
-              <ul>
+            <div className="min-w-60 absolute bottom-full right-0 mb-1 rounded-2xl bg-white shadow-md py-2.5 border border-[#F1F1F1]">
+              <ul className="flex flex-col gap-y-0.5">
                 <li>
                   <Link to={"/admin/product/add"}>
                     <button

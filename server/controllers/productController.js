@@ -27,18 +27,18 @@ const addProduct = async (req, res) => {
   const { images, name, description, variants } = req.body;
 
   try {
-    const addProduct = new Product({
+    const query = new Product({
       images,
       name,
       description,
       variants,
     });
 
-    await addProduct.save();
+    await query.save();
 
     return res
       .status(200)
-      .json({ message: "Successfully added product", addProduct });
+      .json({ message: "Successfully added product", results: query });
   } catch (err) {
     console.error("Error :", err);
     return res.status(500).json({ message: "Internal server error" });
@@ -48,11 +48,11 @@ const addProduct = async (req, res) => {
 // Get all products
 const getProducts = async (req, res) => {
   try {
-    const getAllProducts = await Product.find();
+    const query = await Product.find();
 
     return res
       .status(200)
-      .json({ message: "Successfully get all the products", getAllProducts });
+      .json({ message: "Successfully get all the products", results: query });
   } catch (err) {
     console.error("Error :", err);
     return res.status(500).json({ message: "Internal server error" });
@@ -65,7 +65,7 @@ const updateVisibilityProduct = async (req, res) => {
   const { visibility } = req.body;
 
   try {
-    const updateVisibility = await Product.findByIdAndUpdate(
+    const query = await Product.findByIdAndUpdate(
       id,
       {
         visibility: visibility,
@@ -73,13 +73,13 @@ const updateVisibilityProduct = async (req, res) => {
       { new: true }
     );
 
-    if (!updateVisibility) {
+    if (!query) {
       return res.status(404).json({ message: "Product not found" });
     }
 
     return res.status(200).json({
       message: "Successfully update product visibility",
-      updateVisibility,
+      results: query,
     });
   } catch (err) {
     console.log("Error :" + err);
@@ -92,16 +92,16 @@ const deleteProduct = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const deleteProd = await Product.findByIdAndDelete(id, { new: true });
+    const query = await Product.findByIdAndDelete(id, { new: true });
 
     // If product does'nt exist
-    if (!deleteProd) {
+    if (!query) {
       return res.status(404).json({ message: "Product not found" });
     }
 
     return res
       .status(200)
-      .json({ message: "Product deleted successfully", deleteProd });
+      .json({ message: "Product deleted successfully", results: query });
   } catch (err) {
     console.log("Error :" + err);
     return res.status(500).json({ message: "Internal server error" });
@@ -113,16 +113,16 @@ const getProductById = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const getProduct = await Product.findById(id);
+    const query = await Product.findById(id);
 
     // If product doesn't exist
-    if (!getProduct) {
+    if (!query) {
       return res.status(404).json({ message: "Product not found" });
     }
 
     return res
       .status(200)
-      .json({ message: "Successfully get product data", getProduct });
+      .json({ message: "Successfully get product data", results: query });
   } catch (err) {
     console.log("Error :" + err);
     return res.status(500).json({ message: "Internal server error" });
@@ -135,12 +135,13 @@ const updateProduct = async (req, res) => {
   const { images, name, description, variants } = req.body;
 
   try {
+    // Check if product is exist
     const isProductExists = await Product.findById(id);
     if (!isProductExists) {
       return res.status(404).json({ message: "Product not found" });
     }
 
-    const updateData = await Product.findByIdAndUpdate(
+    const query = await Product.findByIdAndUpdate(
       id,
       {
         images,
@@ -153,7 +154,7 @@ const updateProduct = async (req, res) => {
 
     return res
       .status(200)
-      .json({ message: "Successfully updated product", updateData });
+      .json({ message: "Successfully updated product", results: query });
   } catch (err) {
     console.log("Error :" + err);
     return res.status(500).json();

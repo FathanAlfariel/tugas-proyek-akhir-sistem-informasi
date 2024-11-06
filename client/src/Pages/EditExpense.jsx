@@ -15,8 +15,8 @@ const AddExpense = () => {
       await axios
         .get(`http://localhost:5000/api/expense/${id}`)
         .then(({ data }) => {
-          formik.setFieldValue("name", data.query.name);
-          formik.setFieldValue("price", data.query.price);
+          formik.setFieldValue("name", data.results.name);
+          formik.setFieldValue("price", data.results.price);
         })
         .catch((err) => {
           console.log(err);

@@ -12,7 +12,7 @@ const Expense = () => {
       await axios
         .get("http://localhost:5000/api/expense")
         .then(({ data }) => {
-          setExpenses(data.query);
+          setExpenses(data.results);
         })
         .catch((err) => {
           console.log(err);

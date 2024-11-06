@@ -42,7 +42,7 @@ const Input = ({
                       : "password"
                     : type
                 }
-                className="outline-none"
+                className="outline-none placeholder:text-[#71717a]"
                 placeholder={placeholder}
                 onChange={onChange}
                 onBlur={onBlur}

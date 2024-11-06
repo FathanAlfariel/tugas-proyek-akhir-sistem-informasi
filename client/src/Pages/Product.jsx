@@ -22,7 +22,7 @@ const Product = () => {
       await axios
         .get("http://localhost:5000/api/product")
         .then(({ data }) => {
-          setProducts(data.getAllProducts);
+          setProducts(data.results);
         })
         .catch((err) => {
           console.log(err);
@@ -46,7 +46,7 @@ const Product = () => {
       setProducts((prev) => {
         return prev.map((product) => {
           return product._id === id
-            ? { ...product, visibility: data.updateVisibility.visibility }
+            ? { ...product, visibility: data.results.visibility }
             : product;
         });
       });
@@ -143,8 +143,8 @@ const Product = () => {
 
                       {/* Action / More menu */}
                       {moreMenuProductId === product?._id && (
-                        <div className="absolute top-0 right-0 shadow bg-white min-w-40 py-2.5 rounded-xl border border-[#F1F1F1] z-10">
-                          <ul>
+                        <div className="absolute top-0 right-0 shadow bg-white min-w-40 py-2.5 rounded-2xl border border-[#F1F1F1] z-10">
+                          <ul className="flex flex-col gap-y-0.5">
                             <li>
                               <Link to={`/admin/product/edit/${product?._id}`}>
                                 <button className="flex items-center gap-x-4 w-full pl-4 pr-6 py-2 text-sm hover:bg-[#1D1B20]/[.08]">
@@ -207,8 +207,8 @@ const Product = () => {
 
                       {/* Visibility menu */}
                       {visibilityMenuProductId === product?._id && (
-                        <div className="absolute top-0 left-0 shadow bg-white min-w-40 py-2.5 rounded-xl border border-[#F1F1F1]">
-                          <ul>
+                        <div className="absolute top-0 left-0 shadow bg-white min-w-40 py-2.5 rounded-2xl border border-[#F1F1F1]">
+                          <ul className="flex flex-col gap-y-0.5">
                             <li>
                               <button
                                 onClick={() =>

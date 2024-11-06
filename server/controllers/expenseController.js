@@ -14,7 +14,7 @@ const addExpense = async (req, res) => {
 
     return res
       .status(200)
-      .json({ message: "Successfully added product", query });
+      .json({ message: "Successfully added product", results: query });
   } catch (err) {
     console.log("Error :" + err);
     return res.status(500).json({ message: "Internal server error" });
@@ -28,7 +28,7 @@ const getAllExpenses = async (req, res) => {
 
     return res
       .status(200)
-      .json({ message: "Successfully get all the expenses", query });
+      .json({ message: "Successfully get all the expenses", results: query });
   } catch (err) {
     console.log("Error :" + err);
     return res.status(500).json({ message: "Internal server error" });
@@ -49,7 +49,7 @@ const deleteExpense = async (req, res) => {
 
     return res
       .status(200)
-      .json({ message: "Expense deleted successfully", query });
+      .json({ message: "Expense deleted successfully", results: query });
   } catch (err) {
     console.log("Error :" + err);
     return res.status(500).json({ message: "Internal server error" });
@@ -68,7 +68,7 @@ const getExpenseById = async (req, res) => {
 
     return res
       .status(200)
-      .json({ message: "Successfully get product data", query });
+      .json({ message: "Successfully get product data", results: query });
   } catch (err) {
     console.log("Error :" + err);
     return res.status(500).json({ message: "Internal server error" });
@@ -91,7 +91,7 @@ const updateExpense = async (req, res) => {
 
     return res
       .status(200)
-      .json({ message: "Successfully updated expense", query });
+      .json({ message: "Successfully updated expense", results: query });
   } catch (err) {
     console.log("Error :" + err);
     return res.status(500).json({ message: "Internal server error" });
