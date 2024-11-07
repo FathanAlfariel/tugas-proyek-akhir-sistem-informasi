@@ -82,4 +82,31 @@ const updateTailor = async (req, res) => {
   }
 };
 
-module.exports = { addTailor, getAllTailors, getTailorById, updateTailor };
+// Delete tailor
+const deleteTailor = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    // Find tailor data whether it exists or not
+    const findTailor = await Tailor.findById(id);
+    if (!findTailor)
+      return res.status(404).json({ message: "Tailor not found" });
+
+    const query = await Tailor.findByIdAndDelete(id);
+
+    return res
+      .status(200)
+      .json({ message: "Tailor deleted successfully", results: query });
+  } catch (err) {
+    console.log("Error :" + err);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+module.exports = {
+  addTailor,
+  getAllTailors,
+  getTailorById,
+  updateTailor,
+  deleteTailor,
+};

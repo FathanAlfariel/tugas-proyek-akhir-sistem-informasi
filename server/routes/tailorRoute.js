@@ -6,6 +6,7 @@ const {
   getAllTailors,
   getTailorById,
   updateTailor,
+  deleteTailor,
 } = require("../controllers/tailorController");
 
 // Add tailor route
@@ -19,5 +20,8 @@ router.get("/:id", getTailorById);
 
 // Update tailor data
 router.put("/:id", updateTailor);
+
+// Delete tailor
+router.delete("/:id", deleteTailor);
 
 module.exports = router;

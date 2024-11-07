@@ -54,7 +54,7 @@ const Navigation = () => {
       iconSelected: <PiYarnFill />,
       label: "Penjahit",
       link: "/admin/tailor",
-      end: true,
+      end: false,
     },
     {
       icon: <IoBagAddOutline />,

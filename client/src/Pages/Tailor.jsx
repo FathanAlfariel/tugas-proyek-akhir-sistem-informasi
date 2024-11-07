@@ -22,6 +22,17 @@ const Tailor = () => {
     getAllTailors();
   }, []);
 
+  const handleDeleteTailor = async (id) => {
+    await axios
+      .delete(`http://localhost:5000/api/tailor/${id}`)
+      .then(({ data }) => {
+        setTailors((prev) => prev.filter((tailor) => tailor._id !== id));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   return (
     <>
       <h1 className="text-[28px] leading-9 font-medium">Penjahit</h1>
@@ -73,7 +84,10 @@ const Tailor = () => {
                           <HiOutlinePencil className="text-lg" />
                         </IconButton>
                       </Link>
-                      <IconButton type="button">
+                      <IconButton
+                        type="button"
+                        onClick={() => handleDeleteTailor(tailor._id)}
+                      >
                         <HiOutlineTrash className="text-lg" />
                       </IconButton>
                     </div>
