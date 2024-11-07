@@ -40,7 +40,7 @@ const Navigation = () => {
       iconSelected: <RiFileList2Fill />,
       label: "Pemesanan",
       link: "/admin/order",
-      end: true,
+      end: false,
     },
     {
       icon: <LuMinus />,
