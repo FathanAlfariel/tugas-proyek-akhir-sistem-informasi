@@ -1,14 +1,32 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Input from "../Components/Input";
 import Select from "../Components/Select";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import Button from "../Components/Button";
 import axios from "axios";
 
-const AddTailor = () => {
+const EditTailor = () => {
+  const { id } = useParams();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const getTailorDataById = async () => {
+      await axios
+        .get(`http://localhost:5000/api/tailor/${id}`)
+        .then(({ data }) => {
+          formik.setFieldValue("name", data.results.name);
+          formik.setFieldValue("available", data.results.available);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
+
+    getTailorDataById();
+  }, [id]);
+
   const formik = useFormik({
     initialValues: {
       name: "",
@@ -20,7 +38,7 @@ const AddTailor = () => {
     }),
     onSubmit: async (values) => {
       await axios
-        .post("http://localhost:5000/api/tailor", {
+        .put(`http://localhost:5000/api/tailor/${id}`, {
           name: values.name,
           available: values.available,
         })
@@ -90,4 +108,4 @@ const AddTailor = () => {
   );
 };
 
-export default AddTailor;
+export default EditTailor;

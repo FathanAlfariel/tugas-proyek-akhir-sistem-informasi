@@ -46,6 +46,7 @@ const Select = ({
       <div id="select-menu" className="relative">
         <button
           onClick={handleShowSelectMenu}
+          type="button"
           className="w-full flex items-center py-2 px-3 border-2 rounded-xl text-sm cursor-pointer"
         >
           <div className="grow flex flex-col text-left">
