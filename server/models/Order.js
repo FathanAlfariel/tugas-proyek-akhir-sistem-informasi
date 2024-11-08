@@ -3,15 +3,21 @@ const mongoose = require("mongoose");
 const orderSchema = new mongoose.Schema(
   {
     shippingReceipt: { type: String, required: true },
-    productId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Product",
-      required: true,
-    },
-    variant: {
-      type: mongoose.Schema.Types.ObjectId,
-      required: true,
-    },
+    productId: [
+      {
+        product: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Product",
+          required: true,
+        },
+        variants: [
+          {
+            variantId: mongoose.Schema.Types.ObjectId,
+            total: Number,
+          },
+        ],
+      },
+    ],
     name: {
       type: String,
       required: true,

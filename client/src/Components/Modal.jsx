@@ -6,7 +6,7 @@ const Modal = ({ headerTitle, children, showModal, setShowModal }) => {
     <>
       {showModal && (
         <div className="fixed inset-0 flex justify-center items-center bg-black/[0.5] z-10">
-          <div className="min-w-72 max-w-xl bg-white rounded-[28px]">
+          <div className="w-full min-w-72 max-w-4xl bg-white rounded-[28px]">
             {/* Header and Content */}
             <div className="flex flex-col gap-y-4 pt-6 px-6">
               {/* Header */}

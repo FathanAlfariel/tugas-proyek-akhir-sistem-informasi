@@ -24,7 +24,11 @@ const AddFloatingButton = () => {
   }, [showMenu]);
 
   // Define paths where the floating button should not appear
-  const hideButtonOnPaths = ["/admin/product/add", "/admin/product/edit/"];
+  const hideButtonOnPaths = [
+    "/admin/product/add",
+    "/admin/product/edit/",
+    "/admin/order/add",
+  ];
 
   // Check if the current location is in the list
   const shouldHideButton = hideButtonOnPaths.some((path) =>
