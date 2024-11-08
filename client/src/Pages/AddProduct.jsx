@@ -107,7 +107,7 @@ const AddProduct = () => {
       <h1 className="text-[28px] leading-9 font-medium mb-6">Tambah produk</h1>
 
       <form onSubmit={formik.handleSubmit}>
-        <div className="grid grid-cols-12 gap-x-6 ">
+        <div className="grid grid-cols-12 gap-x-6">
           <div className="col-span-7 flex flex-col gap-y-4">
             <Input
               id="namaProduk"
@@ -267,9 +267,8 @@ const AddProduct = () => {
             </div>
           </div>
 
-          {/* Images and Action Button */}
+          {/* Images */}
           <div className="col-span-5 flex flex-col justify-between">
-            {/* Images */}
             <div>
               <h5 className="text-lg font-medium">Tambah gambar</h5>
 

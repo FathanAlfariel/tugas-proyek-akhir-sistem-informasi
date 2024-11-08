@@ -67,7 +67,7 @@ const AddFloatingButton = () => {
                 <li>
                   <Link to={"/admin/order/add"}>
                     <button
-                      onnClick={() => setShowMenu(false)}
+                      onClick={() => setShowMenu(false)}
                       className="w-full pl-4 pr-6 py-2 text-left text-sm hover:bg-[#1D1B20]/[.08]"
                     >
                       Tambah pesanan
