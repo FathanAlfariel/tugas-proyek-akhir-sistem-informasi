@@ -50,7 +50,10 @@ const EditProduct = () => {
         for (const file of data.files) {
           imagesName.push(file.filename);
         }
-        formik.setFieldValue("images", imagesName);
+        formik.setFieldValue("images", [
+          ...formik.values.images,
+          ...imagesName,
+        ]);
       })
       .catch((err) => {
         console.log(err);
@@ -286,7 +289,7 @@ const EditProduct = () => {
             </div>
           </div>
 
-          {/* Images and Action Button */}
+          {/* Images */}
           <div className="col-span-5 flex flex-col justify-between">
             {/* Images */}
             <div>

@@ -31,7 +31,10 @@ const AddProduct = () => {
         for (const file of data.files) {
           imagesName.push(file.filename);
         }
-        formik.setFieldValue("images", imagesName);
+        formik.setFieldValue("images", [
+          ...formik.values.images,
+          ...imagesName,
+        ]);
       })
       .catch((err) => {
         console.log(err);
