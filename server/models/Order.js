@@ -2,6 +2,16 @@ const mongoose = require("mongoose");
 
 const orderSchema = new mongoose.Schema(
   {
+    shippingReceipt: { type: String, required: true },
+    productId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Product",
+      required: true,
+    },
+    variant: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+    },
     name: {
       type: String,
       required: true,
@@ -17,7 +27,6 @@ const orderSchema = new mongoose.Schema(
       postalCode: { type: String, required: true },
       country: { type: String, required: true },
     },
-    resi: { type: String, required: true },
     shippingServices: { type: String, required: true },
   },
   { timestamps: true }
