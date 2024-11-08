@@ -18,7 +18,6 @@ const productSchema = new mongoose.Schema(
     },
     variants: [
       {
-        _id: false,
         color: String,
         size: {
           length: Number,
