@@ -1,7 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Button from "./Button";
 
-const Modal = ({ headerTitle, children, showModal, setShowModal }) => {
+const Modal = ({
+  headerTitle,
+  children,
+  showModal,
+  setShowModal,
+  onCancel,
+  onSubmit,
+}) => {
   return (
     <>
       {showModal && (
@@ -15,18 +22,29 @@ const Modal = ({ headerTitle, children, showModal, setShowModal }) => {
               {/* Content */}
               {children}
             </div>
-
             {/* Actions Button */}
             <div className="flex justify-end">
               <div className="flex items-center gap-x-2 py-6 pr-6 pl-2">
                 <Button
-                  onClick={() => setShowModal(false)}
+                  onClick={() => {
+                    setShowModal(false);
+                    onCancel();
+                  }}
                   type="button"
                   buttonStyle="text-button"
                 >
                   Cancel
                 </Button>
-                <Button type="button" buttonStyle="text-button">
+                <Button
+                  onClick={() => {
+                    setShowModal(false);
+                    if (onSubmit) {
+                      onSubmit();
+                    }
+                  }}
+                  type="button"
+                  buttonStyle="text-button"
+                >
                   Submit
                 </Button>
               </div>

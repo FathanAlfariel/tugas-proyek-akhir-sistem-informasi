@@ -50,8 +50,6 @@ const AddOrder = () => {
     },
   });
 
-  console.log(formik.values.productId);
-
   return (
     <>
       <h1 className="text-[28px] leading-9 font-medium mb-6">Tambah pesanan</h1>

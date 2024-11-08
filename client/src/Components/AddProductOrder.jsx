@@ -76,6 +76,26 @@ const AddProductOrder = ({ formik }) => {
     }
   };
 
+  const handleTotal = (productId, variantId, value) => {
+    const updatedProductList = formik.values.productId.map((item) => {
+      if (item.product === productId) {
+        const updatedVariantTotal = item.variants.map((v) => {
+          if (v.variant === variantId) {
+            return { ...v, total: value };
+          }
+
+          return v;
+        });
+
+        return { ...item, variants: updatedVariantTotal };
+      }
+
+      return item;
+    });
+
+    formik.setFieldValue("productId", updatedProductList);
+  };
+
   return (
     <>
       <h5 className="text-lg font-medium mb-2.5">Produk yang dipesan</h5>
@@ -95,13 +115,14 @@ const AddProductOrder = ({ formik }) => {
         showModal={showModal}
         setShowModal={setShowModal}
         headerTitle="Pilih produk"
+        onCancel={() => formik.setFieldValue("productId", [])}
       >
         <ul className="flex flex-col gap-y-4 min-w-max">
           {products &&
             products.map((product, key) => {
               return (
                 <li key={key}>
-                  <div className="flex items-start gap-x-3 border-b">
+                  <div className="flex items-start gap-x-3 pb-4 border-b">
                     {/* Image */}
                     <img
                       src={`http://localhost:5000/public/images/${product.images[0]}`}
@@ -123,8 +144,8 @@ const AddProductOrder = ({ formik }) => {
                       </div>
 
                       {/* Variants */}
-                      <ul className="grid grid-cols-3 gap-x-4">
-                        {product.variants.map((variant, key) => {
+                      <ul className="grid grid-cols-3 gap-x-2 gap-y-2">
+                        {product.variants.map((variant, index) => {
                           const isVariantSelected =
                             formik.values.productId.find(
                               (item) =>
@@ -135,7 +156,7 @@ const AddProductOrder = ({ formik }) => {
                             );
 
                           return (
-                            <li key={key}>
+                            <li key={index}>
                               <label
                                 htmlFor={`variant${variant._id}`}
                                 className="block px-4 py-1.5 border has-[:checked]:border-[#6750A4] has-[:checked]:bg-[#6750A4]/[.12] rounded-xl text-xs has-[:checked]:text-[#6750A4] font-medium transition-all duration-300 cursor-pointer"
@@ -173,27 +194,35 @@ const AddProductOrder = ({ formik }) => {
                               </label>
 
                               {/* Total dibeli */}
-                              <div
-                                className={`${
-                                  isVariantSelected ? "visible" : "invisible"
-                                } flex items-center gap-x-2 w-full my-0.5`}
-                              >
-                                <label
-                                  htmlFor={`total${variant._id}`}
-                                  className="text-xs font-medium text-nowrap"
-                                >
-                                  Total dibeli:
-                                </label>
+                              {isVariantSelected && (
+                                <div className="flex items-center gap-x-2 w-full mt-1">
+                                  <label
+                                    htmlFor={`total${variant._id}`}
+                                    className="text-xs font-medium text-nowrap"
+                                  >
+                                    Total dibeli:
+                                  </label>
 
-                                <input
-                                  id={`total${variant._id}`}
-                                  type="text"
-                                  placeholder="Masukkan total dibeli"
-                                  className="outline-none w-full text-xs"
-                                  autoFocus
-                                  onChange={() => handleTotal()}
-                                />
-                              </div>
+                                  <input
+                                    id={`total${variant._id}`}
+                                    name="total"
+                                    type="number"
+                                    min={1}
+                                    max={100}
+                                    placeholder="Masukkan total dibeli"
+                                    className="outline-none w-full text-xs"
+                                    autoFocus
+                                    defaultValue={1}
+                                    onChange={(e) => {
+                                      handleTotal(
+                                        product._id,
+                                        variant._id,
+                                        e.target.value
+                                      );
+                                    }}
+                                  />
+                                </div>
+                              )}
                             </li>
                           );
                         })}
