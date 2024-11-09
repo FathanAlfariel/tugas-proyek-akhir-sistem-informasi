@@ -50,29 +50,13 @@ const AddOrder = () => {
     },
   });
 
-  // useEffect(() => {
-  //   // console.log(formik.values.productId);
-  //   const getProductOrderList = async () => {
-  //     if (formik.values.productId.length > 0) {
-  //       for (let i = 0; i <= formik.values.productId.length; i++) {
-  //         await axios
-  //           .get(
-  //             `http://localhost:5000/api/product/${formik.values.productId[i].product}`
-  //           )
-  //           .then(({ data }) => {
-  //             formik.values.productId[i].variants.filter((item) => {});
-  //           })
-  //           .catch((err) => {
-  //             console.log(err);
-  //           });
-  //       }
-  //     }
-  //   };
+  useEffect(() => {
+    const getProductsOrderList = async () => {
+      await axios.get("http://localhost:5000/api/product/variant");
+    };
+  }, [formik.values.variantId]);
 
-  //   getProductOrderList();
-  // }, [formik.values.productId]);
-
-  // console.log(productsOrderList);
+  console.log(formik.values.variantId);
 
   return (
     <>
