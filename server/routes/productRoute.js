@@ -34,6 +34,6 @@ router.get("/:id", getProductById);
 router.put("/:id", updateProduct);
 
 // Update product
-router.get("/variant/:id", getProductByVariantId);
+router.post("/variant", getProductByVariantId);
 
 module.exports = router;

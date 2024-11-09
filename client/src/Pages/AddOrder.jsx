@@ -52,11 +52,22 @@ const AddOrder = () => {
 
   useEffect(() => {
     const getProductsOrderList = async () => {
-      await axios.get("http://localhost:5000/api/product/variant");
+      await axios
+        .post("http://localhost:5000/api/product/variant", {
+          data: formik.values.variantId,
+        })
+        .then(({ data }) => {
+          console.log(data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     };
+
+    getProductsOrderList();
   }, [formik.values.variantId]);
 
-  console.log(formik.values.variantId);
+  // console.log(formik.values.variantId);
 
   return (
     <>
