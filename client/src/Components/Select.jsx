@@ -36,9 +36,11 @@ const Select = ({
 
   // If the selected menu has been initialized
   useEffect(() => {
-    const menu = selectMenu.filter((menu) => menu.value === defaultValue);
+    const menu = selectMenu?.filter((menu) => menu.value === defaultValue);
 
-    setSelectedMenu(menu[0]);
+    if (menu) {
+      setSelectedMenu(menu[0]);
+    }
   }, [defaultValue]);
 
   return (

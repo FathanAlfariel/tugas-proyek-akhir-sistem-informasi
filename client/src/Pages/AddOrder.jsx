@@ -5,6 +5,7 @@ import * as yup from "yup";
 import AddProductOrder from "../Components/AddProductOrder";
 import { Link } from "react-router-dom";
 import Button from "../Components/Button";
+import Select from "../Components/Select";
 import { IoWarning } from "react-icons/io5";
 import axios from "axios";
 
@@ -93,7 +94,7 @@ const AddOrder = () => {
         <div className="grid grid-cols-12 gap-x-6">
           <div className="col-span-7">
             {/* Informasi pemesan */}
-            <div>
+            <div className="mb-6">
               <h5 className="text-lg font-medium mb-2.5">Informasi pemesan</h5>
 
               <div className="flex flex-col gap-y-2">
@@ -122,6 +123,50 @@ const AddOrder = () => {
                 />
               </div>
             </div>
+
+            {/* Ongkir dan diskon pesanan */}
+            <div className="mb-6">
+              <h5 className="text-lg font-medium mb-2.5">
+                Ongkir dan discount
+              </h5>
+
+              <div className="flex flex-col gap-y-2">
+                <Input
+                  id="ongkir"
+                  type="text"
+                  name="ongkir"
+                  label="Ongkir"
+                  placeholder="Masukkan ongkir"
+                  onChange={formik.handleChange("ongkir")}
+                  onBlur={formik.handleBlur("ongkir")}
+                  value={formik.values.name}
+                  errorMessage={formik.touched.name && formik.errors.name}
+                />
+
+                <Input
+                  id="discount"
+                  type="text"
+                  name="discount"
+                  label="Discount"
+                  placeholder="Masukkan discount"
+                  onChange={formik.handleChange("discount")}
+                  onBlur={formik.handleBlur("discount")}
+                  value={formik.values.discount}
+                  errorMessage={
+                    formik.touched.discount && formik.errors.discount
+                  }
+                />
+              </div>
+            </div>
+
+            {/* Alamat pengiriman */}
+            <div>
+              <h5 className="text-lg font-medium mb-2.5">Alamat pengiriman</h5>
+
+              <div className="flex flex-col gap-y-2">
+                <Select label="Negara" placeholder="Pilih negara" />
+              </div>
+            </div>
           </div>
 
           <div className="col-span-5">
@@ -142,7 +187,7 @@ const AddOrder = () => {
           </div>
         </div>
 
-        <div className="fixed bottom-0 right-0 w-full flex justify-end items-center gap-x-2 mx-6 py-8 bg-white">
+        <div className="sticky bottom-0 right-0 w-full flex justify-end items-center gap-x-2 mx-6 py-8">
           <Link to={-1}>
             <Button type="button" buttonStyle="text-button">
               Cancel
