@@ -8,6 +8,7 @@ const Modal = ({
   setShowModal,
   onCancel,
   onSubmit,
+  singleActionButton,
 }) => {
   return (
     <>
@@ -25,28 +26,45 @@ const Modal = ({
             {/* Actions Button */}
             <div className="flex justify-end">
               <div className="flex items-center gap-x-2 py-6 pr-6 pl-2">
-                <Button
-                  onClick={() => {
-                    setShowModal(false);
-                    onCancel();
-                  }}
-                  type="button"
-                  buttonStyle="text-button"
-                >
-                  Cancel
-                </Button>
-                <Button
-                  onClick={() => {
-                    setShowModal(false);
-                    if (onSubmit) {
-                      onSubmit();
-                    }
-                  }}
-                  type="button"
-                  buttonStyle="text-button"
-                >
-                  Submit
-                </Button>
+                {singleActionButton ? (
+                  <Button
+                    onClick={() => {
+                      setShowModal(false);
+                      if (onSubmit) {
+                        onSubmit();
+                      }
+                    }}
+                    type="button"
+                    buttonStyle="text-button"
+                  >
+                    Submit
+                  </Button>
+                ) : (
+                  <>
+                    <Button
+                      onClick={() => {
+                        setShowModal(false);
+                        if (onSubmit) {
+                          onSubmit();
+                        }
+                      }}
+                      type="button"
+                      buttonStyle="text-button"
+                    >
+                      Submit
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        setShowModal(false);
+                        onCancel();
+                      }}
+                      type="button"
+                      buttonStyle="text-button"
+                    >
+                      Cancel
+                    </Button>
+                  </>
+                )}
               </div>
             </div>
           </div>

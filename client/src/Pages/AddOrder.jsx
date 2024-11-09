@@ -9,7 +9,7 @@ import { IoWarning } from "react-icons/io5";
 import axios from "axios";
 
 const AddOrder = () => {
-  // const [productsOrderList, setProductsOrderList] = useState([]);
+  const [productsOrderList, setProductsOrderList] = useState([]);
 
   const formik = useFormik({
     initialValues: {
@@ -57,7 +57,7 @@ const AddOrder = () => {
           data: formik.values.variantId,
         })
         .then(({ data }) => {
-          console.log(data);
+          setProductsOrderList(data.results);
         })
         .catch((err) => {
           console.log(err);
@@ -67,7 +67,23 @@ const AddOrder = () => {
     getProductsOrderList();
   }, [formik.values.variantId]);
 
-  // console.log(formik.values.variantId);
+  // Function to display an alert when the user wants to leave or refresh the page
+  useEffect(() => {
+    const handleBeforeUnload = (event) => {
+      const message =
+        "Anda memiliki perubahan yang belum disimpan. Apakah Anda yakin ingin meninggalkan halaman ini?";
+      event.returnValue = message; // Displays a confirmation dialog on most browsers
+      return message;
+    };
+
+    // Added 'beforeunload' event listener
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    // Cleanup: Removes event listener when component is unmounted
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, []);
 
   return (
     <>
@@ -110,7 +126,10 @@ const AddOrder = () => {
 
           <div className="col-span-5">
             {/* Produk yang dipesan */}
-            <AddProductOrder formik={formik} />
+            <AddProductOrder
+              formik={formik}
+              productsOrderList={productsOrderList}
+            />
 
             {formik.touched.productId && formik.errors.productId && (
               <div className="flex items-center mt-1.5">
@@ -123,7 +142,7 @@ const AddOrder = () => {
           </div>
         </div>
 
-        <div className="fixed bottom-0 right-0 flex justify-end items-center gap-x-2 mt-8 mx-6 py-8">
+        <div className="fixed bottom-0 right-0 w-full flex justify-end items-center gap-x-2 mx-6 py-8 bg-white">
           <Link to={-1}>
             <Button type="button" buttonStyle="text-button">
               Cancel
