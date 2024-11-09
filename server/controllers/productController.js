@@ -1,5 +1,6 @@
 const Product = require("../models/Product");
 const imageUpload = require("../middlewares/multerMiddleware");
+const mongoose = require("mongoose");
 
 // Image Upload Controller
 const uploadImages = async (req, res) => {
@@ -161,6 +162,39 @@ const updateProduct = async (req, res) => {
   }
 };
 
+// Get product by variant id
+const getProductByVariantId = async (req, res) => {
+  try {
+    const query = await Product.aggregate([
+      {
+        $match: {
+          variants: { $elemMatch: { _id: new mongoose.Types.ObjectId(id) } },
+        },
+      },
+      {
+        $project: {
+          name: 1, // Menampilkan nama produk
+          description: 1, // Menampilkan deskripsi produk
+          variants: {
+            $filter: {
+              input: "$variants", // Array variants dari produk
+              as: "variant",
+              cond: {
+                $eq: ["$$variant._id", new mongoose.Types.ObjectId(id)],
+              }, // Menyaring variant dengan _id yang sesuai
+            },
+          },
+        },
+      },
+    ]);
+
+    return res.status(200).json({ message: "Success", results: query });
+  } catch (err) {
+    console.log("Error :" + err);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 module.exports = {
   uploadImages,
   addProduct,
@@ -169,4 +203,5 @@ module.exports = {
   deleteProduct,
   getProductById,
   updateProduct,
+  getProductByVariantId,
 };

@@ -2,10 +2,12 @@ import React, { useEffect, useState } from "react";
 import { FiPlus } from "react-icons/fi";
 import Modal from "../Components/Modal";
 import axios from "axios";
+import { IoChevronDownOutline, IoCheckmarkSharp } from "react-icons/io5";
 
 const AddProductOrder = ({ formik }) => {
   const [showModal, setShowModal] = useState(false);
   const [products, setProducts] = useState([]);
+  const [showTotalSelectionsMenu, setShowTotalSelectionsMenu] = useState({});
 
   const handleShowModal = () => {
     setShowModal(true);
@@ -26,75 +28,18 @@ const AddProductOrder = ({ formik }) => {
     getAllProducts();
   }, []);
 
-  const handleSelectedVariant = (productId, variantId, isChecked) => {
-    const existingProduct = formik.values.productId.find(
-      (item) => item.product === productId
-    );
-
-    if (isChecked) {
-      // Add the variant if it doesn't exist
-      if (existingProduct) {
-        const updatedVariants = [
-          ...existingProduct.variants,
-          { variant: variantId, total: 0 },
-        ];
-        const updatedProductList = formik.values.productId.map((item) =>
-          item.product === productId
-            ? { ...item, variants: updatedVariants }
-            : item
-        );
-        formik.setFieldValue("productId", updatedProductList);
-      } else {
-        formik.setFieldValue("productId", [
-          ...formik.values.productId,
-          {
-            product: productId,
-            variants: [{ variant: variantId, total: 0 }],
-          },
-        ]);
-      }
-    } else {
-      // Remove the variant if it exists
-      if (existingProduct) {
-        const updatedVariants = existingProduct.variants.filter(
-          (variant) => variant.variant !== variantId
-        );
-
-        const updatedProductList =
-          updatedVariants.length > 0
-            ? formik.values.productId.map((item) =>
-                item.product === productId
-                  ? { ...item, variants: updatedVariants }
-                  : item
-              )
-            : formik.values.productId.filter(
-                (item) => item.product !== productId
-              );
-
-        formik.setFieldValue("productId", updatedProductList);
-      }
+  // Closes the menu when the user clicks outside the div
+  useEffect(() => {
+    if (showTotalSelectionsMenu) {
+      window.addEventListener("click", (e) => {
+        if (!document.getElementById("total-menu").contains(e.target)) {
+          setShowMenu(false);
+        }
+      });
     }
-  };
+  }, [showTotalSelectionsMenu]);
 
-  const handleTotal = (productId, variantId, value) => {
-    const updatedProductList = formik.values.productId.map((item) => {
-      if (item.product === productId) {
-        const updatedVariantTotal = item.variants.map((v) => {
-          if (v.variant === variantId) {
-            return { ...v, total: value };
-          }
-
-          return v;
-        });
-
-        return { ...item, variants: updatedVariantTotal };
-      }
-
-      return item;
-    });
-
-    formik.setFieldValue("productId", updatedProductList);
-  };
+  console.log(showTotalSelectionsMenu);
 
   return (
     <>
@@ -146,15 +91,6 @@ const AddProductOrder = ({ formik }) => {
                       {/* Variants */}
                       <ul className="grid grid-cols-3 gap-x-2 gap-y-2">
                         {product.variants.map((variant, index) => {
-                          const isVariantSelected =
-                            formik.values.productId.find(
-                              (item) =>
-                                item.product === product._id &&
-                                item.variants.some(
-                                  (v) => v.variant === variant._id
-                                )
-                            );
-
                           return (
                             <li key={index}>
                               <label
@@ -183,44 +119,107 @@ const AddProductOrder = ({ formik }) => {
                                   id={`variant${variant._id}`}
                                   className="hidden"
                                   value={variant._id}
-                                  onChange={(e) =>
-                                    handleSelectedVariant(
-                                      product._id,
-                                      variant._id,
-                                      e.target.checked
-                                    )
-                                  }
+                                  onChange={(e) => {
+                                    if (e.target.checked) {
+                                      // If checked then add variant id to variantId
+                                      formik.setFieldValue("variantId", [
+                                        ...formik.values.variantId,
+                                        {
+                                          id: variant._id,
+                                          total: 1,
+                                        },
+                                      ]);
+                                    } else {
+                                      // If unchecked then delete variant id from variantId
+                                      const deleteVariant =
+                                        formik.values.variantId.filter(
+                                          (item) => item.id !== variant._id
+                                        );
+
+                                      formik.setFieldValue(
+                                        "variantId",
+                                        deleteVariant
+                                      );
+                                    }
+                                  }}
                                 />
                               </label>
 
                               {/* Total dibeli */}
-                              {isVariantSelected && (
-                                <div className="flex items-center gap-x-2 w-full mt-1">
-                                  <label
-                                    htmlFor={`total${variant._id}`}
-                                    className="text-xs font-medium text-nowrap"
-                                  >
+                              {formik.values.variantId.find(
+                                (item) => item.id === variant._id
+                              ) && (
+                                <div className="flex items-center gap-x-2 w-full">
+                                  <p className="text-xs font-medium text-nowrap">
                                     Total dibeli:
-                                  </label>
+                                  </p>
 
-                                  <input
-                                    id={`total${variant._id}`}
-                                    name="total"
-                                    type="number"
-                                    min={1}
-                                    max={100}
-                                    placeholder="Masukkan total dibeli"
-                                    className="outline-none w-full text-xs"
-                                    autoFocus
-                                    defaultValue={1}
-                                    onChange={(e) => {
-                                      handleTotal(
-                                        product._id,
-                                        variant._id,
-                                        e.target.value
-                                      );
-                                    }}
-                                  />
+                                  <div className="relative" id="total-menu">
+                                    <button
+                                      type="button"
+                                      onClick={() =>
+                                        setShowTotalSelectionsMenu(
+                                          formik.values.variantId.find(
+                                            (item) => item.id === variant._id
+                                          )
+                                        )
+                                      }
+                                      className="flex items-center gap-x-1 py-1 px-2 text-xs text-[#71717a] border rounded-md shadow-sm"
+                                    >
+                                      Pilih total dibeli
+                                      <span>
+                                        <IoChevronDownOutline className="transition-all duration-300" />
+                                      </span>
+                                    </button>
+
+                                    {showTotalSelectionsMenu && (
+                                      <div className="absolute top-auto left-auto w-full py-2 bg-white border rounded-xl max-h-28 overflow-y-auto">
+                                        <ul className="flex flex-col gap-y-0.5">
+                                          {(() => {
+                                            const items = [];
+                                            for (
+                                              let i = 1;
+                                              i <= variant.size.stock;
+                                              i++
+                                            ) {
+                                              items.push(
+                                                <li key={i}>
+                                                  <button
+                                                    type="button"
+                                                    className="flex items-center gap-x-4 w-full pl-4 pr-6 py-2 text-xs hover:bg-[#1D1B20]/[.08]"
+                                                  >
+                                                    {(() => {
+                                                      const getStock =
+                                                        formik.values.variantId.find(
+                                                          (item) =>
+                                                            item.id ===
+                                                            variant._id
+                                                        );
+
+                                                      return getStock.total ===
+                                                        i ? (
+                                                        <span>
+                                                          <IoCheckmarkSharp className="text-base" />
+                                                        </span>
+                                                      ) : (
+                                                        <span>
+                                                          <IoCheckmarkSharp className="invisible text-base" />
+                                                        </span>
+                                                      );
+                                                    })()}
+
+                                                    {i}
+                                                  </button>
+                                                </li>
+                                              );
+                                            }
+
+                                            return items;
+                                          })()}
+                                        </ul>
+                                      </div>
+                                    )}
+                                  </div>
                                 </div>
                               )}
                             </li>

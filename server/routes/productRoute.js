@@ -9,6 +9,7 @@ const {
   deleteProduct,
   getProductById,
   updateProduct,
+  getProductByVariantId,
 } = require("../controllers/productController");
 
 // Upload images route
@@ -31,5 +32,8 @@ router.get("/:id", getProductById);
 
 // Update product
 router.put("/:id", updateProduct);
+
+// Update product
+router.get("/variant/:id", getProductByVariantId);
 
 module.exports = router;

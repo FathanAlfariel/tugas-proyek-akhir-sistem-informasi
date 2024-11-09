@@ -15,7 +15,7 @@ const Modal = ({
         <div className="fixed inset-0 flex justify-center items-center bg-black/[0.5] z-10">
           <div className="w-full min-w-72 max-w-4xl bg-white rounded-[28px]">
             {/* Header and Content */}
-            <div className="flex flex-col gap-y-4 pt-6 px-6">
+            <div className="flex flex-col gap-y-6 pt-6 px-6">
               {/* Header */}
               <h3 className="text-2xl text-[#1D1B20]">{headerTitle}</h3>
 

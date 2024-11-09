@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Input from "../Components/Input";
 import { useFormik } from "formik";
 import * as yup from "yup";
@@ -6,32 +6,32 @@ import AddProductOrder from "../Components/AddProductOrder";
 import { Link } from "react-router-dom";
 import Button from "../Components/Button";
 import { IoWarning } from "react-icons/io5";
+import axios from "axios";
 
 const AddOrder = () => {
+  // const [productsOrderList, setProductsOrderList] = useState([]);
+
   const formik = useFormik({
     initialValues: {
       shippingReceipt: "",
-      productId: [],
+      variantId: [],
       name: "",
       phone: "",
       address: {},
     },
     validationSchema: yup.object({
       shippingReceipt: yup.string().required("Resi pemesanan harus diisi."),
-      productId: yup
-        .array()
-        .of(
-          yup.object({
-            product: yup.string(),
-            variants: yup.array().of(
-              yup.object({
-                variantId: yup.string(),
-                total: yup.number().typeError("Tolong masukkan hanya angka."),
-              })
-            ),
-          })
-        )
-        .min(1, "Produk pesanan harus diisi."),
+      variantId: yup.array().of(
+        yup.object({
+          id: yup.string(),
+          total: yup
+            .number()
+            .typeError("Tolong masukkan angka.")
+            .required("Total harus diisi.")
+            .min(1, "Total minimal adalah 1.")
+            .max(100, "Total maksimal adalah 100."),
+        })
+      ),
       name: yup.string().required("Nama pemesan harus diisi."),
       phone: yup
         .number()
@@ -49,6 +49,30 @@ const AddOrder = () => {
       console.log(values);
     },
   });
+
+  // useEffect(() => {
+  //   // console.log(formik.values.productId);
+  //   const getProductOrderList = async () => {
+  //     if (formik.values.productId.length > 0) {
+  //       for (let i = 0; i <= formik.values.productId.length; i++) {
+  //         await axios
+  //           .get(
+  //             `http://localhost:5000/api/product/${formik.values.productId[i].product}`
+  //           )
+  //           .then(({ data }) => {
+  //             formik.values.productId[i].variants.filter((item) => {});
+  //           })
+  //           .catch((err) => {
+  //             console.log(err);
+  //           });
+  //       }
+  //     }
+  //   };
+
+  //   getProductOrderList();
+  // }, [formik.values.productId]);
+
+  // console.log(productsOrderList);
 
   return (
     <>
