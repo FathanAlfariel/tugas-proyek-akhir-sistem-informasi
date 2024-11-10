@@ -6,6 +6,7 @@ import {
 } from "react-icons/io5";
 
 const Select = ({
+  id,
   label,
   placeholder,
   selectMenu,
@@ -18,7 +19,12 @@ const Select = ({
   const [showSelectMenu, setShowSelectMenu] = useState(false);
   const [selectedMenu, setSelectedMenu] = useState(null);
 
-  const [filteredMenu, setFilteredMenu] = useState([]);
+  const [filteredMenu, setFilteredMenu] = useState();
+  const [searchValue, setSearchValue] = useState("");
+
+  useEffect(() => {
+    setFilteredMenu(selectMenu);
+  }, [selectMenu]);
 
   const handleShowSelectMenu = () => {
     setShowSelectMenu((prev) => !prev);
@@ -28,7 +34,7 @@ const Select = ({
   useEffect(() => {
     if (showSelectMenu) {
       window.addEventListener("click", (e) => {
-        if (!document.getElementById("select-menu").contains(e.target)) {
+        if (!document.getElementById(id).contains(e.target)) {
           setShowSelectMenu(false);
         }
       });
@@ -51,17 +57,17 @@ const Select = ({
     }
   }, [defaultValue]);
 
-  const handleSearch = (e) => {
+  useEffect(() => {
     const filteredItems = selectMenu.filter((item) =>
-      item.label.toLowerCase().includes(e.target.value.toLowerCase())
+      item.label.toLowerCase().includes(searchValue)
     );
 
     setFilteredMenu(filteredItems);
-  };
+  }, [searchValue]);
 
   return (
     <>
-      <div id="select-menu" className="relative">
+      <div id={id} className="relative">
         <button
           onClick={handleShowSelectMenu}
           type="button"
@@ -107,60 +113,42 @@ const Select = ({
                     type="text"
                     placeholder="Search"
                     className="outline-none w-full text-sm"
-                    onChange={(e) => handleSearch(e)}
+                    onChange={(e) =>
+                      setSearchValue(e.target.value.toLowerCase())
+                    }
                   />
                 </div>
               </div>
             )}
 
             <ul className="flex flex-col gap-y-0.5">
-              {filteredMenu.length > 0
-                ? filteredMenu &&
-                  filteredMenu.map((menu, key) => {
-                    return (
-                      <li key={key}>
-                        <button
-                          onClick={() => handleSelectedMenu(menu)}
-                          className="flex items-center gap-x-4 w-full pl-4 pr-6 py-2 text-sm hover:bg-[#1D1B20]/[.08]"
-                        >
-                          {selectedMenu?.value === menu?.value ? (
-                            <span>
-                              <IoCheckmarkSharp className="text-xl" />
-                            </span>
-                          ) : (
-                            <span>
-                              <IoCheckmarkSharp className="invisible text-xl" />
-                            </span>
-                          )}
-
-                          {menu?.label}
-                        </button>
-                      </li>
-                    );
-                  })
-                : selectMenu &&
-                  selectMenu.map((menu, key) => {
-                    return (
-                      <li key={key}>
-                        <button
-                          onClick={() => handleSelectedMenu(menu)}
-                          className="flex items-center gap-x-4 w-full pl-4 pr-6 py-2 text-sm hover:bg-[#1D1B20]/[.08]"
-                        >
-                          {selectedMenu?.value === menu?.value ? (
-                            <span>
-                              <IoCheckmarkSharp className="text-xl" />
-                            </span>
-                          ) : (
-                            <span>
-                              <IoCheckmarkSharp className="invisible text-xl" />
-                            </span>
-                          )}
-
-                          {menu?.label}
-                        </button>
-                      </li>
-                    );
-                  })}
+              {filteredMenu.length > 0 ? (
+                filteredMenu.map((menu, key) => (
+                  <li key={key}>
+                    <button
+                      type="button"
+                      onClick={() => handleSelectedMenu(menu)}
+                      className="flex items-center gap-x-4 w-full pl-4 pr-6 py-2 text-sm hover:bg-[#1D1B20]/[.08]"
+                    >
+                      {selectedMenu?.value === menu?.value ? (
+                        <span>
+                          <IoCheckmarkSharp className="text-xl" />
+                        </span>
+                      ) : (
+                        <span>
+                          <IoCheckmarkSharp className="invisible text-xl" />
+                        </span>
+                      )}
+                      {menu?.label}
+                    </button>
+                  </li>
+                ))
+              ) : (
+                // Jika sedang mencari dan tidak ada hasil
+                <li className="text-center py-2 text-sm text-gray-500">
+                  Tidak ada data yang cocok
+                </li>
+              )}
             </ul>
           </div>
         )}

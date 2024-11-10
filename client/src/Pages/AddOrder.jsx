@@ -156,8 +156,8 @@ const AddOrder = () => {
                   placeholder="Masukkan ongkir"
                   onChange={formik.handleChange("ongkir")}
                   onBlur={formik.handleBlur("ongkir")}
-                  value={formik.values.name}
-                  errorMessage={formik.touched.name && formik.errors.name}
+                  value={formik.values.ongkir}
+                  errorMessage={formik.touched.ongkir && formik.errors.ongkir}
                 />
 
                 <Input
@@ -182,8 +182,42 @@ const AddOrder = () => {
 
               <div className="flex flex-col gap-y-2">
                 <Select
+                  id="country"
                   label="Negara"
                   placeholder="Pilih negara"
+                  selectMenu={countries}
+                  setSelectMenu={setCountries}
+                  showSearch={true}
+                />
+
+                <Input
+                  id="alamat"
+                  type="text"
+                  name="alamat"
+                  label="Alamat"
+                  placeholder="Nama jalan, gedung, no. rumah"
+                  onChange={formik.handleChange("alamat")}
+                  onBlur={formik.handleBlur("alamat")}
+                  value={formik.values.alamat}
+                  errorMessage={formik.touched.alamat && formik.errors.alamat}
+                />
+
+                <Input
+                  id="detail"
+                  type="text"
+                  name="detail"
+                  label="Detail lainnya"
+                  placeholder="Blok / Unit no. patokan"
+                  onChange={formik.handleChange("detail")}
+                  onBlur={formik.handleBlur("detail")}
+                  value={formik.values.detail}
+                  errorMessage={formik.touched.detail && formik.errors.detail}
+                />
+
+                <Select
+                  id="province"
+                  label="Negara Bagian / Provinsi / Wilayah"
+                  placeholder="Pilih negara bagian / provinsi / wilayah"
                   selectMenu={countries}
                   setSelectMenu={setCountries}
                   showSearch={true}
