@@ -15,6 +15,7 @@ const Select = ({
   defaultValue,
   value,
   errorMessage,
+  disabled = false,
 }) => {
   const [showSelectMenu, setShowSelectMenu] = useState(false);
   const [selectedMenu, setSelectedMenu] = useState(null);
@@ -75,6 +76,7 @@ const Select = ({
           onClick={handleShowSelectMenu}
           type="button"
           className="w-full flex items-center py-2 px-3 border-2 rounded-xl text-sm cursor-pointer"
+          disabled={disabled}
         >
           <div className="grow flex flex-col text-left">
             <p className="text-[#52525B]">{label}</p>
