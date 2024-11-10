@@ -75,7 +75,7 @@ const Select = ({
         <button
           onClick={handleShowSelectMenu}
           type="button"
-          className="w-full flex items-center py-2 px-3 border-2 rounded-xl text-sm cursor-pointer"
+          className="w-full flex items-center py-2 px-3 border-2 rounded-xl text-sm cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
           disabled={disabled}
         >
           <div className="grow flex flex-col text-left">
