@@ -11,6 +11,7 @@ import axios from "axios";
 
 const AddOrder = () => {
   const [productsOrderList, setProductsOrderList] = useState([]);
+  const [countries, setCountries] = useState([]);
 
   const formik = useFormik({
     initialValues: {
@@ -84,6 +85,22 @@ const AddOrder = () => {
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
+  }, []);
+
+  // Get all countries
+  useEffect(() => {
+    const getCountries = async () => {
+      await axios
+        .get("http://localhost:5000/api/country")
+        .then(({ data }) => {
+          setCountries(data.results);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
+
+    getCountries();
   }, []);
 
   return (
@@ -164,7 +181,13 @@ const AddOrder = () => {
               <h5 className="text-lg font-medium mb-2.5">Alamat pengiriman</h5>
 
               <div className="flex flex-col gap-y-2">
-                <Select label="Negara" placeholder="Pilih negara" />
+                <Select
+                  label="Negara"
+                  placeholder="Pilih negara"
+                  selectMenu={countries}
+                  setSelectMenu={setCountries}
+                  showSearch={true}
+                />
               </div>
             </div>
           </div>
