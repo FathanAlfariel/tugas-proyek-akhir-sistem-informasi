@@ -199,6 +199,7 @@ const AddOrder = () => {
               <h5 className="text-lg font-medium mb-2.5">Alamat pengiriman</h5>
 
               <div className="flex flex-col gap-y-2">
+                {/* Country selection */}
                 <Select
                   id="country"
                   label="Negara"
@@ -233,6 +234,7 @@ const AddOrder = () => {
                   errorMessage={formik.touched.detail && formik.errors.detail}
                 />
 
+                {/* State selection */}
                 <Select
                   id="province"
                   label="Negara Bagian / Provinsi / Wilayah"
@@ -240,6 +242,7 @@ const AddOrder = () => {
                   selectMenu={states}
                   setSelectMenu={setStates}
                   showSearch={true}
+                  disabled={selectedCountry === "" ? true : false}
                 />
               </div>
             </div>
