@@ -209,7 +209,6 @@ const AddOrder = () => {
                   showSearch={true}
                   value={(value) => setSelectedCountry(value)}
                 />
-
                 <Input
                   id="alamat"
                   type="text"
@@ -221,7 +220,6 @@ const AddOrder = () => {
                   value={formik.values.alamat}
                   errorMessage={formik.touched.alamat && formik.errors.alamat}
                 />
-
                 <Input
                   id="detail"
                   type="text"
@@ -244,6 +242,38 @@ const AddOrder = () => {
                   showSearch={true}
                   disabled={selectedCountry === "" ? true : false}
                 />
+
+                <div className="flex items-center gap-x-2">
+                  <div className="w-full">
+                    {/* City selection */}
+                    <Select
+                      id="city"
+                      label="Kota"
+                      placeholder="Pilih kota"
+                      selectMenu={states}
+                      setSelectMenu={setStates}
+                      showSearch={true}
+                      // disabled={selectedCountry === "" ? true : false}
+                    />
+                  </div>
+
+                  <div className="w-full">
+                    {/* Postal code */}
+                    <Input
+                      id="postal_code"
+                      type="text"
+                      name="postal_code"
+                      label="Kode pos"
+                      placeholder="Masukkan kode pos"
+                      onChange={formik.handleChange("postal_code")}
+                      onBlur={formik.handleBlur("postal_code")}
+                      value={formik.values.postal_code}
+                      errorMessage={
+                        formik.touched.postal_code && formik.errors.postal_code
+                      }
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
