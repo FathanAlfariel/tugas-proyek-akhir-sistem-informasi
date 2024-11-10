@@ -44,8 +44,6 @@ const Select = ({
   const handleSelectedMenu = (menu) => {
     setSelectedMenu(menu);
     value(menu?.value);
-
-    setShowSelectMenu(false);
   };
 
   // If the selected menu has been initialized
@@ -58,6 +56,11 @@ const Select = ({
   }, [defaultValue]);
 
   useEffect(() => {
+    if (searchValue === "") {
+      setFilteredMenu(selectMenu);
+      return;
+    }
+
     const filteredItems = selectMenu.filter((item) =>
       item.label.toLowerCase().includes(searchValue)
     );
@@ -122,12 +125,16 @@ const Select = ({
             )}
 
             <ul className="flex flex-col gap-y-0.5">
-              {filteredMenu.length > 0 ? (
+              {filteredMenu?.length > 0 ? (
                 filteredMenu.map((menu, key) => (
                   <li key={key}>
                     <button
                       type="button"
-                      onClick={() => handleSelectedMenu(menu)}
+                      onClick={() => {
+                        handleSelectedMenu(menu);
+                        setSearchValue("");
+                        setShowSelectMenu(false);
+                      }}
                       className="flex items-center gap-x-4 w-full pl-4 pr-6 py-2 text-sm hover:bg-[#1D1B20]/[.08]"
                     >
                       {selectedMenu?.value === menu?.value ? (

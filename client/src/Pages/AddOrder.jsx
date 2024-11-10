@@ -12,6 +12,8 @@ import axios from "axios";
 const AddOrder = () => {
   const [productsOrderList, setProductsOrderList] = useState([]);
   const [countries, setCountries] = useState([]);
+  const [selectedCountry, setSelectedCountry] = useState("");
+  const [states, setStates] = useState([]);
 
   const formik = useFormik({
     initialValues: {
@@ -103,6 +105,22 @@ const AddOrder = () => {
     getCountries();
   }, []);
 
+  // Get state by selected country
+  useEffect(() => {
+    const getStates = async () => {
+      await axios
+        .get(`http://localhost:5000/api/country/state?state=${selectedCountry}`)
+        .then(({ data }) => {
+          setStates(data.results);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
+
+    getStates();
+  }, [selectedCountry]);
+
   return (
     <>
       <h1 className="text-[28px] leading-9 font-medium mb-6">Tambah pesanan</h1>
@@ -188,6 +206,7 @@ const AddOrder = () => {
                   selectMenu={countries}
                   setSelectMenu={setCountries}
                   showSearch={true}
+                  value={(value) => setSelectedCountry(value)}
                 />
 
                 <Input
@@ -218,8 +237,8 @@ const AddOrder = () => {
                   id="province"
                   label="Negara Bagian / Provinsi / Wilayah"
                   placeholder="Pilih negara bagian / provinsi / wilayah"
-                  selectMenu={countries}
-                  setSelectMenu={setCountries}
+                  selectMenu={states}
+                  setSelectMenu={setStates}
                   showSearch={true}
                 />
               </div>
