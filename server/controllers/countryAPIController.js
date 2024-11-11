@@ -1,29 +1,22 @@
 const axios = require("axios");
+const Country = require("country-state-city").Country;
+const State = require("country-state-city").State;
+const City = require("country-state-city").City;
 
 const getAllCountries = async (req, res) => {
   try {
-    const query = await axios
-      .get("https://www.universal-tutorial.com/api/countries/", {
-        headers: {
-          Authorization: `Bearer ${process.env.COUNTRY_AUTH_TOKEN}`,
-          Accept: "application/json",
-        },
-      })
-      .then(({ data }) => {
-        return data
-          .map((item) => ({
-            label: item.country_name,
-            value: item.country_name,
-          }))
-          .sort((a, b) => a.label.localeCompare(b.label)); // Urutkan A-Z berdasarkan label
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    const query = await Country.getAllCountries();
+
+    const results = query
+      .map((item) => ({
+        label: item.name,
+        value: item.isoCode,
+      }))
+      .sort((a, b) => a.label.localeCompare(b.label)); // Urutkan A-Z berdasarkan label
 
     return res.status(200).json({
       message: "Successfully get all country",
-      results: query,
+      results: results,
     });
   } catch (err) {
     console.log("Error :" + err);
@@ -31,33 +24,21 @@ const getAllCountries = async (req, res) => {
   }
 };
 
-const getStateBySelectedCountry = async (req, res) => {
-  const { state } = req.query;
+const getStatesBySelectedCountry = async (req, res) => {
+  const { country } = req.query;
 
   try {
-    if (state) {
-      const query = await axios
-        .get(`https://www.universal-tutorial.com/api/states/${state}`, {
-          headers: {
-            Authorization: `Bearer ${process.env.COUNTRY_AUTH_TOKEN}`,
-            Accept: "application/json",
-          },
-        })
-        .then(({ data }) => {
-          return data
-            .map((item) => ({
-              label: item.state_name,
-              value: item.state_name,
-            }))
-            .sort((a, b) => a.label.localeCompare(b.label)); // Urutkan A-Z berdasarkan label
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+    if (country) {
+      const query = await State.getStatesOfCountry(country);
+
+      const results = query.map((item) => ({
+        label: item.name,
+        value: item.isoCode,
+      }));
 
       return res.status(200).json({
         message: "Successfully get all states",
-        results: query,
+        results: results,
       });
     }
   } catch (err) {
@@ -66,4 +47,31 @@ const getStateBySelectedCountry = async (req, res) => {
   }
 };
 
-module.exports = { getAllCountries, getStateBySelectedCountry };
+const getCitiesBySelectedState = async (req, res) => {
+  const { countryCode, stateCode } = req.query;
+
+  try {
+    if (countryCode && stateCode) {
+      const query = await City.getCitiesOfState(countryCode, stateCode);
+
+      const results = query.map((item) => ({
+        label: item.name,
+        value: item.name,
+      }));
+
+      console.log(query);
+      return res
+        .status(200)
+        .json({ message: "Successfully get all cities", results: results });
+    }
+  } catch (err) {
+    console.log("Error :" + err);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+module.exports = {
+  getAllCountries,
+  getStatesBySelectedCountry,
+  getCitiesBySelectedState,
+};

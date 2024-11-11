@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IoEye, IoEyeOff, IoWarning } from "react-icons/io5";
 
 const Input = ({
@@ -11,7 +11,14 @@ const Input = ({
   onChange,
   onBlur,
   errorMessage,
+  disabled,
 }) => {
+  const [isDisabled, setIsDisabled] = useState(false);
+
+  useEffect(() => {
+    setIsDisabled(disabled);
+  }, [disabled]);
+
   // Handle Show / Hidden Password
   const [showPassword, setShowPassword] = useState(false);
   const handleShowPassword = () => {
@@ -26,9 +33,18 @@ const Input = ({
     <>
       <div className="flex flex-col">
         {type === "password" ? (
-          <div className="w-full py-2 px-3 flex border-2 rounded-xl text-sm">
+          <div
+            className={`w-full py-2 px-3 flex border-2 rounded-xl text-sm ${
+              isDisabled && "cursor-not-allowed opacity-50"
+            }`}
+          >
             <div className="flex flex-col w-full">
-              <label htmlFor={id} className="text-[#52525B]">
+              <label
+                htmlFor={id}
+                className={`text-[#52525B] ${
+                  isDisabled && "cursor-not-allowed"
+                }`}
+              >
                 {label}
               </label>
 
@@ -42,11 +58,12 @@ const Input = ({
                       : "password"
                     : type
                 }
-                className="outline-none placeholder:text-[#71717a]"
+                className="outline-none placeholder:text-[#71717a] disabled:cursor-not-allowed"
                 placeholder={placeholder}
                 onChange={onChange}
                 onBlur={onBlur}
                 value={value}
+                disabled={isDisabled}
               />
             </div>
 
@@ -65,8 +82,15 @@ const Input = ({
             </div>
           </div>
         ) : (
-          <div className="w-full py-2 px-3 flex flex-col border-2 rounded-xl text-sm">
-            <label htmlFor={id} className="text-[#52525B]">
+          <div
+            className={`w-full py-2 px-3 flex flex-col border-2 rounded-xl text-sm ${
+              isDisabled && "cursor-not-allowed opacity-50"
+            }`}
+          >
+            <label
+              htmlFor={id}
+              className={`text-[#52525B] ${isDisabled && "cursor-not-allowed"}`}
+            >
               {label}
             </label>
 
@@ -75,10 +99,11 @@ const Input = ({
               name={name}
               type={type}
               placeholder={placeholder}
-              className="outline-none placeholder:text-[#71717a]"
+              className="outline-none placeholder:text-[#71717a] disabled:cursor-not-allowed"
               onChange={onChange}
               onBlur={onBlur}
               value={value}
+              disabled={isDisabled}
             />
           </div>
         )}

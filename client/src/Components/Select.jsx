@@ -3,6 +3,7 @@ import {
   IoChevronDownOutline,
   IoCheckmarkSharp,
   IoSearchSharp,
+  IoWarning,
 } from "react-icons/io5";
 
 const Select = ({
@@ -103,7 +104,7 @@ const Select = ({
 
         {showSelectMenu && (
           <div
-            className={`max-h-64 w-full absolute top-auto right-0 ${
+            className={`absolute max-h-64 w-full top-auto right-0 ${
               showSearch ? "pb-2.5" : "py-2.5"
             } shadow bg-white rounded-2xl border border-[#F1F1F1] z-10 mt-1 overflow-y-auto`}
           >
@@ -161,18 +162,19 @@ const Select = ({
             </ul>
           </div>
         )}
-      </div>
 
-      {errorMessage && (
-        <>
-          <div className="flex items-center mt-1.5">
-            <IoWarning className="text-xs text-red-600 dark:text-red-500" />
-            <p className="ml-1.5 text-xs text-red-600 dark:text-red-500">
-              {errorMessage}
-            </p>
-          </div>
-        </>
-      )}
+        {/* Error message */}
+        {errorMessage && (
+          <>
+            <div className="flex items-center mt-1.5">
+              <IoWarning className="text-xs text-red-600 dark:text-red-500" />
+              <p className="ml-1.5 text-xs text-red-600 dark:text-red-500">
+                {errorMessage}
+              </p>
+            </div>
+          </>
+        )}
+      </div>
     </>
   );
 };

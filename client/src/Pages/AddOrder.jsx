@@ -14,6 +14,9 @@ const AddOrder = () => {
   const [countries, setCountries] = useState([]);
   const [selectedCountry, setSelectedCountry] = useState("");
   const [states, setStates] = useState([]);
+  const [selectedState, setSelectedState] = useState("");
+  const [cities, setCities] = useState([]);
+  const [selectedCity, setSelectedCity] = useState("");
 
   const formik = useFormik({
     initialValues: {
@@ -21,32 +24,43 @@ const AddOrder = () => {
       variantId: [],
       name: "",
       phone: "",
-      address: {},
+      address: {
+        country: "",
+        address: "",
+        moreDetails: "",
+        province: "",
+        city: "",
+        postalCode: "",
+      },
     },
     validationSchema: yup.object({
       shippingReceipt: yup.string().required("Resi pemesanan harus diisi."),
-      variantId: yup.array().of(
-        yup.object({
-          id: yup.string(),
-          total: yup
-            .number()
-            .typeError("Tolong masukkan angka.")
-            .required("Total harus diisi.")
-            .min(1, "Total minimal adalah 1.")
-            .max(100, "Total maksimal adalah 100."),
-        })
-      ),
+      variantId: yup
+        .array()
+        .of(
+          yup.object({
+            id: yup.string(),
+            total: yup
+              .number()
+              .typeError("Tolong masukkan angka.")
+              .required("Total harus diisi.")
+              .min(1, "Total minimal adalah 1.")
+              .max(100, "Total maksimal adalah 100."),
+          })
+        )
+        .min(1, "Produk harus diisi."),
       name: yup.string().required("Nama pemesan harus diisi."),
       phone: yup
         .number()
         .typeError("Tolong masukkan hanya angka.")
         .required("Nomor telepon pemesan harus diisi."),
       address: yup.object({
-        city: yup.string().required("Kota harus diisi."),
-        province: yup.string().required("Provinsi harus diisi."),
-        district: yup.string().required("Kecamatan harus diisi."),
-        postalCode: yup.string().required("Kode pos harus diisi."),
         country: yup.string().required("Negara harus diisi."),
+        address: yup.string().required("Alamat harus diisi."),
+        moreDetails: yup.string(),
+        province: yup.string().required("Provinsi harus diisi."),
+        city: yup.string().required("Kota harus diisi."),
+        postalCode: yup.string().required("Kode pos harus diisi."),
       }),
     }),
     onSubmit: async (values) => {
@@ -105,11 +119,13 @@ const AddOrder = () => {
     getCountries();
   }, []);
 
-  // Get state by selected country
+  // Get states by selected country
   useEffect(() => {
     const getStates = async () => {
       await axios
-        .get(`http://localhost:5000/api/country/state?state=${selectedCountry}`)
+        .get(
+          `http://localhost:5000/api/country/states?country=${selectedCountry}`
+        )
         .then(({ data }) => {
           setStates(data.results);
         })
@@ -120,6 +136,23 @@ const AddOrder = () => {
 
     getStates();
   }, [selectedCountry]);
+
+  // Get cities by selected country
+  useEffect(() => {
+    const getCities = async () => {
+      await axios
+        .get(
+          `http://localhost:5000/api/country/cities?countryCode=${selectedCountry}&stateCode=${selectedState}`
+        )
+        .then(({ data }) => {
+          setCities(data.results);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
+    getCities();
+  }, [selectedCountry, selectedState]);
 
   return (
     <>
@@ -208,28 +241,40 @@ const AddOrder = () => {
                   setSelectMenu={setCountries}
                   showSearch={true}
                   value={(value) => setSelectedCountry(value)}
+                  errorMessage={
+                    formik.touched.address?.country &&
+                    formik.errors.address?.country
+                  }
                 />
+
                 <Input
-                  id="alamat"
+                  id="address"
                   type="text"
-                  name="alamat"
+                  name="address.address"
                   label="Alamat"
                   placeholder="Nama jalan, gedung, no. rumah"
-                  onChange={formik.handleChange("alamat")}
-                  onBlur={formik.handleBlur("alamat")}
-                  value={formik.values.alamat}
-                  errorMessage={formik.touched.alamat && formik.errors.alamat}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.address.address}
+                  errorMessage={
+                    formik.touched.address?.address &&
+                    formik.errors.address?.address
+                  }
                 />
+
                 <Input
-                  id="detail"
+                  id="moreDetails"
                   type="text"
-                  name="detail"
+                  name="address.moreDetails"
                   label="Detail lainnya"
                   placeholder="Blok / Unit no. patokan"
-                  onChange={formik.handleChange("detail")}
-                  onBlur={formik.handleBlur("detail")}
-                  value={formik.values.detail}
-                  errorMessage={formik.touched.detail && formik.errors.detail}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.address?.moreDetails}
+                  errorMessage={
+                    formik.touched.address?.moreDetails &&
+                    formik.errors.address?.moreDetails
+                  }
                 />
 
                 {/* State selection */}
@@ -241,6 +286,11 @@ const AddOrder = () => {
                   setSelectMenu={setStates}
                   showSearch={true}
                   disabled={selectedCountry === "" ? true : false}
+                  value={(value) => setSelectedState(value)}
+                  errorMessage={
+                    formik.touched.address?.province &&
+                    formik.errors.address?.province
+                  }
                 />
 
                 <div className="flex items-center gap-x-2">
@@ -250,27 +300,34 @@ const AddOrder = () => {
                       id="city"
                       label="Kota"
                       placeholder="Pilih kota"
-                      selectMenu={states}
-                      setSelectMenu={setStates}
+                      selectMenu={cities}
+                      setSelectMenu={setCities}
                       showSearch={true}
-                      // disabled={selectedCountry === "" ? true : false}
+                      disabled={selectedState === "" ? true : false}
+                      value={(value) => setSelectedCity(value)}
+                      errorMessage={
+                        formik.touched.address?.city &&
+                        formik.errors.address?.city
+                      }
                     />
                   </div>
 
                   <div className="w-full">
                     {/* Postal code */}
                     <Input
-                      id="postal_code"
+                      id="postalCode"
                       type="text"
-                      name="postal_code"
+                      name="address.postalCode"
                       label="Kode pos"
                       placeholder="Masukkan kode pos"
-                      onChange={formik.handleChange("postal_code")}
-                      onBlur={formik.handleBlur("postal_code")}
-                      value={formik.values.postal_code}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.address?.postalCode}
                       errorMessage={
-                        formik.touched.postal_code && formik.errors.postal_code
+                        formik.touched.address?.postalCode &&
+                        formik.errors.address?.postalCode
                       }
+                      disabled={selectedCity === "" ? true : false}
                     />
                   </div>
                 </div>
@@ -285,11 +342,11 @@ const AddOrder = () => {
               productsOrderList={productsOrderList}
             />
 
-            {formik.touched.productId && formik.errors.productId && (
+            {formik.touched.variantId && formik.errors.variantId && (
               <div className="flex items-center mt-1.5">
                 <IoWarning className="text-xs text-red-600 dark:text-red-500" />
                 <p className="ml-1.5 text-xs text-red-600 dark:text-red-500">
-                  {formik.errors.productId}
+                  {formik.errors.variantId}
                 </p>
               </div>
             )}
