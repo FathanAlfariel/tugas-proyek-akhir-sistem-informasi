@@ -59,7 +59,6 @@ const getCitiesBySelectedState = async (req, res) => {
         value: item.name,
       }));
 
-      console.log(query);
       return res
         .status(200)
         .json({ message: "Successfully get all cities", results: results });

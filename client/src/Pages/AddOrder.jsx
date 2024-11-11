@@ -20,7 +20,7 @@ const AddOrder = () => {
 
   const formik = useFormik({
     initialValues: {
-      shippingReceipt: "",
+      trackingReceipt: "",
       variantId: [],
       name: "",
       phone: "",
@@ -36,7 +36,7 @@ const AddOrder = () => {
       },
     },
     validationSchema: yup.object({
-      shippingReceipt: yup.string().required("Resi pemesanan harus diisi."),
+      trackingReceipt: yup.string(),
       variantId: yup
         .array()
         .of(
@@ -71,7 +71,36 @@ const AddOrder = () => {
       }),
     }),
     onSubmit: async (values) => {
-      console.log(values);
+      const getCountry = countries.find(
+        (item) => item.value === values?.address?.country
+      );
+
+      const getState = states.find(
+        (item) => item.value === values?.address?.province
+      );
+
+      await axios
+        .post("http://localhost:5000/api/order", {
+          variantId: values.variantId,
+          name: values.name,
+          phone: values.phone,
+          shippingFee: values.shippingFee,
+          discount: values.discount,
+          address: {
+            country: getCountry.label,
+            address: values.address.address,
+            otherDetails: values.address.otherDetails,
+            province: getState.label,
+            city: values.address.city,
+            postalCode: values.address.postalCode,
+          },
+        })
+        .then(({ data }) => {
+          console.log(data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
   });
 
@@ -250,7 +279,10 @@ const AddOrder = () => {
                   selectMenu={countries}
                   setSelectMenu={setCountries}
                   showSearch={true}
-                  value={(value) => setSelectedCountry(value)}
+                  value={(value) => {
+                    setSelectedCountry(value);
+                    formik.setFieldValue("address.country", value);
+                  }}
                   errorMessage={
                     formik.touched.address?.country &&
                     formik.errors.address?.country
@@ -298,7 +330,10 @@ const AddOrder = () => {
                   setSelectMenu={setStates}
                   showSearch={true}
                   disabled={selectedCountry === "" ? true : false}
-                  value={(value) => setSelectedState(value)}
+                  value={(value) => {
+                    setSelectedState(value);
+                    formik.setFieldValue("address.province", value);
+                  }}
                   errorMessage={
                     formik.touched.address?.province &&
                     formik.errors.address?.province
@@ -316,7 +351,10 @@ const AddOrder = () => {
                       setSelectMenu={setCities}
                       showSearch={true}
                       disabled={selectedState === "" ? true : false}
-                      value={(value) => setSelectedCity(value)}
+                      value={(value) => {
+                        setSelectedCity(value);
+                        formik.setFieldValue("address.city", value);
+                      }}
                       errorMessage={
                         formik.touched.address?.city &&
                         formik.errors.address?.city

@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const orderSchema = new mongoose.Schema(
   {
-    shippingReceipt: { type: String, required: true },
+    trackingReceipt: { type: String, required: true, unique: true },
     variantId: [
       {
         id: mongoose.Schema.Types.ObjectId,
@@ -27,7 +27,7 @@ const orderSchema = new mongoose.Schema(
     address: {
       country: { type: String, required: true },
       address: { type: String, required: true },
-      otherDetails: { type: String, required: true },
+      otherDetails: { type: String },
       province: { type: String, required: true },
       city: { type: String, required: true },
       postalCode: { type: String, required: true },
