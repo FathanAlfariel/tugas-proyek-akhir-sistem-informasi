@@ -1,7 +1,9 @@
 const Order = require("../models/Order");
 
+// Add order controller
 const addOrder = async (req, res) => {
-  const { variantId, name, phone, shippingFee, discount, address } = req.body;
+  const { variantId, name, phone, shippingFee, discount, address, status } =
+    req.body;
 
   try {
     const query = new Order({
@@ -12,6 +14,7 @@ const addOrder = async (req, res) => {
       shippingFee,
       discount,
       address,
+      status,
     });
 
     await query.save();

@@ -33,6 +33,17 @@ const orderSchema = new mongoose.Schema(
       city: { type: String, required: true },
       postalCode: { type: String, required: true },
     },
+    status: {
+      type: String,
+      enum: [
+        "belum bayar",
+        "sedang dikemas",
+        "dikirim",
+        "selesai",
+        "dibatalkan",
+      ],
+      required: true,
+    },
   },
   { timestamps: true }
 );
