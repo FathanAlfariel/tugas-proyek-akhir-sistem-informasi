@@ -342,7 +342,7 @@ const EditProduct = () => {
                   <div className="border-2 border-dashed rounded-xl">
                     <label
                       htmlFor="uploadImages"
-                      className="flex justify-center items-center p-6 cursor-pointer"
+                      className="flex justify-center items-center p-7 cursor-pointer"
                     >
                       <input
                         id="uploadImages"
@@ -351,7 +351,7 @@ const EditProduct = () => {
                         className="hidden"
                         onChange={uploadImages}
                       />
-                      <FiPlus className="text-lg" />
+                      <FiPlus className="text-xl" />
                     </label>
                   </div>
                 </li>

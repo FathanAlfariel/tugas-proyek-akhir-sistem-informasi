@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { useFormik } from "formik";
 import * as yup from "yup";
@@ -7,12 +7,15 @@ import Button from "../Components/Button";
 import IconButton from "../Components/IconButton";
 import { FiPlus } from "react-icons/fi";
 import TextArea from "../Components/TextArea";
-import { IoWarning } from "react-icons/io5";
+import { IoEyeOutline, IoWarning } from "react-icons/io5";
+import { HiOutlineTrash } from "react-icons/hi2";
 import { MdClose } from "react-icons/md";
 import { Link, useNavigate } from "react-router-dom";
 
 const AddProduct = () => {
   const navigate = useNavigate();
+
+  const [viewImageFilename, setViewImageFilename] = useState(null);
 
   const uploadImages = async (e) => {
     const files = e.target.files;
@@ -283,7 +286,7 @@ const AddProduct = () => {
                         <img
                           src={`http://localhost:5000/public/images/${name}`}
                           alt={name}
-                          className="h-[70px] w-[70px] object-cover rounded-xl"
+                          className="h-20 w-20 object-cover rounded-xl"
                         />
 
                         {/* View and delete image */}
@@ -318,7 +321,7 @@ const AddProduct = () => {
                   <div className="border-2 border-dashed rounded-xl">
                     <label
                       htmlFor="uploadImages"
-                      className="flex justify-center items-center p-6 cursor-pointer"
+                      className="flex justify-center items-center p-7 cursor-pointer"
                     >
                       <input
                         id="uploadImages"
@@ -327,7 +330,7 @@ const AddProduct = () => {
                         className="hidden"
                         onChange={uploadImages}
                       />
-                      <FiPlus className="text-lg" />
+                      <FiPlus className="text-xl" />
                     </label>
                   </div>
                 </li>
@@ -359,7 +362,7 @@ const AddProduct = () => {
         </div>
       </form>
 
-      {viewImageFilename && (
+      {formik.values.images.length > 0 && viewImageFilename && (
         <ViewImages
           filename={viewImageFilename}
           onClose={() => setViewImageFilename(null)}

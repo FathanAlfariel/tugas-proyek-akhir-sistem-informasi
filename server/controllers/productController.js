@@ -1,6 +1,8 @@
 const Product = require("../models/Product");
 const imageUpload = require("../middlewares/multerMiddleware");
 const mongoose = require("mongoose");
+const fs = require("fs");
+const path = require("path");
 
 // Image Upload Controller
 const uploadImages = async (req, res) => {
@@ -140,6 +142,21 @@ const updateProduct = async (req, res) => {
     const isProductExists = await Product.findById(id);
     if (!isProductExists) {
       return res.status(404).json({ message: "Product not found" });
+    }
+
+    const imagesToDelete = isProductExists.images.filter(
+      (img) => !images.includes(img)
+    );
+
+    for (let imgPath of imagesToDelete) {
+      // Hapus gambar dari filesystem
+      fs.unlink(path.join(__dirname, "../public/images/", imgPath), (err) => {
+        if (err) {
+          return res
+            .status(500)
+            .json({ message: "Failed to delete image file", error: err });
+        }
+      });
     }
 
     const query = await Product.findByIdAndUpdate(

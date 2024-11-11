@@ -28,4 +28,13 @@ const addOrder = async (req, res) => {
   }
 };
 
+// Get all orders controller
+const getAllOrders = async (req, res) => {
+  try {
+  } catch (err) {
+    console.log("Error :" + err);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 module.exports = { addOrder };

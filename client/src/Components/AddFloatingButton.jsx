@@ -13,13 +13,19 @@ const AddFloatingButton = () => {
   // Closes the menu when the user clicks outside the div
   useEffect(() => {
     if (showMenu) {
-      window.addEventListener("click", (e) => {
-        if (
-          !document.getElementById("floating-button-menu").contains(e.target)
-        ) {
+      const handleClickOutside = (e) => {
+        const menuElement = document.getElementById("floating-button-menu");
+        if (menuElement && !menuElement.contains(e.target)) {
           setShowMenu(false);
         }
-      });
+      };
+
+      window.addEventListener("click", handleClickOutside);
+
+      // Cleanup the event listener on component unmount
+      return () => {
+        window.removeEventListener("click", handleClickOutside);
+      };
     }
   }, [showMenu]);
 
