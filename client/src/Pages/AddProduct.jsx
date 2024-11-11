@@ -279,12 +279,37 @@ const AddProduct = () => {
                 {formik.values.images &&
                   formik.values.images.map((name, key) => {
                     return (
-                      <li key={key}>
+                      <li key={key} className="relative">
                         <img
                           src={`http://localhost:5000/public/images/${name}`}
                           alt={name}
                           className="h-[70px] w-[70px] object-cover rounded-xl"
                         />
+
+                        {/* View and delete image */}
+                        <div className="absolute top-0 left-0 w-full h-full flex justify-center items-center bg-black/[0.25] rounded-xl">
+                          {/* View image */}
+                          <IconButton
+                            type="button"
+                            onClick={() => setViewImageFilename(name)}
+                          >
+                            <IoEyeOutline className="text-white text-lg" />
+                          </IconButton>
+
+                          {/* Delete image */}
+                          <IconButton
+                            type="button"
+                            onClick={() => {
+                              const newImages = formik.values.images.filter(
+                                (item) => item !== name
+                              );
+
+                              formik.setFieldValue("images", newImages);
+                            }}
+                          >
+                            <HiOutlineTrash className="text-white text-lg" />
+                          </IconButton>
+                        </div>
                       </li>
                     );
                   })}
@@ -333,6 +358,13 @@ const AddProduct = () => {
           </Button>
         </div>
       </form>
+
+      {viewImageFilename && (
+        <ViewImages
+          filename={viewImageFilename}
+          onClose={() => setViewImageFilename(null)}
+        />
+      )}
     </>
   );
 };

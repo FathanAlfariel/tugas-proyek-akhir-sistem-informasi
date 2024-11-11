@@ -6,14 +6,18 @@ import Input from "../Components/Input";
 import Button from "../Components/Button";
 import { FiPlus } from "react-icons/fi";
 import TextArea from "../Components/TextArea";
-import { IoWarning } from "react-icons/io5";
+import { IoEyeOutline, IoWarning } from "react-icons/io5";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import IconButton from "../Components/IconButton";
 import { MdClose } from "react-icons/md";
+import { HiOutlineTrash } from "react-icons/hi2";
+import ViewImages from "../Components/ViewImages";
 
 const EditProduct = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+
+  const [viewImageFilename, setViewImageFilename] = useState(null);
 
   useEffect(() => {
     const fetchProductData = async () => {
@@ -299,12 +303,37 @@ const EditProduct = () => {
                 {formik.values.images &&
                   formik.values.images.map((name, key) => {
                     return (
-                      <li key={key}>
+                      <li key={key} className="relative">
                         <img
                           src={`http://localhost:5000/public/images/${name}`}
                           alt={name}
-                          className="h-[70px] w-[70px] object-cover rounded-xl"
+                          className="h-20 w-20 object-cover rounded-xl"
                         />
+
+                        {/* View and delete image */}
+                        <div className="absolute top-0 left-0 w-full h-full flex justify-center items-center bg-black/[0.25] rounded-xl">
+                          {/* View image */}
+                          <IconButton
+                            type="button"
+                            onClick={() => setViewImageFilename(name)}
+                          >
+                            <IoEyeOutline className="text-white text-lg" />
+                          </IconButton>
+
+                          {/* Delete image */}
+                          <IconButton
+                            type="button"
+                            onClick={() => {
+                              const newImages = formik.values.images.filter(
+                                (item) => item !== name
+                              );
+
+                              formik.setFieldValue("images", newImages);
+                            }}
+                          >
+                            <HiOutlineTrash className="text-white text-lg" />
+                          </IconButton>
+                        </div>
                       </li>
                     );
                   })}
@@ -353,6 +382,13 @@ const EditProduct = () => {
           </Button>
         </div>
       </form>
+
+      {viewImageFilename && (
+        <ViewImages
+          filename={viewImageFilename}
+          onClose={() => setViewImageFilename(null)}
+        />
+      )}
     </>
   );
 };
