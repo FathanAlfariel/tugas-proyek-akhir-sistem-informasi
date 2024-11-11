@@ -35,11 +35,19 @@ const Select = ({
   // Closes the menu when the user clicks outside the div
   useEffect(() => {
     if (showSelectMenu) {
-      window.addEventListener("click", (e) => {
-        if (!document.getElementById(id).contains(e.target)) {
+      const handleClickOutside = (e) => {
+        const menuElement = document.getElementById(id);
+        if (menuElement && !menuElement.contains(e.target)) {
           setShowSelectMenu(false);
         }
-      });
+      };
+
+      window.addEventListener("click", handleClickOutside);
+
+      // Cleanup the event listener on component unmount
+      return () => {
+        window.removeEventListener("click", handleClickOutside);
+      };
     }
   }, [showSelectMenu]);
 
@@ -48,7 +56,7 @@ const Select = ({
     value(menu?.value);
   };
 
-  // If the selected menu has been initialized
+  // If the default menu has been initialized
   useEffect(() => {
     const menu = selectMenu?.filter((menu) => menu?.value === defaultValue);
 

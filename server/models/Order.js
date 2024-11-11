@@ -42,6 +42,7 @@ const orderSchema = new mongoose.Schema(
         "selesai",
         "dibatalkan",
       ],
+      default: "belum bayar",
       required: true,
     },
   },

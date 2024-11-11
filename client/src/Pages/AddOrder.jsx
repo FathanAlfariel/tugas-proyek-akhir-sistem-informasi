@@ -36,6 +36,7 @@ const AddOrder = () => {
         city: "",
         postalCode: "",
       },
+      status: "belum bayar",
     },
     validationSchema: yup.object({
       trackingReceipt: yup.string(),
@@ -71,6 +72,7 @@ const AddOrder = () => {
         city: yup.string().required("Kota harus diisi."),
         postalCode: yup.string().required("Kode pos harus diisi."),
       }),
+      status: yup.string().required("Status pemesanan harus diisi."),
     }),
     onSubmit: async (values) => {
       const getCountry = countries.find(
@@ -96,6 +98,7 @@ const AddOrder = () => {
             city: values.address.city,
             postalCode: values.address.postalCode,
           },
+          status: values.status,
         })
         .then(({ data }) => {
           console.log(data);
@@ -271,7 +274,7 @@ const AddOrder = () => {
             </div>
 
             {/* Alamat pengiriman */}
-            <div>
+            <div className="mb-6">
               <h5 className="text-lg font-medium mb-2.5">Alamat pengiriman</h5>
 
               <div className="flex flex-col gap-y-2">
@@ -386,6 +389,27 @@ const AddOrder = () => {
                   </div>
                 </div>
               </div>
+            </div>
+
+            <div>
+              <h5 className="text-lg font-medium mb-2.5">Status pemesanan</h5>
+
+              {/* Country selection */}
+              <Select
+                id="status"
+                label="Status"
+                placeholder="Pilih status pesanan"
+                selectMenu={[
+                  { label: "Belum bayar", value: "belum bayar" },
+                  { label: "Sedang dikemas", value: "sedang dikemas" },
+                  { label: "Dikirim", value: "dikirim" },
+                  { label: "Selesai", value: "selesai" },
+                  { label: "Dibatalkan", value: "dibatalkan" },
+                ]}
+                defaultValue={formik.values.status}
+                value={(value) => formik.setFieldValue("status", value)}
+                errorMessage={formik.touched.status && formik.errors.status}
+              />
             </div>
           </div>
 
