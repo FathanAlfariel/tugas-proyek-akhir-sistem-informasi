@@ -24,10 +24,12 @@ const AddOrder = () => {
       variantId: [],
       name: "",
       phone: "",
+      shippingFee: "",
+      discount: "",
       address: {
         country: "",
         address: "",
-        moreDetails: "",
+        otherDetails: "",
         province: "",
         city: "",
         postalCode: "",
@@ -54,10 +56,15 @@ const AddOrder = () => {
         .number()
         .typeError("Tolong masukkan hanya angka.")
         .required("Nomor telepon pemesan harus diisi."),
+      shippingFee: yup
+        .number()
+        .typeError("Tolong masukkan hanya angka.")
+        .required("Ongkir pesanan harus diisi."),
+      discount: yup.number().typeError("Tolong masukkan hanya angka."),
       address: yup.object({
         country: yup.string().required("Negara harus diisi."),
         address: yup.string().required("Alamat harus diisi."),
-        moreDetails: yup.string(),
+        otherDetails: yup.string(),
         province: yup.string().required("Provinsi harus diisi."),
         city: yup.string().required("Kota harus diisi."),
         postalCode: yup.string().required("Kode pos harus diisi."),
@@ -68,6 +75,7 @@ const AddOrder = () => {
     },
   });
 
+  // Get products order list
   useEffect(() => {
     const getProductsOrderList = async () => {
       await axios
@@ -200,15 +208,17 @@ const AddOrder = () => {
 
               <div className="flex flex-col gap-y-2">
                 <Input
-                  id="ongkir"
+                  id="shippingFee"
                   type="text"
-                  name="ongkir"
+                  name="shippingFee"
                   label="Ongkir"
                   placeholder="Masukkan ongkir"
-                  onChange={formik.handleChange("ongkir")}
-                  onBlur={formik.handleBlur("ongkir")}
-                  value={formik.values.ongkir}
-                  errorMessage={formik.touched.ongkir && formik.errors.ongkir}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.shippingFee}
+                  errorMessage={
+                    formik.touched.shippingFee && formik.errors.shippingFee
+                  }
                 />
 
                 <Input
@@ -217,8 +227,8 @@ const AddOrder = () => {
                   name="discount"
                   label="Discount"
                   placeholder="Masukkan discount"
-                  onChange={formik.handleChange("discount")}
-                  onBlur={formik.handleBlur("discount")}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
                   value={formik.values.discount}
                   errorMessage={
                     formik.touched.discount && formik.errors.discount
@@ -260,21 +270,23 @@ const AddOrder = () => {
                     formik.touched.address?.address &&
                     formik.errors.address?.address
                   }
+                  disabled={selectedCountry === "" ? true : false}
                 />
 
                 <Input
-                  id="moreDetails"
+                  id="otherDetails"
                   type="text"
-                  name="address.moreDetails"
+                  name="address.otherDetails"
                   label="Detail lainnya"
                   placeholder="Blok / Unit no. patokan"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  value={formik.values.address?.moreDetails}
+                  value={formik.values.address?.otherDetails}
                   errorMessage={
-                    formik.touched.address?.moreDetails &&
-                    formik.errors.address?.moreDetails
+                    formik.touched.address?.otherDetails &&
+                    formik.errors.address?.otherDetails
                   }
+                  disabled={selectedCountry === "" ? true : false}
                 />
 
                 {/* State selection */}
