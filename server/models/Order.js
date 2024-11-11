@@ -5,6 +5,7 @@ const orderSchema = new mongoose.Schema(
     trackingReceipt: { type: String, required: true, unique: true },
     variantId: [
       {
+        _id: false,
         id: mongoose.Schema.Types.ObjectId,
         total: Number,
       },
