@@ -3,13 +3,15 @@ import Input from "../Components/Input";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import AddProductOrder from "../Components/AddProductOrder";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Button from "../Components/Button";
 import Select from "../Components/Select";
 import { IoWarning } from "react-icons/io5";
 import axios from "axios";
 
 const AddOrder = () => {
+  const navigate = useNavigate();
+
   const [productsOrderList, setProductsOrderList] = useState([]);
   const [countries, setCountries] = useState([]);
   const [selectedCountry, setSelectedCountry] = useState("");
@@ -97,6 +99,8 @@ const AddOrder = () => {
         })
         .then(({ data }) => {
           console.log(data);
+
+          navigate("/admin/order");
         })
         .catch((err) => {
           console.log(err);
