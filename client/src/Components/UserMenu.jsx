@@ -1,8 +1,11 @@
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../Config/UserConfig";
 import { MdLogout } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const UserMenu = () => {
+  const navigate = useNavigate();
   const [showMenu, setShowMenu] = useState(false);
 
   const { user } = useContext(UserContext);
@@ -20,6 +23,17 @@ const UserMenu = () => {
 
   const handleShowMenu = () => {
     setShowMenu((prev) => !prev);
+  };
+
+  const handleLogout = async () => {
+    await axios
+      .post("http://localhost:5000/api/auth/logout")
+      .then(({ data }) => {
+        navigate("/login");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (
@@ -40,7 +54,11 @@ const UserMenu = () => {
           <div className="absolute top-auto right-0 shadow bg-white min-w-64 py-2.5 rounded-xl mt-1 border border-[#F1F1F1] z-10">
             <ul>
               <li>
-                <button className="flex items-center gap-x-4 w-full pl-4 pr-6 py-2 text-sm hover:bg-[#1D1B20]/[.08]">
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className="flex items-center gap-x-4 w-full pl-4 pr-6 py-2 text-sm hover:bg-[#1D1B20]/[.08]"
+                >
                   <span>
                     <MdLogout className="text-2xl" />
                   </span>

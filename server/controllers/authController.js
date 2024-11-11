@@ -55,6 +55,7 @@ const getUser = async (req, res) => {
   }
 };
 
+// Get token from cookies
 const getToken = async (req, res) => {
   const { token } = req.cookies;
 
@@ -73,4 +74,23 @@ const getToken = async (req, res) => {
   }
 };
 
-module.exports = { login, getUser, getToken };
+// Logout controller
+const logout = async (req, res) => {
+  const { token } = req.cookies;
+
+  try {
+    if (!token) {
+      return res.status(401).json({ message: "No Token in cookies." });
+    }
+
+    return res
+      .clearCookie("token")
+      .status(200)
+      .json({ message: "Logout Successfully" });
+  } catch (err) {
+    console.log("Error :" + err);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+module.exports = { login, getUser, getToken, logout };
