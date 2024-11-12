@@ -45,12 +45,13 @@ const Order = () => {
     <>
       <h1 className="text-[28px] leading-9 font-medium mb-4">Pemesanan</h1>
 
-      <div className="flex flex-col gap-y-4">
+      <div className="flex flex-col gap-y-6">
         {orders &&
           orders.map((order, key) => {
             return (
               <div key={key}>
                 <div className="flex justify-between items-center pb-4 border-b">
+                  {/* Tracking receipt / No.Resi */}
                   <div>
                     <p className="text-xs text-[#606060]">No. Resi:</p>
                     <p className="text-base font-medium">
@@ -58,6 +59,7 @@ const Order = () => {
                     </p>
                   </div>
 
+                  {/* Order status */}
                   <span className="px-3 py-1.5 bg-[#6750A4]/[.12] rounded-full first-letter:uppercase text-xs text-[#6750A4] font-semibold">
                     {order.status}
                   </span>
@@ -219,6 +221,7 @@ const Order = () => {
                     </div>
                   </div>
 
+                  {/* Total product */}
                   <h3 className="text-base line-clamp-2">
                     Total pesanan ({order.variantId.length} barang):{" "}
                     <span className="font-bold">Rp. 10.000,00</span>
