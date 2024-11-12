@@ -36,66 +36,76 @@ const Expense = () => {
   return (
     <>
       <h1 className="text-[28px] leading-9 font-medium">Pengeluaran</h1>
-
-      <table className="w-full">
-        <thead>
-          <tr className="border-b">
-            <th className="pl-6 py-4 text-xs text-left font-medium">
-              Nama pengeluaran
-            </th>
-            <th className="pl-6 py-4 text-xs text-left font-medium">Harga</th>
-            <th className="pl-6 py-4 text-xs text-left font-medium">Tanggal</th>
-            <th className="pl-6 py-4 text-xs text-left font-medium">Aksi</th>
-          </tr>
-        </thead>
-        <tbody>
-          {expenses &&
-            expenses.map((expense, key) => {
-              return (
-                <tr key={key} className="border-b">
-                  <td className="pl-6 py-6">
-                    <p className="text-sm line-clamp-2">{expense.name}</p>
-                  </td>
-                  <td className="pl-6 py-6">
-                    <p className="text-sm">
-                      {expense.price.toLocaleString("id-ID", {
-                        style: "currency",
-                        currency: "IDR",
-                      })}
-                    </p>
-                  </td>
-                  <td className="pl-6 py-6">
-                    <p className="text-xs">
-                      {new Date(expense.createdAt).toLocaleDateString("id-ID", {
-                        day: "numeric",
-                        month: "long",
-                        year: "numeric",
-                      })}
-                    </p>
-                    <div className="text-xs font-medium">Ditambahkan</div>
-                  </td>
-                  <td className="pl-6 py-6">
-                    <div className="flex items-center gap-x-1">
-                      <Link to={`/admin/expense/edit/${expense._id}`}>
-                        <IconButton type="button">
-                          <HiOutlinePencil className="text-lg" />
+      <div className="overflow-x-auto">
+        <table className="w-full">
+          <thead>
+            <tr className="border-b">
+              <th className="pl-6 py-4 text-xs text-left font-medium whitespace-nowrap">
+                Nama pengeluaran
+              </th>
+              <th className="pl-6 py-4 text-xs text-left font-medium whitespace-nowrap">
+                Harga
+              </th>
+              <th className="pl-6 py-4 text-xs text-left font-medium whitespace-nowrap">
+                Tanggal
+              </th>
+              <th className="pl-6 py-4 text-xs text-left font-medium whitespace-nowrap">
+                Aksi
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {expenses &&
+              expenses.map((expense, key) => {
+                return (
+                  <tr key={key} className="border-b">
+                    <td className="pl-6 py-6 whitespace-nowrap">
+                      <p className="text-sm line-clamp-2">{expense.name}</p>
+                    </td>
+                    <td className="pl-6 py-6 whitespace-nowrap">
+                      <p className="text-sm">
+                        {expense.price.toLocaleString("id-ID", {
+                          style: "currency",
+                          currency: "IDR",
+                        })}
+                      </p>
+                    </td>
+                    <td className="pl-6 py-6 whitespace-nowrap">
+                      <p className="text-xs">
+                        {new Date(expense.createdAt).toLocaleDateString(
+                          "id-ID",
+                          {
+                            day: "numeric",
+                            month: "long",
+                            year: "numeric",
+                          }
+                        )}
+                      </p>
+                      <div className="text-xs font-medium">Ditambahkan</div>
+                    </td>
+                    <td className="pl-6 py-6 whitespace-nowrap">
+                      <div className="flex items-center gap-x-1">
+                        <Link to={`/admin/expense/edit/${expense._id}`}>
+                          <IconButton type="button">
+                            <HiOutlinePencil className="text-lg" />
+                          </IconButton>
+                        </Link>
+                        <IconButton
+                          onClick={() => {
+                            handleDeleteExpense(expense._id);
+                          }}
+                          type="button"
+                        >
+                          <HiOutlineTrash className="text-lg" />
                         </IconButton>
-                      </Link>
-                      <IconButton
-                        onClick={() => {
-                          handleDeleteExpense(expense._id);
-                        }}
-                        type="button"
-                      >
-                        <HiOutlineTrash className="text-lg" />
-                      </IconButton>
-                    </div>
-                  </td>
-                </tr>
-              );
-            })}
-        </tbody>
-      </table>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
+          </tbody>
+        </table>
+      </div>
     </>
   );
 };

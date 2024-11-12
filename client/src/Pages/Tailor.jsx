@@ -40,12 +40,18 @@ const Tailor = () => {
       <table className="w-full">
         <thead>
           <tr className="border-b">
-            <th className="pl-6 py-4 text-xs text-left font-medium">
+            <th className="pl-0 md:pl-6 py-4 text-xs text-left font-medium whitespace-nowrap">
               Nama penjahit
             </th>
-            <th className="pl-6 py-4 text-xs text-left font-medium">Status</th>
-            <th className="pl-6 py-4 text-xs text-left font-medium">Tanggal</th>
-            <th className="pl-6 py-4 text-xs text-left font-medium">Aksi</th>
+            <th className="pl-6 py-4 text-xs text-left font-medium whitespace-nowrap">
+              Status
+            </th>
+            <th className="pl-6 py-4 text-xs text-left font-medium whitespace-nowrap">
+              Tanggal
+            </th>
+            <th className="pl-6 py-4 text-xs text-left font-medium whitespace-nowrap">
+              Aksi
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -53,10 +59,10 @@ const Tailor = () => {
             tailors.map((tailor, key) => {
               return (
                 <tr key={key} className="border-b">
-                  <td className="pl-6 py-6">
+                  <td className="pl-0 md:pl-6 py-6 whitespace-nowrap">
                     <p className="text-sm">{tailor.name}</p>
                   </td>
-                  <td className="pl-6 py-6">
+                  <td className="pl-6 py-6 whitespace-nowrap">
                     {tailor.available === true ? (
                       <div className="inline-block px-3 py-1.5 bg-[#00712D]/[.12] rounded-full text-xs text-[#00712D] font-medium">
                         Ada
@@ -67,7 +73,7 @@ const Tailor = () => {
                       </div>
                     )}
                   </td>
-                  <td className="pl-6 py-6">
+                  <td className="pl-6 py-6 whitespace-nowrap">
                     <p className="text-xs">
                       {new Date(tailor.createdAt).toLocaleDateString("id-ID", {
                         day: "numeric",
@@ -77,7 +83,7 @@ const Tailor = () => {
                     </p>
                     <p className="text-xs font-medium">Ditambahkan</p>
                   </td>
-                  <td className="pl-6 py-6">
+                  <td className="pl-6 py-6 whitespace-nowrap">
                     <div className="flex items-center gap-x-1">
                       <Link to={`/admin/tailor/edit/${tailor._id}`}>
                         <IconButton type="button">
