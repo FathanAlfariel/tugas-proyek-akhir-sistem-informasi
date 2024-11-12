@@ -33,16 +33,14 @@ const getAllOrders = async (req, res) => {
   try {
     const query = await Order.aggregate([
       {
-        // Unwind variantId array in orders to process each variant separately
         $unwind: "$variantId",
       },
       {
-        // Lookup products by matching variant ID
         $lookup: {
-          from: "products", // Name of the products collection
+          from: "products",
           let: { variantId: "$variantId" },
           pipeline: [
-            { $unwind: "$variants" }, // Unwind variants array in products
+            { $unwind: "$variants" },
             { $match: { $expr: { $eq: ["$variants._id", "$$variantId.id"] } } },
             {
               $project: {
@@ -50,6 +48,7 @@ const getAllOrders = async (req, res) => {
                 description: 1,
                 images: 1,
                 variant: "$variants",
+                variantPrice: "$variants.size.price", // Ambil harga dari setiap variant
                 total: "$$variantId.total",
               },
             },
@@ -58,7 +57,9 @@ const getAllOrders = async (req, res) => {
         },
       },
       {
-        // Group product details back by order ID
+        $unwind: "$productDetails", // Unwind lagi untuk memproses harga setiap variant
+      },
+      {
         $group: {
           _id: "$_id",
           trackingReceipt: { $first: "$trackingReceipt" },
@@ -70,7 +71,19 @@ const getAllOrders = async (req, res) => {
           status: { $first: "$status" },
           createdAt: { $first: "$createdAt" },
           updatedAt: { $first: "$updatedAt" },
-          product: { $push: { $arrayElemAt: ["$productDetails", 0] } }, // Push matching product details for each variant
+          product: { $push: "$productDetails" },
+          totalVariantPrice: { $sum: "$productDetails.variantPrice" }, // Hitung total harga semua variant
+        },
+      },
+      {
+        $addFields: {
+          totalPrice: {
+            $add: [
+              "$totalVariantPrice",
+              "$shippingFee",
+              { $multiply: ["$discount", -1] },
+            ],
+          }, // Total harga akhir
         },
       },
     ]);

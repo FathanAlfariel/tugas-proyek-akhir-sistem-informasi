@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { FiInfo } from "react-icons/fi";
-import Button from "../Components/Button";
 import { IoChevronDownOutline, IoCheckmarkSharp } from "react-icons/io5";
 import { GrDeliver } from "react-icons/gr";
 import axios from "axios";
+import { HiOutlineTrash, HiOutlinePencil } from "react-icons/hi2";
 
 const Order = () => {
   const [orders, setOrders] = useState([]);
@@ -61,9 +61,27 @@ const Order = () => {
                   </div>
 
                   {/* Order status */}
-                  <span className="px-3 py-1.5 bg-[#6750A4]/[.12] rounded-full first-letter:uppercase text-xs text-[#6750A4] font-semibold">
-                    {order.status}
-                  </span>
+                  {order.status === "belum bayar" ? (
+                    <span className="px-3 py-1.5 bg-[#ECEFF1] rounded-full first-letter:uppercase text-xs text-[#546E7A] font-semibold">
+                      {order.status}
+                    </span>
+                  ) : order.status === "sedang dikemas" ? (
+                    <span className="px-3 py-1.5 bg-[#FFE0B2] rounded-full first-letter:uppercase text-xs text-[#F57C00] font-semibold">
+                      {order.status}
+                    </span>
+                  ) : order.status === "dikirim" ? (
+                    <span className="px-3 py-1.5 bg-[#BBDEFB] rounded-full first-letter:uppercase text-xs text-[#1976D2] font-semibold">
+                      {order.status}
+                    </span>
+                  ) : order.status === "selesai" ? (
+                    <span className="px-3 py-1.5 bg-[#C8E6C9] rounded-full first-letter:uppercase text-xs text-[#388E3C] font-semibold">
+                      {order.status}
+                    </span>
+                  ) : order.status === "selesai" ? (
+                    <span className="px-3 py-1.5 bg-[#FFCDD2] rounded-full first-letter:uppercase text-xs text-[#D32F2F] font-semibold">
+                      {order.status}
+                    </span>
+                  ) : null}
                 </div>
 
                 <div
@@ -123,26 +141,28 @@ const Order = () => {
                 <div className="flex justify-between items-center border-y py-4">
                   <div className="flex items-center gap-x-2">
                     {/* Detail button */}
-                    <Button
+                    <button
                       type="button"
-                      buttonStyle="tonal-button-with-icon"
-                      icon={<FiInfo />}
+                      className="flex items-center gap-x-2 py-2.5 px-4 text-sm text-[#0f0f0f] font-medium rounded-full transition-all active:scale-90 duration-300 bg-black/[.05] hover:bg-black/[.1]"
                     >
+                      <span className="text-lg text-[#0f0f0f]">
+                        <FiInfo />
+                      </span>
                       Detail
-                    </Button>
+                    </button>
 
                     {/* Update status button */}
                     <div id="update-status-menu" className="relative">
                       <button
                         type="button"
-                        className="group flex items-center gap-x-2 py-2.5 px-4 text-sm text-[#1D192B] font-medium rounded-full transition-all active:scale-90 duration-300 bg-[#E8DEF8] shadow-none hover:shadow-md"
+                        className="group flex items-center gap-x-2 py-2.5 px-4 text-sm text-[#0f0f0f] font-medium rounded-full transition-all active:scale-90 duration-300 bg-black/[.05] hover:bg-black/[.1]"
                         onClick={() => handleShowMenuStatusUpdates(order._id)}
                       >
-                        <span className="text-lg text-[#1D192B]">
+                        <span className="text-lg text-[#0f0f0f]">
                           <GrDeliver />
                         </span>
                         Update status
-                        <span className="text-base text-[#1D192B]">
+                        <span className="hidden group-hover:block text-base text-[#0f0f0f]">
                           <IoChevronDownOutline />
                         </span>
                       </button>
@@ -259,12 +279,34 @@ const Order = () => {
                         </div>
                       )}
                     </div>
+
+                    {/* Edit button */}
+                    <button
+                      type="button"
+                      className="flex items-center gap-x-2 py-2.5 px-4 text-sm text-[#0f0f0f] font-medium rounded-full transition-all active:scale-90 duration-300 bg-black/[.05] hover:bg-black/[.1]"
+                    >
+                      <span className="text-lg text-[#0f0f0f]">
+                        <HiOutlinePencil />
+                      </span>
+                      Edit
+                    </button>
+
+                    {/* Delete button */}
+                    <button
+                      type="button"
+                      className="flex items-center gap-x-2 py-2.5 px-4 text-sm text-[#0f0f0f] font-medium rounded-full transition-all active:scale-90 duration-300 bg-black/[.05] hover:bg-black/[.1]"
+                    >
+                      <span className="text-lg text-[#0f0f0f]">
+                        <HiOutlineTrash />
+                      </span>
+                      Hapus
+                    </button>
                   </div>
 
                   {/* Total product */}
-                  <h3 className="text-base line-clamp-2">
+                  <h3 className="text-sm line-clamp-2">
                     Total pesanan ({order.product.length} barang):{" "}
-                    <span className="font-bold">Rp. 10.000,00</span>
+                    <span className="font-bold">{order.totalPrice}</span>
                   </h3>
                 </div>
               </div>
