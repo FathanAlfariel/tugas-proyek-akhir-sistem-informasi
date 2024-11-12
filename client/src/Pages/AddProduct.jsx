@@ -11,6 +11,7 @@ import { IoEyeOutline, IoWarning } from "react-icons/io5";
 import { HiOutlineTrash } from "react-icons/hi2";
 import { MdClose } from "react-icons/md";
 import { Link, useNavigate } from "react-router-dom";
+import ViewImages from "../Components/ViewImages";
 
 const AddProduct = () => {
   const navigate = useNavigate();

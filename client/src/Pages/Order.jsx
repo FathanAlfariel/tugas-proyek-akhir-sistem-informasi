@@ -89,7 +89,7 @@ const Order = () => {
                     order.product.length > 1
                       ? "grid-cols-2 gap-x-12"
                       : "grid-cols-1"
-                  } `}
+                  } max-h-80 overflow-y-auto`}
                 >
                   {order.product.map((prod, key) => {
                     return (

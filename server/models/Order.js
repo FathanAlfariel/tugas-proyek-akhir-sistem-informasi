@@ -25,6 +25,7 @@ const orderSchema = new mongoose.Schema(
     },
     discount: {
       type: Number,
+      default: 0,
     },
     address: {
       country: { type: String, required: true },
