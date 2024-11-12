@@ -159,7 +159,7 @@ const AddProductOrder = ({ formik, productsOrderList }) => {
                           <li key={index}>
                             <label
                               htmlFor={`variant${variant._id}`}
-                              className="block px-4 py-1.5 border has-[:checked]:border-[#6750A4] has-[:checked]:bg-[#6750A4]/[.12] rounded-xl text-xs has-[:checked]:text-[#6750A4] font-medium transition-all duration-300 cursor-pointer"
+                              className="block px-4 py-1.5 border has-[:checked]:border-[#6750A4] has-[:checked]:bg-[#6750A4]/[.12] rounded-xl text-xs has-[:checked]:text-[#6750A4] has-[:disabled]:opacity-50 has-[:disabled]:cursor-not-allowed font-medium transition-all duration-300 cursor-pointer"
                             >
                               <p className="text-nowrap">
                                 {variant.color}: {variant.size.length}cm x{" "}
@@ -205,6 +205,9 @@ const AddProductOrder = ({ formik, productsOrderList }) => {
                                     );
                                   }
                                 }}
+                                disabled={
+                                  variant.size.stock === 0 ? true : false
+                                }
                               />
                             </label>
 

@@ -306,7 +306,12 @@ const Order = () => {
                   {/* Total product */}
                   <h3 className="text-sm line-clamp-2">
                     Total pesanan ({order.product.length} barang):{" "}
-                    <span className="font-bold">{order.totalPrice}</span>
+                    <span className="font-bold">
+                      {order.totalPrice.toLocaleString("id-ID", {
+                        style: "currency",
+                        currency: "IDR",
+                      })}
+                    </span>
                   </h3>
                 </div>
               </div>
