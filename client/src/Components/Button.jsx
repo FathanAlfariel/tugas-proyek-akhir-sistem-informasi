@@ -1,4 +1,11 @@
-const Button = ({ type, buttonStyle, width = "auto", children, onClick }) => {
+const Button = ({
+  type,
+  buttonStyle,
+  width = "auto",
+  icon,
+  children,
+  onClick,
+}) => {
   return (
     <>
       {buttonStyle === "filled" ? (
@@ -21,9 +28,28 @@ const Button = ({ type, buttonStyle, width = "auto", children, onClick }) => {
         >
           {children}
         </button>
-      ) : (
-        "Hello"
-      )}
+      ) : buttonStyle === "tonal-button" ? (
+        <button
+          type={type}
+          className={`${
+            width === "full" ? "w-full" : "w-auto"
+          } py-2.5 px-6 text-sm text-[#1D192B] font-medium rounded-full transition-all active:scale-90 duration-300 bg-[#E8DEF8] shadow-none hover:shadow-md`}
+          onClick={onClick}
+        >
+          {children}
+        </button>
+      ) : buttonStyle === "tonal-button-with-icon" ? (
+        <button
+          type={type}
+          className={`flex items-center gap-x-2 ${
+            width === "full" ? "w-full" : "w-auto"
+          } py-2.5 pl-4 pr-6 text-sm text-[#1D192B] font-medium rounded-full transition-all active:scale-90 duration-300 bg-[#E8DEF8] shadow-none hover:shadow-md`}
+          onClick={onClick}
+        >
+          <span className="text-lg text-[#1D192B]">{icon}</span>
+          {children}
+        </button>
+      ) : null}
     </>
   );
 };

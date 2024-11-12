@@ -31,10 +31,15 @@ const addOrder = async (req, res) => {
 // Get all orders controller
 const getAllOrders = async (req, res) => {
   try {
+    const query = await Order.find();
+
+    return res
+      .status(200)
+      .json({ message: "Successfully get all the orders", results: query });
   } catch (err) {
     console.log("Error :" + err);
     return res.status(500).json({ message: "Internal server error" });
   }
 };
 
-module.exports = { addOrder };
+module.exports = { addOrder, getAllOrders };
