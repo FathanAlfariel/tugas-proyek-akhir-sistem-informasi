@@ -66,19 +66,58 @@ const Order = () => {
                   </span>
                 </div>
 
-                <div className="flex items-start gap-x-3 py-4">
-                  <img
-                    src="https://distributorkemasan.com/files/product/84a64daf79354034acba7b506740d06a.jpeg"
-                    alt=""
-                    className="w-36 h-36 object-contain rounded-xl border"
-                  />
+                <div
+                  className={`grid ${
+                    order.product.length > 1
+                      ? "grid-cols-2 gap-x-12"
+                      : "grid-cols-1"
+                  } `}
+                >
+                  {order.product.map((prod, key) => {
+                    return (
+                      <div key={key} className="flex items-start gap-x-3 py-4">
+                        <img
+                          src={`http://localhost:5000/public/images/${prod.images[0]}`}
+                          alt={prod.images[0]}
+                          className="w-28 h-28 object-contain rounded-xl border"
+                        />
 
-                  <div className="grow">
-                    <h3 className="text-base line-clamp-2">Tas</h3>
-                    <p className="text-sm text-[#606060]">Variasi: </p>
-                  </div>
+                        <div className="grow">
+                          <h3 className="text-sm line-clamp-2">{prod.name}</h3>
+                          <p className="text-xs text-[#606060]">
+                            Variasi:{" "}
+                            <span>
+                              {prod.variant.color}(
+                              {`${prod.variant.size.length} cm x ${prod.variant.size.width} cm x ${prod.variant.size.height} cm`}
+                              )
+                            </span>
+                          </p>
+                          <p className="text-xs text-[#606060]">
+                            x{prod.total}
+                          </p>
+                        </div>
 
-                  <h3 className="text-base font-bold">Rp. 10.000,00</h3>
+                        <div>
+                          <h3 className="text-sm font-bold">
+                            {prod.variant.size.price.toLocaleString("id-ID", {
+                              style: "currency",
+                              currency: "IDR",
+                            })}
+                          </h3>
+                          <p className="text-xs text-[#606060] text-right">
+                            (
+                            {(
+                              prod.variant.size.price * prod.total
+                            ).toLocaleString("id-ID", {
+                              style: "currency",
+                              currency: "IDR",
+                            })}
+                            )
+                          </p>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
 
                 <div className="flex justify-between items-center border-y py-4">
