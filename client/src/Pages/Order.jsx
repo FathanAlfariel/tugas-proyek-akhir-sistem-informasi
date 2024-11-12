@@ -19,6 +19,7 @@ const Order = () => {
         .get("http://localhost:5000/api/order")
         .then(({ data }) => {
           setOrders(data.results);
+          console.log(data.results);
         })
         .catch((err) => {
           console.log(err);
@@ -223,7 +224,7 @@ const Order = () => {
 
                   {/* Total product */}
                   <h3 className="text-base line-clamp-2">
-                    Total pesanan ({order.variantId.length} barang):{" "}
+                    Total pesanan ({order.product.length} barang):{" "}
                     <span className="font-bold">Rp. 10.000,00</span>
                   </h3>
                 </div>
