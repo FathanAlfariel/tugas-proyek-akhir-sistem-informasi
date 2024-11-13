@@ -10,6 +10,7 @@ import { IoChevronDownOutline, IoCheckmarkSharp } from "react-icons/io5";
 import { PiLockKey } from "react-icons/pi";
 import { Link } from "react-router-dom";
 import DropdownSelect from "../Components/DropdownSelect";
+import Dropdown from "../Components/Dropdown";
 
 const Product = () => {
   const [products, setProducts] = useState(null);
@@ -137,54 +138,44 @@ const Product = () => {
                       </div>
 
                       {/* Action / More */}
-                      <div id="more-menu" className="relative">
-                        {/* Action / More menu button */}
-                        <button
-                          onClick={() => handleShowMoreMenu(product?._id)}
-                          className="p-2 hover:bg-[#49454F]/[.08] active:[#49454F]/[.12] rounded-full transition-all active:scale-90 duration-300"
-                        >
-                          <IoMdMore className="text-lg" />
-                        </button>
-
-                        {/* Action / More menu */}
-                        {moreMenuProductId === product?._id && (
-                          <div className="absolute top-0 right-0 shadow bg-white min-w-40 py-2.5 rounded-2xl border border-[#F1F1F1] z-10">
-                            <ul className="flex flex-col gap-y-0.5">
-                              <li>
-                                <Link
-                                  to={`/admin/product/edit/${product?._id}`}
-                                >
-                                  <button className="flex items-center gap-x-4 w-full pl-4 pr-6 py-2 text-sm hover:bg-[#1D1B20]/[.08]">
-                                    <span>
-                                      <HiOutlinePencil className="text-xl" />
-                                    </span>
-                                    Edit
-                                  </button>
-                                </Link>
-                              </li>
-                              <li>
-                                <button
-                                  onClick={() =>
-                                    handleDeleteProduct(product?._id)
-                                  }
-                                  className="flex items-center gap-x-4 w-full pl-4 pr-6 py-2 text-sm hover:bg-[#1D1B20]/[.08]"
-                                >
-                                  <span>
-                                    <HiOutlineTrash className="text-xl" />
-                                  </span>
-                                  Hapus
-                                </button>
-                              </li>
-                            </ul>
-                          </div>
-                        )}
+                      <div>
+                        <Dropdown
+                          id={"more-menu" + key}
+                          menuDirection="right"
+                          button={
+                            <button
+                              onClick={() => setMoreMenuProductId(product?._id)}
+                              className="p-2 hover:bg-[#49454F]/[.08] active:[#49454F]/[.12] rounded-full transition-all active:scale-90 duration-300"
+                            >
+                              <IoMdMore className="text-lg" />
+                            </button>
+                          }
+                          onShow={moreMenuProductId === product?._id}
+                          setOnShow={(isOpen) =>
+                            setMoreMenuProductId(isOpen ? product?._id : null)
+                          }
+                          selectMenu={[
+                            {
+                              type: "link",
+                              url: `/admin/product/edit/${product?._id}`,
+                              icon: <HiOutlinePencil />,
+                              label: "Edit",
+                            },
+                            {
+                              handleMenuClicked: () =>
+                                handleDeleteProduct(product?._id),
+                              icon: <HiOutlineTrash />,
+                              label: "Hapus",
+                            },
+                          ]}
+                        />
                       </div>
                     </td>
 
                     {/* Visibility */}
                     <td className="pl-6 py-3 whitespace-nowrap">
                       <DropdownSelect
-                        id="visibility-menu"
+                        id={"visibility-menu" + key}
                         button={
                           <button
                             onClick={() =>

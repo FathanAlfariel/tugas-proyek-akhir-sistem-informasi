@@ -12,12 +12,8 @@ const DropdownSelect = ({
   menuDirection = "left",
   minWidth = undefined,
 }) => {
-  const [showDropdownMenu, setShowDropdownMenu] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedMenu, setSelectedMenu] = useState(null);
-
-  useEffect(() => {
-    setShowDropdownMenu(onShow);
-  }, [onShow]);
 
   useEffect(() => {
     const menu = selectMenu?.find((menu) => menu?.value === defaultValue);
@@ -29,12 +25,11 @@ const DropdownSelect = ({
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (!document.getElementById(id)?.contains(e.target)) {
-        setShowDropdownMenu(false);
-        setOnShow(false); // Update parent state when closed
+        setIsDropdownOpen(false);
       }
     };
 
-    if (showDropdownMenu) {
+    if (isDropdownOpen) {
       window.addEventListener("click", handleClickOutside);
     } else {
       window.removeEventListener("click", handleClickOutside);
@@ -43,17 +38,17 @@ const DropdownSelect = ({
     return () => {
       window.removeEventListener("click", handleClickOutside);
     };
-  }, [showDropdownMenu, id, setOnShow]);
+  }, [isDropdownOpen, id]);
 
   return (
     <>
       {/* Dropdown select */}
       <div id={id} className="inline-flex relative">
-        {/* Visibility menu button */}
-        {button}
+        {/* Button */}
+        <div onClick={() => setIsDropdownOpen(!isDropdownOpen)}>{button}</div>
 
         {/* Dropdown select menu */}
-        {onShow && (
+        {isDropdownOpen && (
           <>
             {/* Dropdown select menu for tablet, desktop */}
             <div
