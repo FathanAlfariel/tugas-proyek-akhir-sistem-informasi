@@ -5,8 +5,6 @@ import { MdClose } from "react-icons/md";
 const DropdownSelect = ({
   id,
   button,
-  onShow,
-  setOnShow, // callback to update the state in parent
   selectMenu,
   defaultValue,
   menuDirection = "left",
@@ -52,11 +50,13 @@ const DropdownSelect = ({
           <>
             {/* Dropdown select menu for tablet, desktop */}
             <div
-              className={`hidden md:block absolute top-0 ${
+              className={`hidden absolute top-0 ${
                 menuDirection === "left" ? "left-0" : "right-0"
               } shadow bg-white ${
                 minWidth === undefined ? "min-w-40" : minWidth
-              } py-2.5 rounded-2xl border border-[#F1F1F1] z-10`}
+              } py-2.5 rounded-2xl border border-[#F1F1F1] z-10 ${
+                isDropdownOpen ? "block" : "hidden"
+              } md:block`}
             >
               <ul className="flex flex-col gap-y-0.5">
                 {selectMenu.map((menu, key) => {
@@ -88,8 +88,7 @@ const DropdownSelect = ({
               {/* Backdrop */}
               <div
                 onClick={() => {
-                  setShowDropdownMenu(false);
-                  setOnShow(false);
+                  setIsDropdownOpen(false);
                 }}
                 className="fixed top-0 left-0 h-full w-full bg-black/[.25] -z-40"
               ></div>
@@ -122,8 +121,7 @@ const DropdownSelect = ({
                 <div className="border-t py-2.5">
                   <button
                     onClick={() => {
-                      setShowDropdownMenu(false);
-                      setOnShow(false);
+                      setIsDropdownOpen(false);
                     }}
                     className="flex items-center gap-x-4 w-full pl-4 pr-6 py-2 text-sm hover:bg-[#1D1B20]/[.08]"
                   >

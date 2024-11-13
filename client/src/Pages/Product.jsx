@@ -150,10 +150,6 @@ const Product = () => {
                               <IoMdMore className="text-lg" />
                             </button>
                           }
-                          onShow={moreMenuProductId === product?._id}
-                          setOnShow={(isOpen) =>
-                            setMoreMenuProductId(isOpen ? product?._id : null)
-                          }
                           selectMenu={[
                             {
                               type: "link",
@@ -206,24 +202,22 @@ const Product = () => {
                             </span>
                           </button>
                         }
-                        onShow={visibilityMenuProductId === product?._id}
-                        setOnShow={(isOpen) =>
-                          setVisibilityMenuProductId(
-                            isOpen ? product?._id : null
-                          )
-                        }
                         selectMenu={[
                           {
                             label: "Public",
                             value: "public",
-                            handleMenuClicked: () =>
-                              handleChangeVisibility(product?._id, "public"),
+                            handleMenuClicked: () => {
+                              handleChangeVisibility(product?._id, "public");
+                              setVisibilityMenuProductId(null);
+                            },
                           },
                           {
                             label: "Private",
                             value: "private",
-                            handleMenuClicked: () =>
-                              handleChangeVisibility(product?._id, "private"),
+                            handleMenuClicked: () => {
+                              handleChangeVisibility(product?._id, "private");
+                              setVisibilityMenuProductId(null);
+                            },
                           },
                         ]}
                         defaultValue={product?.visibility}

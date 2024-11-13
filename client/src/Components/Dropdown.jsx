@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { IoCheckmarkSharp } from "react-icons/io5";
 import { MdClose } from "react-icons/md";
 import { Link } from "react-router-dom";
 
@@ -9,17 +8,8 @@ const Dropdown = ({
   menuDirection = "left",
   minWidth = undefined,
   selectMenu,
-  defaultValue,
 }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [selectedMenu, setSelectedMenu] = useState(null);
-
-  useEffect(() => {
-    const menu = selectMenu?.find((menu) => menu?.value === defaultValue);
-    if (menu) {
-      setSelectedMenu(menu.value);
-    }
-  }, [defaultValue, selectMenu]);
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -49,7 +39,7 @@ const Dropdown = ({
         <>
           {/* Dropdown select menu for tablet, desktop */}
           <div
-            className={`absolute top-0 ${
+            className={`hidden absolute top-0 ${
               menuDirection === "left" ? "left-0" : "right-0"
             } shadow bg-white ${
               minWidth === undefined ? "min-w-40" : minWidth
@@ -76,15 +66,7 @@ const Dropdown = ({
                         }}
                         className="flex items-center gap-x-4 w-full pl-4 pr-6 py-2 text-left text-sm hover:bg-[#1D1B20]/[.08]"
                       >
-                        {menu?.value === selectedMenu ? (
-                          <span>
-                            <IoCheckmarkSharp className="text-xl" />
-                          </span>
-                        ) : (
-                          <span>
-                            <IoCheckmarkSharp className="invisible text-xl" />
-                          </span>
-                        )}
+                        <span className="text-xl">{menu.icon}</span>
                         {menu.label}
                       </button>
                     )}
@@ -107,24 +89,25 @@ const Dropdown = ({
                 {selectMenu.map((menu, key) => {
                   return (
                     <li key={key}>
-                      <button
-                        onClick={() => {
-                          menu.handleMenuClicked();
-                          setIsDropdownOpen(false);
-                        }}
-                        className="flex items-center gap-x-4 w-full pl-4 pr-6 py-2 text-sm hover:bg-[#1D1B20]/[.08]"
-                      >
-                        {menu?.value === selectedMenu ? (
-                          <span>
-                            <IoCheckmarkSharp className="text-2xl" />
-                          </span>
-                        ) : (
-                          <span>
-                            <IoCheckmarkSharp className="invisible text-2xl" />
-                          </span>
-                        )}
-                        {menu.label}
-                      </button>
+                      {menu.type === "link" ? (
+                        <Link to={menu.url}>
+                          <button className="flex items-center gap-x-4 w-full pl-4 pr-6 py-2 text-left text-sm hover:bg-[#1D1B20]/[.08]">
+                            <span className="text-xl">{menu.icon}</span>
+                            {menu.label}
+                          </button>
+                        </Link>
+                      ) : (
+                        <button
+                          onClick={() => {
+                            menu.handleMenuClicked();
+                            setIsDropdownOpen(false);
+                          }}
+                          className="flex items-center gap-x-4 w-full pl-4 pr-6 py-2 text-left text-sm hover:bg-[#1D1B20]/[.08]"
+                        >
+                          <span className="text-xl">{menu.icon}</span>
+                          {menu.label}
+                        </button>
+                      )}
                     </li>
                   );
                 })}
