@@ -4,6 +4,7 @@ import { IoChevronDownOutline, IoCheckmarkSharp } from "react-icons/io5";
 import { GrDeliver } from "react-icons/gr";
 import axios from "axios";
 import { HiOutlineTrash, HiOutlinePencil } from "react-icons/hi2";
+import { Link } from "react-router-dom";
 
 const Order = () => {
   const [orders, setOrders] = useState([]);
@@ -19,7 +20,6 @@ const Order = () => {
         .get("http://localhost:5000/api/order")
         .then(({ data }) => {
           setOrders(data.results);
-          console.log(data.results);
         })
         .catch((err) => {
           console.log(err);
@@ -63,7 +63,7 @@ const Order = () => {
 
   return (
     <>
-      <h1 className="text-[28px] leading-9 font-medium mb-4">Pemesanan</h1>
+      <h1 className="text-[28px] leading-9 font-medium mb-4">Pesanan</h1>
 
       <div className="flex flex-col gap-y-6">
         {orders &&
@@ -160,15 +160,17 @@ const Order = () => {
                 <div className="flex justify-between items-center border-y py-4 overflow-x-auto md:overflow-visible">
                   <div className="flex items-center gap-x-2">
                     {/* Detail button */}
-                    <button
-                      type="button"
-                      className="flex items-center gap-x-2 py-2.5 px-4 text-sm text-[#0f0f0f] font-medium rounded-full transition-all active:scale-90 duration-300 bg-black/[.05] hover:bg-black/[.1] whitespace-nowrap"
-                    >
-                      <span className="text-lg text-[#0f0f0f]">
-                        <FiInfo />
-                      </span>
-                      Detail
-                    </button>
+                    <Link to={`/admin/order/detail/${order._id}`}>
+                      <button
+                        type="button"
+                        className="flex items-center gap-x-2 py-2.5 px-4 text-sm text-[#0f0f0f] font-medium rounded-full transition-all active:scale-90 duration-300 bg-black/[.05] hover:bg-black/[.1] whitespace-nowrap"
+                      >
+                        <span className="text-lg text-[#0f0f0f]">
+                          <FiInfo />
+                        </span>
+                        Detail
+                      </button>
+                    </Link>
 
                     {/* Update status button */}
                     <div id="update-status-menu" className="relative">
