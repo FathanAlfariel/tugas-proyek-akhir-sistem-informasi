@@ -101,7 +101,7 @@ const Product = () => {
     <>
       <h1 className="text-[28px] leading-9 font-medium">Produk</h1>
 
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto md:overflow-visible">
         <table className="w-full">
           <thead>
             <tr className="border-b">

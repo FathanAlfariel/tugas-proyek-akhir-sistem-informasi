@@ -106,9 +106,9 @@ const Order = () => {
                 <div
                   className={`grid ${
                     order.product.length > 1
-                      ? "grid-cols-2 gap-x-12"
+                      ? "grid-cols-1 md:grid-cols-2 gap-x-12"
                       : "grid-cols-1"
-                  } max-h-80 overflow-y-auto`}
+                  } max-h-44 md:max-h-80 overflow-y-auto`}
                 >
                   {order.product.map((prod, key) => {
                     return (
@@ -121,7 +121,7 @@ const Order = () => {
 
                         <div className="grow">
                           <h3 className="text-sm line-clamp-2">{prod.name}</h3>
-                          <p className="text-xs text-[#606060]">
+                          <p className="text-xs text-[#606060] line-clamp-1">
                             Variasi:{" "}
                             <span>
                               {prod.variant.color}(
@@ -157,12 +157,12 @@ const Order = () => {
                   })}
                 </div>
 
-                <div className="flex justify-between items-center border-y py-4">
+                <div className="flex justify-between items-center border-y py-4 overflow-x-auto md:overflow-visible">
                   <div className="flex items-center gap-x-2">
                     {/* Detail button */}
                     <button
                       type="button"
-                      className="flex items-center gap-x-2 py-2.5 px-4 text-sm text-[#0f0f0f] font-medium rounded-full transition-all active:scale-90 duration-300 bg-black/[.05] hover:bg-black/[.1]"
+                      className="flex items-center gap-x-2 py-2.5 px-4 text-sm text-[#0f0f0f] font-medium rounded-full transition-all active:scale-90 duration-300 bg-black/[.05] hover:bg-black/[.1] whitespace-nowrap"
                     >
                       <span className="text-lg text-[#0f0f0f]">
                         <FiInfo />
@@ -174,7 +174,7 @@ const Order = () => {
                     <div id="update-status-menu" className="relative">
                       <button
                         type="button"
-                        className="group flex items-center gap-x-2 py-2.5 px-4 text-sm text-[#0f0f0f] font-medium rounded-full transition-all active:scale-90 duration-300 bg-black/[.05] hover:bg-black/[.1]"
+                        className="group flex items-center gap-x-2 py-2.5 px-4 text-sm text-[#0f0f0f] font-medium rounded-full transition-all active:scale-90 duration-300 bg-black/[.05] hover:bg-black/[.1] whitespace-nowrap"
                         onClick={() => handleShowMenuStatusUpdates(order._id)}
                       >
                         <span className="text-lg text-[#0f0f0f]">
@@ -296,7 +296,7 @@ const Order = () => {
                     {/* Edit button */}
                     <button
                       type="button"
-                      className="flex items-center gap-x-2 py-2.5 px-4 text-sm text-[#0f0f0f] font-medium rounded-full transition-all active:scale-90 duration-300 bg-black/[.05] hover:bg-black/[.1]"
+                      className="flex items-center gap-x-2 py-2.5 px-4 text-sm text-[#0f0f0f] font-medium rounded-full transition-all active:scale-90 duration-300 bg-black/[.05] hover:bg-black/[.1] whitespace-nowrap"
                     >
                       <span className="text-lg text-[#0f0f0f]">
                         <HiOutlinePencil />
@@ -307,7 +307,7 @@ const Order = () => {
                     {/* Delete button */}
                     <button
                       type="button"
-                      className="flex items-center gap-x-2 py-2.5 px-4 text-sm text-[#0f0f0f] font-medium rounded-full transition-all active:scale-90 duration-300 bg-black/[.05] hover:bg-black/[.1]"
+                      className="flex items-center gap-x-2 py-2.5 px-4 text-sm text-[#0f0f0f] font-medium rounded-full transition-all active:scale-90 duration-300 bg-black/[.05] hover:bg-black/[.1] whitespace-nowrap"
                     >
                       <span className="text-lg text-[#0f0f0f]">
                         <HiOutlineTrash />
