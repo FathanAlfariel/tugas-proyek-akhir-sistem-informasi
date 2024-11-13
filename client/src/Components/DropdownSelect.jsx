@@ -41,9 +41,14 @@ const DropdownSelect = ({
   return (
     <>
       {/* Dropdown select */}
-      <div id={id} className="inline-flex relative">
+      <div id={id} className="flex relative">
         {/* Button */}
-        <div onClick={() => setIsDropdownOpen(!isDropdownOpen)}>{button}</div>
+        <div
+          className="w-full"
+          onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+        >
+          {button}
+        </div>
 
         {/* Dropdown select menu */}
         {isDropdownOpen && (

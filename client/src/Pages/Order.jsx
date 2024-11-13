@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { FiInfo } from "react-icons/fi";
-import { IoChevronDownOutline, IoCheckmarkSharp } from "react-icons/io5";
+import { IoChevronDownOutline } from "react-icons/io5";
 import { GrDeliver } from "react-icons/gr";
 import axios from "axios";
 import { HiOutlineTrash, HiOutlinePencil } from "react-icons/hi2";
 import { Link } from "react-router-dom";
 import DropdownSelect from "../Components/DropdownSelect";
+import IconButton from "../Components/IconButton";
+import { IoMdMore } from "react-icons/io";
+import Dropdown from "../Components/Dropdown";
 
 const Order = () => {
   const [orders, setOrders] = useState([]);
@@ -159,7 +162,7 @@ const Order = () => {
                 </div>
 
                 <div className="flex justify-between items-center border-y py-4 overflow-x-auto md:overflow-visible">
-                  <div className="flex items-center gap-x-2">
+                  <div className="hidden md:flex items-center gap-x-2">
                     {/* Detail button */}
                     <Link to={`/admin/order/detail/${order._id}`}>
                       <button
@@ -174,13 +177,12 @@ const Order = () => {
                     </Link>
 
                     <DropdownSelect
-                      id="update-status-menu"
+                      id={"update-status-menu" + key}
                       minWidth="min-w-48"
                       button={
                         <button
                           type="button"
                           className="group flex items-center gap-x-2 py-2.5 px-4 text-sm text-[#0f0f0f] font-medium rounded-full transition-all active:scale-90 duration-300 bg-black/[.05] hover:bg-black/[.1] whitespace-nowrap"
-                          onClick={() => handleShowMenuStatusUpdates(order._id)}
                         >
                           <span className="text-lg text-[#0f0f0f]">
                             <GrDeliver />
@@ -190,10 +192,6 @@ const Order = () => {
                             <IoChevronDownOutline />
                           </span>
                         </button>
-                      }
-                      onShow={showMenuStatusUpdates === order?._id}
-                      setOnShow={(isOpen) =>
-                        setShowMenuStatusUpdates(isOpen ? order?._id : null)
                       }
                       selectMenu={[
                         {
@@ -254,7 +252,7 @@ const Order = () => {
                   </div>
 
                   {/* Total product */}
-                  <h3 className="text-sm line-clamp-2">
+                  <h3 className="text-sm line-clamp-1">
                     Total pesanan ({order.product.length} barang):{" "}
                     <span className="font-bold">
                       {order.totalPrice.toLocaleString("id-ID", {
@@ -263,6 +261,69 @@ const Order = () => {
                       })}
                     </span>
                   </h3>
+
+                  <Dropdown
+                    id={"action-menu" + key}
+                    button={
+                      <IconButton>
+                        <IoMdMore className="text-lg" />
+                      </IconButton>
+                    }
+                    selectMenu={[
+                      {
+                        type: "link",
+                        url: `/admin/order/detail/${order._id}`,
+                        icon: <FiInfo />,
+                        label: "Detail",
+                      },
+                      {
+                        type: "menu-select",
+                        icon: <GrDeliver />,
+                        label: "Update status",
+                        selectMenu: [
+                          {
+                            label: "Belum bayar",
+                            value: "belum bayar",
+                            handleMenuClicked: () =>
+                              handleOrderStatus(order?._id, "belum bayar"),
+                          },
+                          {
+                            label: "Sedang dikemas",
+                            value: "sedang dikemas",
+                            handleMenuClicked: () =>
+                              handleOrderStatus(order?._id, "sedang dikemas"),
+                          },
+                          {
+                            label: "Dikirim",
+                            value: "dikirim",
+                            handleMenuClicked: () =>
+                              handleOrderStatus(order?._id, "dikirim"),
+                          },
+                          {
+                            label: "Selesai",
+                            value: "selesai",
+                            handleMenuClicked: () =>
+                              handleOrderStatus(order?._id, "selesai"),
+                          },
+                          {
+                            label: "Dibatalkan",
+                            value: "dibatalkan",
+                            handleMenuClicked: () =>
+                              handleOrderStatus(order?._id, "dibatalkan"),
+                          },
+                        ],
+                        defaultValue: order?.status,
+                      },
+                      {
+                        icon: <HiOutlinePencil />,
+                        label: "Edit",
+                      },
+                      {
+                        icon: <HiOutlineTrash />,
+                        label: "Hapus",
+                      },
+                    ]}
+                  />
                 </div>
               </div>
             );

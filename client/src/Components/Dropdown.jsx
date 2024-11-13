@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { MdClose } from "react-icons/md";
 import { Link } from "react-router-dom";
+import { IoChevronForwardOutline } from "react-icons/io5";
+import DropdownSelect from "./DropdownSelect";
 
 const Dropdown = ({
   id,
@@ -96,6 +98,30 @@ const Dropdown = ({
                             {menu.label}
                           </button>
                         </Link>
+                      ) : menu.type === "menu-select" ? (
+                        <DropdownSelect
+                          id={"menu-select" + key}
+                          button={
+                            <button
+                              onClick={() => {
+                                menu.handleMenuClicked();
+                                setIsDropdownOpen(false);
+                              }}
+                              className="flex justify-between items-center w-full pl-4 pr-6 py-2 text-left text-sm hover:bg-[#1D1B20]/[.08]"
+                            >
+                              <div className="flex items-center gap-x-4">
+                                <span className="text-xl">{menu.icon}</span>
+                                {menu.label}
+                              </div>
+
+                              <span className="text-xl">
+                                <IoChevronForwardOutline />
+                              </span>
+                            </button>
+                          }
+                          selectMenu={menu.selectMenu}
+                          defaultValue={menu.defaultValue}
+                        />
                       ) : (
                         <button
                           onClick={() => {
@@ -118,7 +144,7 @@ const Dropdown = ({
                   onClick={() => setIsDropdownOpen(false)}
                   className="flex items-center gap-x-4 w-full pl-4 pr-6 py-2 text-sm hover:bg-[#1D1B20]/[.08]"
                 >
-                  <MdClose className="text-2xl" />
+                  <MdClose className="text-xl" />
                   Cancel
                 </button>
               </div>
