@@ -5,6 +5,7 @@ import { GrDeliver } from "react-icons/gr";
 import axios from "axios";
 import { HiOutlineTrash, HiOutlinePencil } from "react-icons/hi2";
 import { Link } from "react-router-dom";
+import DropdownSelect from "../Components/DropdownSelect";
 
 const Order = () => {
   const [orders, setOrders] = useState([]);
@@ -116,7 +117,7 @@ const Order = () => {
                         <img
                           src={`http://localhost:5000/public/images/${prod.images[0]}`}
                           alt={prod.images[0]}
-                          className="w-28 h-28 object-contain rounded-xl border"
+                          className="w-20 h-20 md:w-28 md:h-28 object-contain rounded-xl"
                         />
 
                         <div className="grow">
@@ -172,128 +173,62 @@ const Order = () => {
                       </button>
                     </Link>
 
-                    {/* Update status button */}
-                    <div id="update-status-menu" className="relative">
-                      <button
-                        type="button"
-                        className="group flex items-center gap-x-2 py-2.5 px-4 text-sm text-[#0f0f0f] font-medium rounded-full transition-all active:scale-90 duration-300 bg-black/[.05] hover:bg-black/[.1] whitespace-nowrap"
-                        onClick={() => handleShowMenuStatusUpdates(order._id)}
-                      >
-                        <span className="text-lg text-[#0f0f0f]">
-                          <GrDeliver />
-                        </span>
-                        Update status
-                        <span className="hidden group-hover:block text-base text-[#0f0f0f]">
-                          <IoChevronDownOutline />
-                        </span>
-                      </button>
-
-                      {/* Update status menu */}
-                      {showMenuStatusUpdates === order?._id && (
-                        <div className="absolute top-0 left-0 shadow bg-white min-w-48 py-2.5 rounded-2xl border border-[#F1F1F1] z-10">
-                          <ul className="flex flex-col gap-y-0.5">
-                            <li>
-                              <button
-                                onClick={() =>
-                                  handleOrderStatus(order?._id, "belum bayar")
-                                }
-                                className="flex items-center gap-x-4 w-full pl-4 pr-6 py-2 text-left text-sm hover:bg-[#1D1B20]/[.08]"
-                              >
-                                {order?.status === "belum bayar" ? (
-                                  <span>
-                                    <IoCheckmarkSharp className="text-xl" />
-                                  </span>
-                                ) : (
-                                  <span>
-                                    <IoCheckmarkSharp className="invisible text-xl" />
-                                  </span>
-                                )}
-                                Belum bayar
-                              </button>
-                            </li>
-                            <li>
-                              <button
-                                onClick={() =>
-                                  handleOrderStatus(
-                                    order?._id,
-                                    "sedang dikemas"
-                                  )
-                                }
-                                className="flex items-center gap-x-4 w-full pl-4 pr-6 py-2 text-left text-sm hover:bg-[#1D1B20]/[.08]"
-                              >
-                                {order?.status === "sedang dikemas" ? (
-                                  <span>
-                                    <IoCheckmarkSharp className="text-xl" />
-                                  </span>
-                                ) : (
-                                  <span>
-                                    <IoCheckmarkSharp className="invisible text-xl" />
-                                  </span>
-                                )}
-                                Sedang dikemas
-                              </button>
-                            </li>
-                            <li>
-                              <button
-                                onClick={() =>
-                                  handleOrderStatus(order?._id, "dikirim")
-                                }
-                                className="flex items-center gap-x-4 w-full pl-4 pr-6 py-2 text-left text-sm hover:bg-[#1D1B20]/[.08]"
-                              >
-                                {order?.status === "dikirim" ? (
-                                  <span>
-                                    <IoCheckmarkSharp className="text-xl" />
-                                  </span>
-                                ) : (
-                                  <span>
-                                    <IoCheckmarkSharp className="invisible text-xl" />
-                                  </span>
-                                )}
-                                Dikirim
-                              </button>
-                            </li>
-                            <li>
-                              <button
-                                onClick={() =>
-                                  handleOrderStatus(order?._id, "selesai")
-                                }
-                                className="flex items-center gap-x-4 w-full pl-4 pr-6 py-2 text-left text-sm hover:bg-[#1D1B20]/[.08]"
-                              >
-                                {order?.status === "selesai" ? (
-                                  <span>
-                                    <IoCheckmarkSharp className="text-xl" />
-                                  </span>
-                                ) : (
-                                  <span>
-                                    <IoCheckmarkSharp className="invisible text-xl" />
-                                  </span>
-                                )}
-                                Selesai
-                              </button>
-                            </li>
-                            <li>
-                              <button
-                                onClick={() =>
-                                  handleOrderStatus(order?._id, "dibatalkan")
-                                }
-                                className="flex items-center gap-x-4 w-full pl-4 pr-6 py-2 text-left text-sm hover:bg-[#1D1B20]/[.08]"
-                              >
-                                {order?.status === "dibatalkan" ? (
-                                  <span>
-                                    <IoCheckmarkSharp className="text-xl" />
-                                  </span>
-                                ) : (
-                                  <span>
-                                    <IoCheckmarkSharp className="invisible text-xl" />
-                                  </span>
-                                )}
-                                Dibatalkan
-                              </button>
-                            </li>
-                          </ul>
-                        </div>
-                      )}
-                    </div>
+                    <DropdownSelect
+                      id="update-status-menu"
+                      minWidth="min-w-48"
+                      button={
+                        <button
+                          type="button"
+                          className="group flex items-center gap-x-2 py-2.5 px-4 text-sm text-[#0f0f0f] font-medium rounded-full transition-all active:scale-90 duration-300 bg-black/[.05] hover:bg-black/[.1] whitespace-nowrap"
+                          onClick={() => handleShowMenuStatusUpdates(order._id)}
+                        >
+                          <span className="text-lg text-[#0f0f0f]">
+                            <GrDeliver />
+                          </span>
+                          Update status
+                          <span className="hidden group-hover:block text-base text-[#0f0f0f]">
+                            <IoChevronDownOutline />
+                          </span>
+                        </button>
+                      }
+                      onShow={showMenuStatusUpdates === order?._id}
+                      setOnShow={(isOpen) =>
+                        setShowMenuStatusUpdates(isOpen ? order?._id : null)
+                      }
+                      selectMenu={[
+                        {
+                          label: "Belum bayar",
+                          value: "belum bayar",
+                          handleMenuClicked: () =>
+                            handleOrderStatus(order?._id, "belum bayar"),
+                        },
+                        {
+                          label: "Sedang dikemas",
+                          value: "sedang dikemas",
+                          handleMenuClicked: () =>
+                            handleOrderStatus(order?._id, "sedang dikemas"),
+                        },
+                        {
+                          label: "Dikirim",
+                          value: "dikirim",
+                          handleMenuClicked: () =>
+                            handleOrderStatus(order?._id, "dikirim"),
+                        },
+                        {
+                          label: "Selesai",
+                          value: "selesai",
+                          handleMenuClicked: () =>
+                            handleOrderStatus(order?._id, "selesai"),
+                        },
+                        {
+                          label: "Dibatalkan",
+                          value: "dibatalkan",
+                          handleMenuClicked: () =>
+                            handleOrderStatus(order?._id, "dibatalkan"),
+                        },
+                      ]}
+                      defaultValue={order?.status}
+                    />
 
                     {/* Edit button */}
                     <button

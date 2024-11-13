@@ -6,7 +6,7 @@ import Navigation from "./Components/Navigation";
 const Layout = () => {
   return (
     <>
-      <header className="mx-6 mt-2.5">
+      <header className="mx-4 md:mx-6 mt-2.5">
         {/* Dashboard header */}
         <Header />
 
@@ -15,7 +15,7 @@ const Layout = () => {
         </div>
       </header>
 
-      <main className="mx-6 my-8">
+      <main className="mx-4 md:mx-6 my-8">
         <Outlet />
         <AddFloatingButton />
       </main>

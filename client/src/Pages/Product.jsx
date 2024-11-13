@@ -9,6 +9,7 @@ import {
 import { IoChevronDownOutline, IoCheckmarkSharp } from "react-icons/io5";
 import { PiLockKey } from "react-icons/pi";
 import { Link } from "react-router-dom";
+import DropdownSelect from "../Components/DropdownSelect";
 
 const Product = () => {
   const [products, setProducts] = useState(null);
@@ -85,17 +86,14 @@ const Product = () => {
     if (!e.target.closest("#more-menu") && moreMenuProductId) {
       setMoreMenuProductId(null);
     }
-    if (!e.target.closest("#visibility-menu") && visibilityMenuProductId) {
-      setVisibilityMenuProductId(null);
-    }
   };
 
   useEffect(() => {
-    if (moreMenuProductId || visibilityMenuProductId) {
+    if (moreMenuProductId) {
       window.addEventListener("click", handleClickOutside);
       return () => window.removeEventListener("click", handleClickOutside);
     }
-  }, [moreMenuProductId, visibilityMenuProductId]);
+  }, [moreMenuProductId]);
 
   return (
     <>
@@ -185,90 +183,60 @@ const Product = () => {
 
                     {/* Visibility */}
                     <td className="pl-6 py-3 whitespace-nowrap">
-                      <div
+                      <DropdownSelect
                         id="visibility-menu"
-                        className="relative inline-flex"
-                      >
-                        {/* Visibility menu button */}
-                        <button
-                          onClick={() => handleShowVisibilityMenu(product?._id)}
-                          className="group flex items-center gap-x-2 pl-3 pr-4 py-2.5 text-sm capitalize rounded-full hover:bg-[#6750A4]/[.08] active:bg-[#6750A4]/[.12] transition-all active:scale-90 duration-300"
-                        >
-                          {product?.visibility === "public" ? (
-                            <>
-                              <span>
-                                <HiOutlineGlobeAsiaAustralia className="text-xl" />
-                              </span>
+                        button={
+                          <button
+                            onClick={() =>
+                              handleShowVisibilityMenu(product?._id)
+                            }
+                            className="group flex items-center gap-x-2 px-3 py-2.5 text-sm capitalize rounded-full hover:bg-[#6750A4]/[.08] active:bg-[#6750A4]/[.12] transition-all active:scale-90 duration-300"
+                          >
+                            {product?.visibility === "public" ? (
+                              <>
+                                <span>
+                                  <HiOutlineGlobeAsiaAustralia className="text-xl" />
+                                </span>
 
-                              {product?.visibility}
-                            </>
-                          ) : (
-                            <>
-                              <span>
-                                <PiLockKey className="text-xl" />
-                              </span>
+                                {product?.visibility}
+                              </>
+                            ) : (
+                              <>
+                                <span>
+                                  <PiLockKey className="text-xl" />
+                                </span>
 
-                              {product?.visibility}
-                            </>
-                          )}
+                                {product?.visibility}
+                              </>
+                            )}
 
-                          <span className="invisible group-hover:visible">
-                            <IoChevronDownOutline />
-                          </span>
-                        </button>
-
-                        {/* Visibility menu */}
-                        {visibilityMenuProductId === product?._id && (
-                          <div className="absolute top-0 left-0 shadow bg-white min-w-40 py-2.5 rounded-2xl border border-[#F1F1F1] z-10">
-                            <ul className="flex flex-col gap-y-0.5">
-                              <li>
-                                <button
-                                  onClick={() =>
-                                    handleChangeVisibility(
-                                      product?._id,
-                                      "public"
-                                    )
-                                  }
-                                  className="flex items-center gap-x-4 w-full pl-4 pr-6 py-2 text-sm hover:bg-[#1D1B20]/[.08]"
-                                >
-                                  {product?.visibility === "public" ? (
-                                    <span>
-                                      <IoCheckmarkSharp className="text-xl" />
-                                    </span>
-                                  ) : (
-                                    <span>
-                                      <IoCheckmarkSharp className="invisible text-xl" />
-                                    </span>
-                                  )}
-                                  Public
-                                </button>
-                              </li>
-                              <li>
-                                <button
-                                  onClick={() =>
-                                    handleChangeVisibility(
-                                      product?._id,
-                                      "private"
-                                    )
-                                  }
-                                  className="flex items-center gap-x-4 w-full pl-4 pr-6 py-2 text-sm hover:bg-[#1D1B20]/[.08]"
-                                >
-                                  {product?.visibility === "private" ? (
-                                    <span>
-                                      <IoCheckmarkSharp className="text-xl" />
-                                    </span>
-                                  ) : (
-                                    <span>
-                                      <IoCheckmarkSharp className="invisible text-xl" />
-                                    </span>
-                                  )}
-                                  Private
-                                </button>
-                              </li>
-                            </ul>
-                          </div>
-                        )}
-                      </div>
+                            <span className="invisible group-hover:visible">
+                              <IoChevronDownOutline />
+                            </span>
+                          </button>
+                        }
+                        onShow={visibilityMenuProductId === product?._id}
+                        setOnShow={(isOpen) =>
+                          setVisibilityMenuProductId(
+                            isOpen ? product?._id : null
+                          )
+                        }
+                        selectMenu={[
+                          {
+                            label: "Public",
+                            value: "public",
+                            handleMenuClicked: () =>
+                              handleChangeVisibility(product?._id, "public"),
+                          },
+                          {
+                            label: "Private",
+                            value: "private",
+                            handleMenuClicked: () =>
+                              handleChangeVisibility(product?._id, "private"),
+                          },
+                        ]}
+                        defaultValue={product?.visibility}
+                      />
                     </td>
                     <td className="pl-6 py-3 whitespace-nowrap">
                       <p className="text-xs">
