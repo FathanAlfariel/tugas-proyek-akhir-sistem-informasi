@@ -8,7 +8,7 @@ const addOrder = async (req, res) => {
 
   try {
     const query = new Order({
-      trackingReceipt: `TRK-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+      trackingReceipt: `TRK${Date.now()}${Math.floor(Math.random() * 1000)}`,
       variantId,
       name,
       phone,

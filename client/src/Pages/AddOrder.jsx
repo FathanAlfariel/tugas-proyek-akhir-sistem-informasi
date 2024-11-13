@@ -22,7 +22,9 @@ const AddOrder = () => {
 
   const formik = useFormik({
     initialValues: {
+      receiptInputOptions: "automatic",
       trackingReceipt: "",
+      orderMethod: "",
       variantId: [],
       name: "",
       phone: "",
@@ -39,6 +41,8 @@ const AddOrder = () => {
       status: "belum bayar",
     },
     validationSchema: yup.object({
+      receiptInputOptions: yup.string(),
+      orderMethod: yup.string().required("Metode pemesanan harus diisi."),
       trackingReceipt: yup.string(),
       variantId: yup
         .array()
@@ -198,6 +202,8 @@ const AddOrder = () => {
     getCities();
   }, [selectedCountry, selectedState]);
 
+  console.log(formik.values.receiptInputOptions);
+
   return (
     <>
       <h1 className="text-[28px] leading-9 font-medium mb-6">Tambah pesanan</h1>
@@ -205,6 +211,81 @@ const AddOrder = () => {
       <form onSubmit={formik.handleSubmit}>
         <div className="grid grid-cols-12 gap-x-6">
           <div className="col-span-7">
+            {/* Resi pesanan */}
+            <div className="mb-6">
+              <h5 className="text-lg font-medium mb-2.5">Resi pesanan</h5>
+
+              <div className="flex items-center gap-x-2.5">
+                <label
+                  htmlFor="receiptInputAutomatic"
+                  className="inline-block text-sm font-medium py-3 px-4 border rounded-xl cursor-pointer hover:bg-[#f1f1f1] transition-all duration-300 has-[:checked]:border-[#6750A4] has-[:checked]:bg-[#6750A4]/[.12] has-[:checked]:text-[#6750A4]"
+                >
+                  Resi automatis
+                  <input
+                    type="radio"
+                    id="receiptInputAutomatic"
+                    name="receiptInputOptions"
+                    value="automatic"
+                    className="hidden"
+                    checked={formik.values.receiptInputOptions === "automatic"}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                  />
+                </label>
+                <label
+                  htmlFor="receiptInputTiktok"
+                  className="inline-block text-sm font-medium py-3 px-4 border rounded-xl cursor-pointer hover:bg-[#f1f1f1] transition-all duration-300 has-[:checked]:border-[#6750A4] has-[:checked]:bg-[#6750A4]/[.12] has-[:checked]:text-[#6750A4]"
+                >
+                  Resi manual
+                  <input
+                    type="radio"
+                    id="receiptInputTiktok"
+                    name="receiptInputOptions"
+                    value="manual"
+                    className="hidden"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                  />
+                </label>
+              </div>
+
+              <div className="flex items-center gap-x-2 mt-2">
+                <div className="w-full">
+                  <Input
+                    id="trackingReceipt"
+                    type="text"
+                    name="trackingReceipt"
+                    label="Resi pesanan"
+                    placeholder="Masukkan resi pesanan"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.trackingReceipt}
+                    errorMessage={
+                      formik.touched.trackingReceipt &&
+                      formik.errors.trackingReceipt
+                    }
+                    disabled={formik.values.receiptInputOptions === "automatic"}
+                  />
+                </div>
+                <div className="w-full">
+                  <Input
+                    id="orderMethod"
+                    type="text"
+                    name="orderMethod"
+                    label="Metode pemesanan"
+                    placeholder="Masukkan metode pemesanan"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.trackingReceipt}
+                    errorMessage={
+                      formik.touched.trackingReceipt &&
+                      formik.errors.trackingReceipt
+                    }
+                  />
+                </div>
+              </div>
+            </div>
+
             {/* Informasi pemesan */}
             <div className="mb-6">
               <h5 className="text-lg font-medium mb-2.5">Informasi pemesan</h5>
