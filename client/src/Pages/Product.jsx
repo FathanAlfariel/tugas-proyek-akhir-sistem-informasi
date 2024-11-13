@@ -15,9 +15,6 @@ import Dropdown from "../Components/Dropdown";
 const Product = () => {
   const [products, setProducts] = useState(null);
 
-  const [moreMenuProductId, setMoreMenuProductId] = useState(null);
-  const [visibilityMenuProductId, setVisibilityMenuProductId] = useState(null);
-
   // Get all products
   useEffect(() => {
     const fetchProducts = async () => {
@@ -52,8 +49,6 @@ const Product = () => {
             : product;
         });
       });
-
-      setVisibilityMenuProductId(null);
     } catch (err) {
       console.log(err);
     }
@@ -72,29 +67,6 @@ const Product = () => {
       console.log(err);
     }
   };
-
-  const handleShowMoreMenu = (productId) => {
-    setMoreMenuProductId((prev) => (prev === productId ? null : productId));
-  };
-
-  const handleShowVisibilityMenu = (productId) => {
-    setVisibilityMenuProductId((prev) =>
-      prev === productId ? null : productId
-    );
-  };
-
-  const handleClickOutside = (e) => {
-    if (!e.target.closest("#more-menu") && moreMenuProductId) {
-      setMoreMenuProductId(null);
-    }
-  };
-
-  useEffect(() => {
-    if (moreMenuProductId) {
-      window.addEventListener("click", handleClickOutside);
-      return () => window.removeEventListener("click", handleClickOutside);
-    }
-  }, [moreMenuProductId]);
 
   return (
     <>
@@ -143,10 +115,7 @@ const Product = () => {
                           id={"more-menu" + key}
                           menuDirection="right"
                           button={
-                            <button
-                              onClick={() => setMoreMenuProductId(product?._id)}
-                              className="p-2 hover:bg-[#49454F]/[.08] active:[#49454F]/[.12] rounded-full transition-all active:scale-90 duration-300"
-                            >
+                            <button className="p-2 hover:bg-[#49454F]/[.08] active:[#49454F]/[.12] rounded-full transition-all active:scale-90 duration-300">
                               <IoMdMore className="text-lg" />
                             </button>
                           }
@@ -173,12 +142,7 @@ const Product = () => {
                       <DropdownSelect
                         id={"visibility-menu" + key}
                         button={
-                          <button
-                            onClick={() =>
-                              handleShowVisibilityMenu(product?._id)
-                            }
-                            className="group flex items-center gap-x-2 px-3 py-2.5 text-sm capitalize rounded-full hover:bg-[#6750A4]/[.08] active:bg-[#6750A4]/[.12] transition-all active:scale-90 duration-300"
-                          >
+                          <button className="group flex items-center gap-x-2 px-3 py-2.5 text-sm capitalize rounded-full hover:bg-[#6750A4]/[.08] active:bg-[#6750A4]/[.12] transition-all active:scale-90 duration-300">
                             {product?.visibility === "public" ? (
                               <>
                                 <span>
@@ -206,18 +170,14 @@ const Product = () => {
                           {
                             label: "Public",
                             value: "public",
-                            handleMenuClicked: () => {
-                              handleChangeVisibility(product?._id, "public");
-                              setVisibilityMenuProductId(null);
-                            },
+                            handleMenuClicked: () =>
+                              handleChangeVisibility(product?._id, "public"),
                           },
                           {
                             label: "Private",
                             value: "private",
-                            handleMenuClicked: () => {
-                              handleChangeVisibility(product?._id, "private");
-                              setVisibilityMenuProductId(null);
-                            },
+                            handleMenuClicked: () =>
+                              handleChangeVisibility(product?._id, "private"),
                           },
                         ]}
                         defaultValue={product?.visibility}
