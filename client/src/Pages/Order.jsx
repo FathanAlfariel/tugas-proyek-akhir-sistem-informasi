@@ -42,6 +42,25 @@ const Order = () => {
     }
   }, [showMenuStatusUpdates]);
 
+  const handleOrderStatus = async (id, status) => {
+    const { data } = await axios.put(
+      `http://localhost:5000/api/order/status/${id}`,
+      {
+        status: status,
+      }
+    );
+
+    setOrders((prev) => {
+      return prev.map((item) => {
+        return item._id === id
+          ? { ...item, status: data.results.status }
+          : item;
+      });
+    });
+
+    setShowMenuStatusUpdates(null);
+  };
+
   return (
     <>
       <h1 className="text-[28px] leading-9 font-medium mb-4">Pemesanan</h1>
@@ -174,10 +193,7 @@ const Order = () => {
                             <li>
                               <button
                                 onClick={() =>
-                                  handleChangeVisibility(
-                                    order?._id,
-                                    "belum bayar"
-                                  )
+                                  handleOrderStatus(order?._id, "belum bayar")
                                 }
                                 className="flex items-center gap-x-4 w-full pl-4 pr-6 py-2 text-left text-sm hover:bg-[#1D1B20]/[.08]"
                               >
@@ -196,7 +212,7 @@ const Order = () => {
                             <li>
                               <button
                                 onClick={() =>
-                                  handleChangeVisibility(
+                                  handleOrderStatus(
                                     order?._id,
                                     "sedang dikemas"
                                   )
@@ -218,7 +234,7 @@ const Order = () => {
                             <li>
                               <button
                                 onClick={() =>
-                                  handleChangeVisibility(order?._id, "dikirim")
+                                  handleOrderStatus(order?._id, "dikirim")
                                 }
                                 className="flex items-center gap-x-4 w-full pl-4 pr-6 py-2 text-left text-sm hover:bg-[#1D1B20]/[.08]"
                               >
@@ -237,7 +253,7 @@ const Order = () => {
                             <li>
                               <button
                                 onClick={() =>
-                                  handleChangeVisibility(order?._id, "selesai")
+                                  handleOrderStatus(order?._id, "selesai")
                                 }
                                 className="flex items-center gap-x-4 w-full pl-4 pr-6 py-2 text-left text-sm hover:bg-[#1D1B20]/[.08]"
                               >
@@ -256,10 +272,7 @@ const Order = () => {
                             <li>
                               <button
                                 onClick={() =>
-                                  handleChangeVisibility(
-                                    order?._id,
-                                    "dibatalkan"
-                                  )
+                                  handleOrderStatus(order?._id, "dibatalkan")
                                 }
                                 className="flex items-center gap-x-4 w-full pl-4 pr-6 py-2 text-left text-sm hover:bg-[#1D1B20]/[.08]"
                               >

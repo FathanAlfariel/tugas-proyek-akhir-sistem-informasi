@@ -98,4 +98,30 @@ const getAllOrders = async (req, res) => {
   }
 };
 
-module.exports = { addOrder, getAllOrders };
+const updateOrderStatus = async (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body;
+
+  try {
+    const query = await Order.findByIdAndUpdate(
+      id,
+      {
+        status,
+      },
+      { new: true }
+    );
+
+    if (!query) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    return res
+      .status(200)
+      .json({ message: "Successfully update order status", results: query });
+  } catch (err) {
+    console.log("Error :" + err);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+module.exports = { addOrder, getAllOrders, updateOrderStatus };

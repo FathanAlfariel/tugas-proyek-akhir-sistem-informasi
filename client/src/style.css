@@ -8,11 +8,13 @@
 /* width */
 ::-webkit-scrollbar {
   width: 10px;
+  height: 8px;
 }
 
 /* Track */
 ::-webkit-scrollbar-track {
   background: #f1f1f1;
+  border-radius: 999px;
 }
 
 /* Handle */
