@@ -11,6 +11,7 @@ import { PiLockKey } from "react-icons/pi";
 import { Link } from "react-router-dom";
 import DropdownSelect from "../Components/DropdownSelect";
 import Dropdown from "../Components/Dropdown";
+import IconButton from "../Components/IconButton";
 
 const Product = () => {
   const [products, setProducts] = useState(null);
@@ -72,7 +73,8 @@ const Product = () => {
     <>
       <h1 className="text-[28px] leading-9 font-medium">Produk</h1>
 
-      <div className="overflow-x-auto md:overflow-visible">
+      {/* Products list for tablet and desktop */}
+      <div className="hidden md:block overflow-x-auto md:overflow-visible">
         <table className="w-full">
           <thead>
             <tr className="border-b">
@@ -110,31 +112,29 @@ const Product = () => {
                       </div>
 
                       {/* Action / More */}
-                      <div>
-                        <Dropdown
-                          id={"more-menu" + key}
-                          menuDirection="right"
-                          button={
-                            <button className="p-2 hover:bg-[#49454F]/[.08] active:[#49454F]/[.12] rounded-full transition-all active:scale-90 duration-300">
-                              <IoMdMore className="text-lg" />
-                            </button>
-                          }
-                          selectMenu={[
-                            {
-                              type: "link",
-                              url: `/admin/product/edit/${product?._id}`,
-                              icon: <HiOutlinePencil />,
-                              label: "Edit",
-                            },
-                            {
-                              handleMenuClicked: () =>
-                                handleDeleteProduct(product?._id),
-                              icon: <HiOutlineTrash />,
-                              label: "Hapus",
-                            },
-                          ]}
-                        />
-                      </div>
+                      <Dropdown
+                        id={"more-menu" + key}
+                        menuDirection="right"
+                        button={
+                          <button className="p-2 hover:bg-[#49454F]/[.08] active:[#49454F]/[.12] rounded-full transition-all active:scale-90 duration-300">
+                            <IoMdMore className="text-lg" />
+                          </button>
+                        }
+                        selectMenu={[
+                          {
+                            type: "link",
+                            url: `/admin/product/edit/${product?._id}`,
+                            icon: <HiOutlinePencil />,
+                            label: "Edit",
+                          },
+                          {
+                            handleMenuClicked: () =>
+                              handleDeleteProduct(product?._id),
+                            icon: <HiOutlineTrash />,
+                            label: "Hapus",
+                          },
+                        ]}
+                      />
                     </td>
 
                     {/* Visibility */}
@@ -200,6 +200,94 @@ const Product = () => {
               })}
           </tbody>
         </table>
+      </div>
+
+      {/* Products list for tablet and desktop */}
+      <div className="flex md:hidden flex-col gap-y-4">
+        {products &&
+          products.map((product, key) => {
+            return (
+              <div key={key} className="flex item-start gap-x-3">
+                <img
+                  src={`http://localhost:5000/public/images/${product.images[0]}`}
+                  alt={product.images[0]}
+                  className="h-20 w-20 object-contain rounded-lg"
+                />
+
+                <div className="flex-1 flex flex-col justify-between">
+                  <div>
+                    <p className="text-xs line-clamp-2">{product.name}</p>
+                    <p className="text-xs text-[#606060] line-clamp-1 py-1">
+                      0 dibeli &#128900;{" "}
+                      {new Date(product.createdAt).toLocaleDateString("id-ID", {
+                        day: "numeric",
+                        month: "long",
+                        year: "numeric",
+                      })}
+                    </p>
+                  </div>
+
+                  <div className="flex items-center gap-x-2.5">
+                    <DropdownSelect
+                      id={"visibility-phone-menu" + key}
+                      button={
+                        <button
+                          type="button"
+                          className="block transition-all active:scale-90 duration-300"
+                        >
+                          {product?.visibility === "public" ? (
+                            <span>
+                              <HiOutlineGlobeAsiaAustralia className="text-base text-black" />
+                            </span>
+                          ) : (
+                            <span>
+                              <PiLockKey className="text-base text-black" />
+                            </span>
+                          )}
+                        </button>
+                      }
+                      selectMenu={[
+                        {
+                          label: "Public",
+                          value: "public",
+                          handleMenuClicked: () =>
+                            handleChangeVisibility(product?._id, "public"),
+                        },
+                        {
+                          label: "Private",
+                          value: "private",
+                          handleMenuClicked: () =>
+                            handleChangeVisibility(product?._id, "private"),
+                        },
+                      ]}
+                      defaultValue={product?.visibility}
+                    />
+
+                    <Link to={`/admin/product/edit/${product?._id}`}>
+                      <button
+                        type="button"
+                        className="block transition-all active:scale-90 duration-300"
+                      >
+                        <span>
+                          <HiOutlinePencil className="text-base text-black" />
+                        </span>
+                      </button>
+                    </Link>
+
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteProduct(product?._id)}
+                      className="transition-all active:scale-90 duration-300"
+                    >
+                      <span>
+                        <HiOutlineTrash className="text-base text-black" />
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
       </div>
     </>
   );
