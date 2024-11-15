@@ -68,56 +68,61 @@ const AddProductOrder = ({ formik, productsOrderList }) => {
             <FiPlus className="text-2xl" />
           </button>
         </li>
-        {productsOrderList &&
-          productsOrderList.map((product, key) => {
-            return (
-              <li
-                key={key}
-                className="flex justify-between items-center gap-x-3"
-              >
-                <div className="grow flex items-center gap-x-3">
-                  <img
-                    src={`http://localhost:5000/public/images/${product.images[0]}`}
-                    alt={product.images[0]}
-                    className="w-16 h-16 object-cover rounded-xl"
-                  />
-
-                  <div>
-                    <p className="text-xs font-medium line-clamp-1">
-                      {product.name}
-                    </p>
-                    <p className="text-xs text-[#606060] font-medium line-clamp-1">
-                      Ukuran:{" "}
-                      <span className="text-black">
-                        {product.variants[0].size.length}cm x{" "}
-                        {product.variants[0].size.width}cm x{" "}
-                        {product.variants[0].size.height}cm
-                      </span>
-                    </p>
-                    <p className="text-xs font-medium">
-                      {product.variants[0].size.price.toLocaleString("id-ID", {
-                        style: "currency",
-                        currency: "IDR",
-                      })}
-                      <span className="text-[#606060]">
-                        {" x"}
-                        {product.total}
-                      </span>
-                    </p>
-                  </div>
-                </div>
-
-                <IconButton
-                  type="button"
-                  onClick={() =>
-                    handleDeleteProductList(product.variants[0]._id)
-                  }
+        <li className="flex flex-col gap-y-4 max-h-64 overflow-y-auto">
+          {productsOrderList &&
+            productsOrderList.map((product, key) => {
+              return (
+                <div
+                  key={key}
+                  className="flex justify-between items-center gap-x-3"
                 >
-                  <HiOutlineTrash className="text-xl" />
-                </IconButton>
-              </li>
-            );
-          })}
+                  <div className="grow flex items-center gap-x-3">
+                    <img
+                      src={`http://localhost:5000/public/images/${product.images[0]}`}
+                      alt={product.images[0]}
+                      className="w-16 h-16 object-cover rounded-xl"
+                    />
+
+                    <div>
+                      <p className="text-xs font-medium line-clamp-1">
+                        {product.name}
+                      </p>
+                      <p className="text-xs text-[#606060] font-medium line-clamp-1">
+                        Ukuran:{" "}
+                        <span className="text-black">
+                          {product.variants[0].size.length}cm x{" "}
+                          {product.variants[0].size.width}cm x{" "}
+                          {product.variants[0].size.height}cm
+                        </span>
+                      </p>
+                      <p className="text-xs font-medium">
+                        {product.variants[0].size.price.toLocaleString(
+                          "id-ID",
+                          {
+                            style: "currency",
+                            currency: "IDR",
+                          }
+                        )}
+                        <span className="text-[#606060]">
+                          {" x"}
+                          {product.total}
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+
+                  <IconButton
+                    type="button"
+                    onClick={() =>
+                      handleDeleteProductList(product.variants[0]._id)
+                    }
+                  >
+                    <HiOutlineTrash className="text-xl" />
+                  </IconButton>
+                </div>
+              );
+            })}
+        </li>
       </ul>
 
       <Modal
