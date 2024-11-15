@@ -84,51 +84,53 @@ const OrderDetail = () => {
             {/* Title */}
             <h5 className="text-lg font-semibold">Produk yang dipesan</h5>
 
-            {/* List of products purchased */}
-            {orderDetail?.product?.map((prod, key) => {
-              return (
-                <div key={key} className="flex items-start gap-x-3">
-                  <img
-                    src={`http://localhost:5000/public/images/${prod.images[0]}`}
-                    alt={prod.images[0]}
-                    className="w-20 h-20 rounded-xl object-cover"
-                  />
+            <div className="flex flex-col gap-y-3 max-h-56 overflow-y-auto">
+              {/* List of products purchased */}
+              {orderDetail?.product?.map((prod, key) => {
+                return (
+                  <div key={key} className="flex items-start gap-x-3">
+                    <img
+                      src={`http://localhost:5000/public/images/${prod.images[0]}`}
+                      alt={prod.images[0]}
+                      className="w-20 h-20 rounded-xl object-cover"
+                    />
 
-                  <div className="grow flex flex-col gap-y-0.5 py-1">
-                    <p className="text-sm line-clamp-2">{prod.name}</p>
-                    <p className="text-xs text-[#606060] line-clamp-1">
-                      Variasi:{" "}
-                      <span>
-                        {prod.variant.color}(
-                        {`${prod.variant.size.length} cm x ${prod.variant.size.width} cm x ${prod.variant.size.height} cm`}
-                        )
-                      </span>
-                    </p>
-                    <p className="text-xs text-[#606060]">x{prod.total}</p>
-                  </div>
+                    <div className="grow flex flex-col gap-y-0.5 py-1">
+                      <p className="text-sm line-clamp-2">{prod.name}</p>
+                      <p className="text-xs text-[#606060] line-clamp-1">
+                        Variasi:{" "}
+                        <span>
+                          {prod.variant.color}(
+                          {`${prod.variant.size.length} cm x ${prod.variant.size.width} cm x ${prod.variant.size.height} cm`}
+                          )
+                        </span>
+                      </p>
+                      <p className="text-xs text-[#606060]">x{prod.total}</p>
+                    </div>
 
-                  <div>
-                    <h3 className="text-sm font-bold">
-                      {prod.variant.size.price.toLocaleString("id-ID", {
-                        style: "currency",
-                        currency: "IDR",
-                      })}
-                    </h3>
-                    <p className="text-xs text-[#606060] text-right">
-                      (
-                      {(prod.variant.size.price * prod.total).toLocaleString(
-                        "id-ID",
-                        {
+                    <div>
+                      <h3 className="text-sm font-bold">
+                        {prod.variant.size.price.toLocaleString("id-ID", {
                           style: "currency",
                           currency: "IDR",
-                        }
-                      )}
-                      )
-                    </p>
+                        })}
+                      </h3>
+                      <p className="text-xs text-[#606060] text-right">
+                        (
+                        {(prod.variant.size.price * prod.total).toLocaleString(
+                          "id-ID",
+                          {
+                            style: "currency",
+                            currency: "IDR",
+                          }
+                        )}
+                        )
+                      </p>
+                    </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
 
           {/* Order price details */}

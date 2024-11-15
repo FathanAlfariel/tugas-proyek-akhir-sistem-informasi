@@ -65,6 +65,18 @@ const Order = () => {
     setShowMenuStatusUpdates(null);
   };
 
+  const deleteOrder = async (id) => {
+    await axios
+      .delete(`http://localhost:5000/api/order/${id}`)
+      .then(({ data }) => {
+        const newData = orders.filter((item) => item._id !== id);
+        setOrders(newData);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   return (
     <>
       <h1 className="text-[28px] leading-9 font-medium mb-4">Pesanan</h1>
@@ -242,6 +254,7 @@ const Order = () => {
                     {/* Delete button */}
                     <button
                       type="button"
+                      onClick={() => deleteOrder(order._id)}
                       className="flex items-center gap-x-2 py-2.5 px-4 text-sm text-[#0f0f0f] font-medium rounded-full transition-all active:scale-90 duration-300 bg-black/[.05] hover:bg-black/[.1] whitespace-nowrap"
                     >
                       <span className="text-lg text-[#0f0f0f]">
@@ -322,6 +335,7 @@ const Order = () => {
                         {
                           icon: <HiOutlineTrash />,
                           label: "Hapus",
+                          handleMenuClicked: () => deleteOrder(order._id),
                         },
                       ]}
                     />
