@@ -115,7 +115,7 @@ const AddProduct = () => {
 
       <form onSubmit={formik.handleSubmit}>
         <div className="grid grid-cols-12 gap-x-6">
-          <div className="col-span-7 flex flex-col gap-y-4">
+          <div className="col-span-12 md:col-span-7 flex flex-col gap-y-4 mt-4 md:mt-0">
             <Input
               id="namaProduk"
               name="namaProduk"
@@ -275,67 +275,69 @@ const AddProduct = () => {
           </div>
 
           {/* Images */}
-          <div className="col-span-5 flex flex-col justify-between">
+          <div className="col-span-12 md:col-span-5 order-first md:order-last flex flex-col justify-between">
             <div>
               <h5 className="text-lg font-medium">Tambah gambar</h5>
 
-              <ul className="flex items-center gap-x-2 mt-4">
-                {formik.values.images &&
-                  formik.values.images.map((name, key) => {
-                    return (
-                      <li key={key} className="relative">
-                        <img
-                          src={`http://localhost:5000/public/images/${name}`}
-                          alt={name}
-                          className="h-20 w-20 object-cover rounded-xl"
+              <div className="max-h-40 md:max-h-0 overflow-y-auto md:overflow-visible">
+                <ul className="flex flex-wrap items-center gap-2 mt-4">
+                  {formik.values.images &&
+                    formik.values.images.map((name, key) => {
+                      return (
+                        <li key={key} className="shrink-0 relative">
+                          <img
+                            src={`http://localhost:5000/public/images/${name}`}
+                            alt={name}
+                            className="h-20 w-20 object-cover rounded-xl"
+                          />
+
+                          {/* View and delete image */}
+                          <div className="absolute top-0 left-0 w-full h-full flex justify-center items-center bg-black/[0.25] rounded-xl">
+                            {/* View image */}
+                            <IconButton
+                              type="button"
+                              onClick={() => setViewImageFilename(name)}
+                            >
+                              <IoEyeOutline className="text-white text-lg" />
+                            </IconButton>
+
+                            {/* Delete image */}
+                            <IconButton
+                              type="button"
+                              onClick={() => {
+                                const newImages = formik.values.images.filter(
+                                  (item) => item !== name
+                                );
+
+                                formik.setFieldValue("images", newImages);
+                              }}
+                            >
+                              <HiOutlineTrash className="text-white text-lg" />
+                            </IconButton>
+                          </div>
+                        </li>
+                      );
+                    })}
+                  <li>
+                    {/* Add Images */}
+                    <div className="border-2 border-dashed rounded-xl">
+                      <label
+                        htmlFor="uploadImages"
+                        className="flex justify-center items-center p-7 cursor-pointer"
+                      >
+                        <input
+                          id="uploadImages"
+                          type="file"
+                          multiple
+                          className="hidden"
+                          onChange={uploadImages}
                         />
-
-                        {/* View and delete image */}
-                        <div className="absolute top-0 left-0 w-full h-full flex justify-center items-center bg-black/[0.25] rounded-xl">
-                          {/* View image */}
-                          <IconButton
-                            type="button"
-                            onClick={() => setViewImageFilename(name)}
-                          >
-                            <IoEyeOutline className="text-white text-lg" />
-                          </IconButton>
-
-                          {/* Delete image */}
-                          <IconButton
-                            type="button"
-                            onClick={() => {
-                              const newImages = formik.values.images.filter(
-                                (item) => item !== name
-                              );
-
-                              formik.setFieldValue("images", newImages);
-                            }}
-                          >
-                            <HiOutlineTrash className="text-white text-lg" />
-                          </IconButton>
-                        </div>
-                      </li>
-                    );
-                  })}
-                <li>
-                  {/* Add Images */}
-                  <div className="border-2 border-dashed rounded-xl">
-                    <label
-                      htmlFor="uploadImages"
-                      className="flex justify-center items-center p-7 cursor-pointer"
-                    >
-                      <input
-                        id="uploadImages"
-                        type="file"
-                        multiple
-                        className="hidden"
-                        onChange={uploadImages}
-                      />
-                      <FiPlus className="text-xl" />
-                    </label>
-                  </div>
-                </li>
-              </ul>
+                        <FiPlus className="text-xl" />
+                      </label>
+                    </div>
+                  </li>
+                </ul>
+              </div>
 
               {formik.touched.images && formik.errors.images && (
                 <>
