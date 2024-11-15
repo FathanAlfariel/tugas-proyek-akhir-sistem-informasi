@@ -14,7 +14,7 @@ const Header = () => {
 
         <div className="col-span-3 lg:col-span-4">
           <div className="flex items-center gap-x-1.5 justify-end items-center h-full">
-            <IconButton>
+            <IconButton type="button" buttonType="icon">
               <FaRegBell />
             </IconButton>
             <UserMenu />
