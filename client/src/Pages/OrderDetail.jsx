@@ -89,14 +89,18 @@ const OrderDetail = () => {
               {orderDetail?.product?.map((prod, key) => {
                 return (
                   <div key={key} className="flex items-start gap-x-3">
-                    <img
-                      src={`http://localhost:5000/public/images/${prod.images[0]}`}
-                      alt={prod.images[0]}
-                      className="w-20 h-20 rounded-xl object-cover"
-                    />
+                    <div className="shrink-0">
+                      <img
+                        src={`http://localhost:5000/public/images/${prod.images[0]}`}
+                        alt={prod.images[0]}
+                        className="w-16 h-16 md:w-20 md:h-20 rounded-xl object-cover"
+                      />
+                    </div>
 
-                    <div className="grow flex flex-col gap-y-0.5 py-1">
-                      <p className="text-sm line-clamp-2">{prod.name}</p>
+                    <div className="grow flex flex-col gap-y-0.5 py-0.5 md:py-1">
+                      <p className="text-sm line-clamp-1 md:line-clamp-2">
+                        {prod.name}
+                      </p>
                       <p className="text-xs text-[#606060] line-clamp-1">
                         Variasi:{" "}
                         <span>
@@ -188,10 +192,19 @@ const OrderDetail = () => {
               </div>
             </div>
 
-            {/* Payment method */}
-            <div className="flex justify-between items-center p-4 border-t border-t-black/[.1] text-sm">
-              Metode pembayaran
-              <span>COD</span>
+            {/* Payment and shipping method */}
+            <div className="flex flex-col gap-y-2 p-4 border-t border-t-black/[.1]">
+              {/* Payment method */}
+              <div className="flex justify-between items-center">
+                <p className="text-sm">Metode pembayaran</p>
+                <span className="text-sm">{orderDetail?.paymentMethod}</span>
+              </div>
+
+              {/* Shipping method */}
+              <div className="flex justify-between items-center">
+                <p className="text-sm">Metode pengiriman</p>
+                <span className="text-sm">{orderDetail?.shippingMethod}</span>
+              </div>
             </div>
           </div>
         </div>
@@ -202,7 +215,7 @@ const OrderDetail = () => {
             {/* Title */}
             <h5 className="text-lg font-semibold">Catatan</h5>
 
-            <p className="text-sm">Catatan tambahan</p>
+            <p className="text-sm">{orderDetail?.additionalNotes}</p>
           </div>
 
           {/* Orderer's name */}

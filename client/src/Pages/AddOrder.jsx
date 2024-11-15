@@ -24,12 +24,11 @@ const AddOrder = () => {
     initialValues: {
       receiptInputOptions: "automatic",
       trackingReceipt: "",
-      orderMethod: "",
       variantId: [],
       name: "",
       phone: "",
       shippingFee: "",
-      discount: "",
+      discount: 0,
       address: {
         country: "",
         address: "",
@@ -38,11 +37,13 @@ const AddOrder = () => {
         city: "",
         postalCode: "",
       },
+      shippingMethod: "",
+      paymentMethod: "",
+      additionalNotes: "",
       status: "belum bayar",
     },
     validationSchema: yup.object({
       receiptInputOptions: yup.string(),
-      orderMethod: yup.string().required("Metode pemesanan harus diisi."),
       trackingReceipt: yup.string(),
       variantId: yup
         .array()
@@ -76,6 +77,9 @@ const AddOrder = () => {
         city: yup.string().required("Kota harus diisi."),
         postalCode: yup.string().required("Kode pos harus diisi."),
       }),
+      shippingMethod: yup.string().required("Metode pengiriman harus diisi."),
+      paymentMethod: yup.string().required("Metode pembayaran harus diisi."),
+      additionalNotes: yup.string(),
       status: yup.string().required("Status pemesanan harus diisi."),
     }),
     onSubmit: async (values) => {
@@ -102,6 +106,9 @@ const AddOrder = () => {
             city: values.address.city,
             postalCode: values.address.postalCode,
           },
+          shippingMethod: values.shippingMethod,
+          paymentMethod: values.paymentMethod,
+          additionalNotes: values.additionalNotes,
           status: values.status,
         })
         .then(({ data }) => {
@@ -202,8 +209,6 @@ const AddOrder = () => {
     getCities();
   }, [selectedCountry, selectedState]);
 
-  console.log(formik.values.receiptInputOptions);
-
   return (
     <>
       <h1 className="text-[28px] leading-9 font-medium mb-6">Tambah pesanan</h1>
@@ -233,13 +238,13 @@ const AddOrder = () => {
                   />
                 </label>
                 <label
-                  htmlFor="receiptInputTiktok"
+                  htmlFor="receiptInputManual"
                   className="inline-block text-sm font-medium py-3 px-4 border rounded-xl cursor-pointer hover:bg-[#f1f1f1] transition-all duration-300 has-[:checked]:border-[#6750A4] has-[:checked]:bg-[#6750A4]/[.12] has-[:checked]:text-[#6750A4]"
                 >
                   Resi manual
                   <input
                     type="radio"
-                    id="receiptInputTiktok"
+                    id="receiptInputManual"
                     name="receiptInputOptions"
                     value="manual"
                     className="hidden"
@@ -249,40 +254,49 @@ const AddOrder = () => {
                 </label>
               </div>
 
-              <div className="flex items-center gap-x-2 mt-2">
-                <div className="w-full">
-                  <Input
-                    id="trackingReceipt"
-                    type="text"
-                    name="trackingReceipt"
-                    label="Resi pesanan"
-                    placeholder="Masukkan resi pesanan"
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.trackingReceipt}
-                    errorMessage={
-                      formik.touched.trackingReceipt &&
-                      formik.errors.trackingReceipt
-                    }
-                    disabled={formik.values.receiptInputOptions === "automatic"}
-                  />
-                </div>
-                <div className="w-full">
-                  <Input
-                    id="orderMethod"
-                    type="text"
-                    name="orderMethod"
-                    label="Metode pemesanan"
-                    placeholder="Masukkan metode pemesanan"
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.trackingReceipt}
-                    errorMessage={
-                      formik.touched.trackingReceipt &&
-                      formik.errors.trackingReceipt
-                    }
-                  />
-                </div>
+              <div className="grid grid-cols-3 gap-x-2 mt-2">
+                <Input
+                  id="trackingReceipt"
+                  type="text"
+                  name="trackingReceipt"
+                  label="Resi pesanan"
+                  placeholder="Masukkan resi pesanan"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.trackingReceipt}
+                  errorMessage={
+                    formik.touched.trackingReceipt &&
+                    formik.errors.trackingReceipt
+                  }
+                  disabled={formik.values.receiptInputOptions === "automatic"}
+                />
+                <Input
+                  id="shippingMethod"
+                  type="text"
+                  name="shippingMethod"
+                  label="Metode pengiriman"
+                  placeholder="Masukkan metode pengiriman"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.shippingMethod}
+                  errorMessage={
+                    formik.touched.shippingMethod &&
+                    formik.errors.shippingMethod
+                  }
+                />
+                <Input
+                  id="paymentMethod"
+                  type="text"
+                  name="paymentMethod"
+                  label="Metode pembayaran"
+                  placeholder="Masukkan metode pembayaran"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.paymentMethod}
+                  errorMessage={
+                    formik.touched.paymentMethod && formik.errors.paymentMethod
+                  }
+                />
               </div>
             </div>
 
@@ -472,10 +486,10 @@ const AddOrder = () => {
               </div>
             </div>
 
-            <div>
+            <div className="mb-6">
               <h5 className="text-lg font-medium mb-2.5">Status pemesanan</h5>
 
-              {/* Country selection */}
+              {/* Status selection */}
               <Select
                 id="status"
                 label="Status"
@@ -490,6 +504,28 @@ const AddOrder = () => {
                 defaultValue={formik.values.status}
                 value={(value) => formik.setFieldValue("status", value)}
                 errorMessage={formik.touched.status && formik.errors.status}
+              />
+            </div>
+
+            {/* Additional notes input */}
+            <div>
+              <h5 className="text-lg font-medium mb-2.5">
+                Catatan tambahan (opsional)
+              </h5>
+
+              <Input
+                id="additionalNotes"
+                type="text"
+                name="additionalNotes"
+                label="Catatan"
+                placeholder="Masukkan catatan tambahan"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.additionalNotes}
+                errorMessage={
+                  formik.touched.additionalNotes &&
+                  formik.errors.additionalNotes
+                }
               />
             </div>
           </div>

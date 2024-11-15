@@ -3,8 +3,18 @@ const mongoose = require("mongoose");
 
 // Add order controller
 const addOrder = async (req, res) => {
-  const { variantId, name, phone, shippingFee, discount, address, status } =
-    req.body;
+  const {
+    variantId,
+    name,
+    phone,
+    shippingFee,
+    discount,
+    address,
+    shippingMethod,
+    paymentMethod,
+    additionalNotes,
+    status,
+  } = req.body;
 
   try {
     const query = new Order({
@@ -15,6 +25,9 @@ const addOrder = async (req, res) => {
       shippingFee,
       discount,
       address,
+      shippingMethod,
+      paymentMethod,
+      additionalNotes,
       status,
     });
 
@@ -73,7 +86,14 @@ const getAllOrders = async (req, res) => {
           createdAt: { $first: "$createdAt" },
           updatedAt: { $first: "$updatedAt" },
           product: { $push: "$productDetails" },
-          totalVariantPrice: { $sum: "$productDetails.variantPrice" }, // Hitung total harga semua variant
+          totalVariantPrice: {
+            $sum: {
+              $multiply: [
+                "$productDetails.variantPrice",
+                "$productDetails.total",
+              ],
+            },
+          }, // Hitung total harga semua variant
         },
       },
       {
@@ -172,11 +192,21 @@ const getOrderById = async (req, res) => {
           address: { $first: "$address" },
           shippingFee: { $first: "$shippingFee" },
           discount: { $first: "$discount" },
+          shippingMethod: { $first: "$shippingMethod" },
+          paymentMethod: { $first: "$paymentMethod" },
+          additionalNotes: { $first: "$additionalNotes" },
           status: { $first: "$status" },
           createdAt: { $first: "$createdAt" },
           updatedAt: { $first: "$updatedAt" },
           product: { $push: "$productDetails" },
-          totalVariantPrice: { $sum: "$productDetails.variantPrice" }, // Hitung total harga semua variant
+          totalVariantPrice: {
+            $sum: {
+              $multiply: [
+                "$productDetails.variantPrice",
+                "$productDetails.total",
+              ],
+            },
+          }, // Hitung total harga semua variant
         },
       },
       {

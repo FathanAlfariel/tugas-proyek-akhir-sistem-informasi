@@ -12,11 +12,7 @@ import Dropdown from "../Components/Dropdown";
 
 const Order = () => {
   const [orders, setOrders] = useState([]);
-  const [showMenuStatusUpdates, setShowMenuStatusUpdates] = useState(null);
-
-  const handleShowMenuStatusUpdates = (id) => {
-    setShowMenuStatusUpdates((prev) => (prev === id ? null : id));
-  };
+  console.log(orders);
 
   useEffect(() => {
     const getAllOrders = async () => {
@@ -33,19 +29,6 @@ const Order = () => {
     getAllOrders();
   }, []);
 
-  const handleClickOutside = (e) => {
-    if (!e.target.closest("#update-status-menu") && showMenuStatusUpdates) {
-      setShowMenuStatusUpdates(null);
-    }
-  };
-
-  useEffect(() => {
-    if (showMenuStatusUpdates) {
-      window.addEventListener("click", handleClickOutside);
-      return () => window.removeEventListener("click", handleClickOutside);
-    }
-  }, [showMenuStatusUpdates]);
-
   const handleOrderStatus = async (id, status) => {
     const { data } = await axios.put(
       `http://localhost:5000/api/order/status/${id}`,
@@ -61,8 +44,6 @@ const Order = () => {
           : item;
       });
     });
-
-    setShowMenuStatusUpdates(null);
   };
 
   const deleteOrder = async (id) => {
@@ -91,76 +72,79 @@ const Order = () => {
                   <div>
                     <p className="text-xs text-[#606060]">No. Resi:</p>
                     <p className="text-base font-medium">
-                      {order.trackingReceipt}
+                      {order?.trackingReceipt}
                     </p>
                   </div>
 
                   {/* Order status */}
-                  {order.status === "belum bayar" ? (
+                  {order?.status === "belum bayar" ? (
                     <span className="px-3 py-1.5 bg-[#ECEFF1] rounded-full first-letter:uppercase text-xs text-[#546E7A] font-semibold">
-                      {order.status}
+                      {order?.status}
                     </span>
-                  ) : order.status === "sedang dikemas" ? (
+                  ) : order?.status === "sedang dikemas" ? (
                     <span className="px-3 py-1.5 bg-[#FFE0B2] rounded-full first-letter:uppercase text-xs text-[#F57C00] font-semibold">
-                      {order.status}
+                      {order?.status}
                     </span>
-                  ) : order.status === "dikirim" ? (
+                  ) : order?.status === "dikirim" ? (
                     <span className="px-3 py-1.5 bg-[#BBDEFB] rounded-full first-letter:uppercase text-xs text-[#1976D2] font-semibold">
-                      {order.status}
+                      {order?.status}
                     </span>
-                  ) : order.status === "selesai" ? (
+                  ) : order?.status === "selesai" ? (
                     <span className="px-3 py-1.5 bg-[#C8E6C9] rounded-full first-letter:uppercase text-xs text-[#388E3C] font-semibold">
-                      {order.status}
+                      {order?.status}
                     </span>
-                  ) : order.status === "selesai" ? (
+                  ) : order?.status === "dibatalkan" ? (
                     <span className="px-3 py-1.5 bg-[#FFCDD2] rounded-full first-letter:uppercase text-xs text-[#D32F2F] font-semibold">
-                      {order.status}
+                      {order?.status}
                     </span>
                   ) : null}
                 </div>
 
                 <div
                   className={`grid ${
-                    order.product.length > 1
+                    order?.product.length > 1
                       ? "grid-cols-1 md:grid-cols-2 gap-x-12"
                       : "grid-cols-1"
                   } max-h-44 md:max-h-80 overflow-y-auto`}
                 >
-                  {order.product.map((prod, key) => {
+                  {order?.product?.map((prod, key) => {
                     return (
                       <div key={key} className="flex items-start gap-x-3 py-4">
                         <img
-                          src={`http://localhost:5000/public/images/${prod.images[0]}`}
-                          alt={prod.images[0]}
+                          src={`http://localhost:5000/public/images/${prod?.images[0]}`}
+                          alt={prod?.images[0]}
                           className="w-20 h-20 md:w-28 md:h-28 object-contain rounded-xl"
                         />
 
                         <div className="grow">
-                          <h3 className="text-sm line-clamp-2">{prod.name}</h3>
+                          <h3 className="text-sm line-clamp-2">{prod?.name}</h3>
                           <p className="text-xs text-[#606060] line-clamp-1">
                             Variasi:{" "}
                             <span>
-                              {prod.variant.color}(
-                              {`${prod.variant.size.length} cm x ${prod.variant.size.width} cm x ${prod.variant.size.height} cm`}
+                              {prod?.variant?.color}(
+                              {`${prod?.variant?.size?.length} cm x ${prod?.variant?.size?.width} cm x ${prod?.variant?.size?.height} cm`}
                               )
                             </span>
                           </p>
                           <p className="text-xs text-[#606060]">
-                            x{prod.total}
+                            x{prod?.total}
                           </p>
                         </div>
 
                         <div>
                           <h3 className="text-sm font-bold">
-                            {prod.variant.size.price.toLocaleString("id-ID", {
-                              style: "currency",
-                              currency: "IDR",
-                            })}
+                            {prod?.variant?.size?.price?.toLocaleString(
+                              "id-ID",
+                              {
+                                style: "currency",
+                                currency: "IDR",
+                              }
+                            )}
                           </h3>
                           <p className="text-xs text-[#606060] text-right">
                             (
                             {(
-                              prod.variant.size.price * prod.total
+                              prod?.variant?.size?.price * prod?.total
                             ).toLocaleString("id-ID", {
                               style: "currency",
                               currency: "IDR",
@@ -176,7 +160,7 @@ const Order = () => {
                 <div className="flex justify-between items-center border-y py-4 overflow-x-auto md:overflow-visible">
                   <div className="hidden md:flex items-center gap-x-2">
                     {/* Detail button */}
-                    <Link to={`/admin/order/detail/${order._id}`}>
+                    <Link to={`/admin/order/detail/${order?._id}`}>
                       <button
                         type="button"
                         className="flex items-center gap-x-2 py-2.5 px-4 text-sm text-[#0f0f0f] font-medium rounded-full transition-all active:scale-90 duration-300 bg-black/[.05] hover:bg-black/[.1] whitespace-nowrap"
@@ -254,7 +238,7 @@ const Order = () => {
                     {/* Delete button */}
                     <button
                       type="button"
-                      onClick={() => deleteOrder(order._id)}
+                      onClick={() => deleteOrder(order?._id)}
                       className="flex items-center gap-x-2 py-2.5 px-4 text-sm text-[#0f0f0f] font-medium rounded-full transition-all active:scale-90 duration-300 bg-black/[.05] hover:bg-black/[.1] whitespace-nowrap"
                     >
                       <span className="text-lg text-[#0f0f0f]">
@@ -266,9 +250,9 @@ const Order = () => {
 
                   {/* Total product */}
                   <h3 className="text-sm line-clamp-1">
-                    Total pesanan ({order.product.length} barang):{" "}
+                    Total pesanan ({order?.product.length} barang):{" "}
                     <span className="font-bold">
-                      {order.totalPrice.toLocaleString("id-ID", {
+                      {order?.totalPrice?.toLocaleString("id-ID", {
                         style: "currency",
                         currency: "IDR",
                       })}
@@ -279,14 +263,14 @@ const Order = () => {
                     <Dropdown
                       id={"action-menu" + key}
                       button={
-                        <IconButton>
+                        <IconButton type="button" buttonType="icon">
                           <IoMdMore className="text-lg" />
                         </IconButton>
                       }
                       selectMenu={[
                         {
                           type: "link",
-                          url: `/admin/order/detail/${order._id}`,
+                          url: `/admin/order/detail/${order?._id}`,
                           icon: <FiInfo />,
                           label: "Detail",
                         },
@@ -335,7 +319,7 @@ const Order = () => {
                         {
                           icon: <HiOutlineTrash />,
                           label: "Hapus",
-                          handleMenuClicked: () => deleteOrder(order._id),
+                          handleMenuClicked: () => deleteOrder(order?._id),
                         },
                       ]}
                     />
