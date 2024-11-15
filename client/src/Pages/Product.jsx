@@ -202,8 +202,8 @@ const Product = () => {
         </table>
       </div>
 
-      {/* Products list for tablet and desktop */}
-      <div className="flex md:hidden flex-col gap-y-4">
+      {/* Products list for mobile */}
+      <div className="flex md:hidden flex-col gap-y-4 mt-4">
         {products &&
           products.map((product, key) => {
             return (

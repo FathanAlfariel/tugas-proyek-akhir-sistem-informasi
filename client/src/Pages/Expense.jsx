@@ -36,11 +36,12 @@ const Expense = () => {
   return (
     <>
       <h1 className="text-[28px] leading-9 font-medium">Pengeluaran</h1>
+
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
             <tr className="border-b">
-              <th className="pl-6 py-4 text-xs text-left font-medium whitespace-nowrap">
+              <th className="pl-0 md:pl-6 py-4 text-xs text-left font-medium whitespace-nowrap">
                 Nama pengeluaran
               </th>
               <th className="pl-6 py-4 text-xs text-left font-medium whitespace-nowrap">
@@ -59,7 +60,7 @@ const Expense = () => {
               expenses.map((expense, key) => {
                 return (
                   <tr key={key} className="border-b">
-                    <td className="pl-6 py-6 whitespace-nowrap">
+                    <td className="pl-0 md:pl-6 py-6 whitespace-nowrap">
                       <p className="text-sm line-clamp-2">{expense.name}</p>
                     </td>
                     <td className="pl-6 py-6 whitespace-nowrap">

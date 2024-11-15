@@ -262,68 +262,70 @@ const Order = () => {
                     </span>
                   </h3>
 
-                  <Dropdown
-                    id={"action-menu" + key}
-                    button={
-                      <IconButton>
-                        <IoMdMore className="text-lg" />
-                      </IconButton>
-                    }
-                    selectMenu={[
-                      {
-                        type: "link",
-                        url: `/admin/order/detail/${order._id}`,
-                        icon: <FiInfo />,
-                        label: "Detail",
-                      },
-                      {
-                        type: "menu-select",
-                        icon: <GrDeliver />,
-                        label: "Update status",
-                        selectMenu: [
-                          {
-                            label: "Belum bayar",
-                            value: "belum bayar",
-                            handleMenuClicked: () =>
-                              handleOrderStatus(order?._id, "belum bayar"),
-                          },
-                          {
-                            label: "Sedang dikemas",
-                            value: "sedang dikemas",
-                            handleMenuClicked: () =>
-                              handleOrderStatus(order?._id, "sedang dikemas"),
-                          },
-                          {
-                            label: "Dikirim",
-                            value: "dikirim",
-                            handleMenuClicked: () =>
-                              handleOrderStatus(order?._id, "dikirim"),
-                          },
-                          {
-                            label: "Selesai",
-                            value: "selesai",
-                            handleMenuClicked: () =>
-                              handleOrderStatus(order?._id, "selesai"),
-                          },
-                          {
-                            label: "Dibatalkan",
-                            value: "dibatalkan",
-                            handleMenuClicked: () =>
-                              handleOrderStatus(order?._id, "dibatalkan"),
-                          },
-                        ],
-                        defaultValue: order?.status,
-                      },
-                      {
-                        icon: <HiOutlinePencil />,
-                        label: "Edit",
-                      },
-                      {
-                        icon: <HiOutlineTrash />,
-                        label: "Hapus",
-                      },
-                    ]}
-                  />
+                  <div className="block md:hidden">
+                    <Dropdown
+                      id={"action-menu" + key}
+                      button={
+                        <IconButton>
+                          <IoMdMore className="text-lg" />
+                        </IconButton>
+                      }
+                      selectMenu={[
+                        {
+                          type: "link",
+                          url: `/admin/order/detail/${order._id}`,
+                          icon: <FiInfo />,
+                          label: "Detail",
+                        },
+                        {
+                          type: "menu-select",
+                          icon: <GrDeliver />,
+                          label: "Update status",
+                          selectMenu: [
+                            {
+                              label: "Belum bayar",
+                              value: "belum bayar",
+                              handleMenuClicked: () =>
+                                handleOrderStatus(order?._id, "belum bayar"),
+                            },
+                            {
+                              label: "Sedang dikemas",
+                              value: "sedang dikemas",
+                              handleMenuClicked: () =>
+                                handleOrderStatus(order?._id, "sedang dikemas"),
+                            },
+                            {
+                              label: "Dikirim",
+                              value: "dikirim",
+                              handleMenuClicked: () =>
+                                handleOrderStatus(order?._id, "dikirim"),
+                            },
+                            {
+                              label: "Selesai",
+                              value: "selesai",
+                              handleMenuClicked: () =>
+                                handleOrderStatus(order?._id, "selesai"),
+                            },
+                            {
+                              label: "Dibatalkan",
+                              value: "dibatalkan",
+                              handleMenuClicked: () =>
+                                handleOrderStatus(order?._id, "dibatalkan"),
+                            },
+                          ],
+                          defaultValue: order?.status,
+                        },
+                        {
+                          icon: <HiOutlinePencil />,
+                          label: "Edit",
+                        },
+                        {
+                          icon: <HiOutlineTrash />,
+                          label: "Hapus",
+                        },
+                      ]}
+                    />
+                  </div>
                 </div>
               </div>
             );
