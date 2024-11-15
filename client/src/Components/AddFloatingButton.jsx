@@ -34,6 +34,7 @@ const AddFloatingButton = () => {
     "/admin/product/add",
     "/admin/product/edit/",
     "/admin/order/add",
+    "/admin/order/edit",
   ];
 
   // Check if the current location is in the list

@@ -5,8 +5,9 @@ const {
   addOrder,
   getAllOrders,
   updateOrderStatus,
+  getOrderDetailById,
   getOrderById,
-  deleteOrder,
+  cancelOrder,
 } = require("../controllers/orderController");
 
 // Add order route
@@ -18,10 +19,13 @@ router.get("/", getAllOrders);
 // Update order status
 router.put("/status/:id", updateOrderStatus);
 
-// Get order data by id
+// Get order detail by id
+router.get("/detail/:id", getOrderDetailById);
+
+// Get order by id
 router.get("/:id", getOrderById);
 
-// Delete order
-router.delete("/:id", deleteOrder);
+// Cancel order
+router.put("/cancel/:id", cancelOrder);
 
 module.exports = router;

@@ -3,12 +3,12 @@ import { FiInfo } from "react-icons/fi";
 import { IoChevronDownOutline } from "react-icons/io5";
 import { GrDeliver } from "react-icons/gr";
 import axios from "axios";
-import { HiOutlineTrash, HiOutlinePencil } from "react-icons/hi2";
 import { Link } from "react-router-dom";
 import DropdownSelect from "../Components/DropdownSelect";
 import IconButton from "../Components/IconButton";
 import { IoMdMore } from "react-icons/io";
 import Dropdown from "../Components/Dropdown";
+import { MdOutlineCancel } from "react-icons/md";
 
 const Order = () => {
   const [orders, setOrders] = useState([]);
@@ -46,12 +46,11 @@ const Order = () => {
     });
   };
 
-  const deleteOrder = async (id) => {
+  const handleCancelOrder = async (id) => {
     await axios
-      .delete(`http://localhost:5000/api/order/${id}`)
+      .put(`http://localhost:5000/api/order/cancel/${id}`)
       .then(({ data }) => {
-        const newData = orders.filter((item) => item._id !== id);
-        setOrders(newData);
+        console.log(data);
       })
       .catch((err) => {
         console.log(err);
@@ -172,80 +171,67 @@ const Order = () => {
                       </button>
                     </Link>
 
-                    <DropdownSelect
-                      id={"update-status-menu" + key}
-                      minWidth="min-w-48"
-                      button={
+                    {order?.status !== "dibatalkan" && (
+                      <>
+                        <DropdownSelect
+                          id={"update-status-menu" + key}
+                          minWidth="min-w-48"
+                          button={
+                            <button
+                              type="button"
+                              className="group flex items-center gap-x-2 py-2.5 px-4 text-sm text-[#0f0f0f] font-medium rounded-full transition-all active:scale-90 duration-300 bg-black/[.05] hover:bg-black/[.1] whitespace-nowrap"
+                            >
+                              <span className="text-lg text-[#0f0f0f]">
+                                <GrDeliver />
+                              </span>
+                              Update status
+                              <span className="hidden group-hover:block text-base text-[#0f0f0f]">
+                                <IoChevronDownOutline />
+                              </span>
+                            </button>
+                          }
+                          selectMenu={[
+                            {
+                              label: "Belum bayar",
+                              value: "belum bayar",
+                              handleMenuClicked: () =>
+                                handleOrderStatus(order?._id, "belum bayar"),
+                            },
+                            {
+                              label: "Sedang dikemas",
+                              value: "sedang dikemas",
+                              handleMenuClicked: () =>
+                                handleOrderStatus(order?._id, "sedang dikemas"),
+                            },
+                            {
+                              label: "Dikirim",
+                              value: "dikirim",
+                              handleMenuClicked: () =>
+                                handleOrderStatus(order?._id, "dikirim"),
+                            },
+                            {
+                              label: "Selesai",
+                              value: "selesai",
+                              handleMenuClicked: () =>
+                                handleOrderStatus(order?._id, "selesai"),
+                            },
+                          ]}
+                          defaultValue={order?.status}
+                        />
+
+                        {/* Cancel order button */}
                         <button
                           type="button"
-                          className="group flex items-center gap-x-2 py-2.5 px-4 text-sm text-[#0f0f0f] font-medium rounded-full transition-all active:scale-90 duration-300 bg-black/[.05] hover:bg-black/[.1] whitespace-nowrap"
+                          onClick={() => handleCancelOrder(order?._id)}
+                          className="flex items-center gap-x-2 py-2.5 px-4 text-sm text-[#0f0f0f] font-medium rounded-full transition-all active:scale-90 duration-300 bg-black/[.05] hover:bg-black/[.1] whitespace-nowrap"
                         >
                           <span className="text-lg text-[#0f0f0f]">
-                            <GrDeliver />
+                            <MdOutlineCancel />
                           </span>
-                          Update status
-                          <span className="hidden group-hover:block text-base text-[#0f0f0f]">
-                            <IoChevronDownOutline />
-                          </span>
+                          Batal pemesanan
                         </button>
-                      }
-                      selectMenu={[
-                        {
-                          label: "Belum bayar",
-                          value: "belum bayar",
-                          handleMenuClicked: () =>
-                            handleOrderStatus(order?._id, "belum bayar"),
-                        },
-                        {
-                          label: "Sedang dikemas",
-                          value: "sedang dikemas",
-                          handleMenuClicked: () =>
-                            handleOrderStatus(order?._id, "sedang dikemas"),
-                        },
-                        {
-                          label: "Dikirim",
-                          value: "dikirim",
-                          handleMenuClicked: () =>
-                            handleOrderStatus(order?._id, "dikirim"),
-                        },
-                        {
-                          label: "Selesai",
-                          value: "selesai",
-                          handleMenuClicked: () =>
-                            handleOrderStatus(order?._id, "selesai"),
-                        },
-                        {
-                          label: "Dibatalkan",
-                          value: "dibatalkan",
-                          handleMenuClicked: () =>
-                            handleOrderStatus(order?._id, "dibatalkan"),
-                        },
-                      ]}
-                      defaultValue={order?.status}
-                    />
-
-                    {/* Edit button */}
-                    <button
-                      type="button"
-                      className="flex items-center gap-x-2 py-2.5 px-4 text-sm text-[#0f0f0f] font-medium rounded-full transition-all active:scale-90 duration-300 bg-black/[.05] hover:bg-black/[.1] whitespace-nowrap"
-                    >
-                      <span className="text-lg text-[#0f0f0f]">
-                        <HiOutlinePencil />
-                      </span>
-                      Edit
-                    </button>
-
-                    {/* Delete button */}
-                    <button
-                      type="button"
-                      onClick={() => deleteOrder(order?._id)}
-                      className="flex items-center gap-x-2 py-2.5 px-4 text-sm text-[#0f0f0f] font-medium rounded-full transition-all active:scale-90 duration-300 bg-black/[.05] hover:bg-black/[.1] whitespace-nowrap"
-                    >
-                      <span className="text-lg text-[#0f0f0f]">
-                        <HiOutlineTrash />
-                      </span>
-                      Hapus
-                    </button>
+                      </>
+                    )}
                   </div>
 
                   {/* Total product */}
@@ -303,23 +289,14 @@ const Order = () => {
                               handleMenuClicked: () =>
                                 handleOrderStatus(order?._id, "selesai"),
                             },
-                            {
-                              label: "Dibatalkan",
-                              value: "dibatalkan",
-                              handleMenuClicked: () =>
-                                handleOrderStatus(order?._id, "dibatalkan"),
-                            },
                           ],
                           defaultValue: order?.status,
                         },
                         {
-                          icon: <HiOutlinePencil />,
-                          label: "Edit",
-                        },
-                        {
-                          icon: <HiOutlineTrash />,
-                          label: "Hapus",
-                          handleMenuClicked: () => deleteOrder(order?._id),
+                          icon: <MdOutlineCancel />,
+                          label: "Batal pemesanan",
+                          handleMenuClicked: () =>
+                            handleCancelOrder(order?._id),
                         },
                       ]}
                     />

@@ -14,7 +14,7 @@ const OrderDetail = () => {
   useEffect(() => {
     const getOrderDataById = async () => {
       await axios
-        .get(`http://localhost:5000/api/order/${id}`)
+        .get(`http://localhost:5000/api/order/detail/${id}`)
         .then(({ data }) => {
           setOrderDetail(data.results);
         })
@@ -55,7 +55,7 @@ const OrderDetail = () => {
             <span className="px-3 py-1.5 bg-[#C8E6C9] rounded-full first-letter:uppercase text-xs text-[#388E3C] font-semibold whitespace-nowrap">
               {orderDetail?.status}
             </span>
-          ) : orderDetail?.status === "selesai" ? (
+          ) : orderDetail?.status === "dibatalkan" ? (
             <span className="px-3 py-1.5 bg-[#FFCDD2] rounded-full first-letter:uppercase text-xs text-[#D32F2F] font-semibold whitespace-nowrap">
               {orderDetail?.status}
             </span>

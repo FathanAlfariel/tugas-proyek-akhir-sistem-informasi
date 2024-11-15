@@ -86,13 +86,14 @@ const Tailor = () => {
                   <td className="pl-6 py-6 whitespace-nowrap">
                     <div className="flex items-center gap-x-1">
                       <Link to={`/admin/tailor/edit/${tailor._id}`}>
-                        <IconButton type="button">
+                        <IconButton type="button" buttonType="icon">
                           <HiOutlinePencil className="text-lg" />
                         </IconButton>
                       </Link>
                       <IconButton
                         type="button"
                         onClick={() => handleDeleteTailor(tailor._id)}
+                        buttonType="icon"
                       >
                         <HiOutlineTrash className="text-lg" />
                       </IconButton>

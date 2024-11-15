@@ -499,7 +499,6 @@ const AddOrder = () => {
                   { label: "Sedang dikemas", value: "sedang dikemas" },
                   { label: "Dikirim", value: "dikirim" },
                   { label: "Selesai", value: "selesai" },
-                  { label: "Dibatalkan", value: "dibatalkan" },
                 ]}
                 defaultValue={formik.values.status}
                 value={(value) => formik.setFieldValue("status", value)}

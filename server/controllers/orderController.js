@@ -1,5 +1,6 @@
 const Order = require("../models/Order");
 const mongoose = require("mongoose");
+const Product = require("../models/Product");
 
 // Add order controller
 const addOrder = async (req, res) => {
@@ -17,7 +18,8 @@ const addOrder = async (req, res) => {
   } = req.body;
 
   try {
-    const query = new Order({
+    // Create a new order instance
+    const order = new Order({
       trackingReceipt: `TRK${Date.now()}${Math.floor(Math.random() * 1000)}`,
       variantId,
       name,
@@ -31,11 +33,40 @@ const addOrder = async (req, res) => {
       status,
     });
 
-    await query.save();
+    // Check and update product variant stock
+    for (const variant of order.variantId) {
+      const product = await Product.findOne({
+        "variants._id": variant.id,
+      });
+
+      if (!product) {
+        throw new Error("Product variant not found.");
+      }
+
+      const productVariant = product.variants.find((v) =>
+        v._id.equals(variant.id)
+      );
+
+      if (!productVariant) {
+        throw new Error("Variant not found in product.");
+      }
+
+      // Check if enough stock is available
+      if (productVariant.size.stock < variant.total) {
+        throw new Error(`Insufficient stock for variant ${variant.id}.`);
+      }
+
+      // Reduce stock
+      productVariant.size.stock -= variant.total;
+      await product.save();
+    }
+
+    // Save the order
+    await order.save();
 
     return res
       .status(200)
-      .json({ message: "Successfully added order", results: query });
+      .json({ message: "Successfully added order", results: order });
   } catch (err) {
     console.log("Error :" + err);
     return res.status(500).json({ message: "Internal server error" });
@@ -147,8 +178,8 @@ const updateOrderStatus = async (req, res) => {
   }
 };
 
-// Get order by id
-const getOrderById = async (req, res) => {
+// Get order detail by id
+const getOrderDetailById = async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -228,7 +259,7 @@ const getOrderById = async (req, res) => {
     }
 
     return res.status(200).json({
-      message: "Successfully get product data",
+      message: "Successfully get order detail",
       results: query[0],
     });
   } catch (err) {
@@ -237,12 +268,12 @@ const getOrderById = async (req, res) => {
   }
 };
 
-// Delete order
-const deleteOrder = async (req, res) => {
+// Get order by id
+const getOrderById = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const query = await Order.findByIdAndDelete(id);
+    const query = await Order.findById(id);
 
     // If order doesn't exist
     if (!query) {
@@ -251,10 +282,47 @@ const deleteOrder = async (req, res) => {
 
     return res
       .status(200)
-      .json({ message: "Order deleted successfully", results: query });
+      .json({ message: "Successfully get order data", results: query });
   } catch (err) {
     console.log("Error :" + err);
     return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+// Cancel order
+const cancelOrder = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    // Find the order to be canceled
+    const order = await Order.findById(id);
+
+    if (!order) {
+      return res.status(404).json({ error: "Order not found" });
+    }
+
+    // Check if the order is in a cancelable state
+    if (order.status !== "belum bayar") {
+      return res.status(400).json({ error: "Order cannot be canceled" });
+    }
+
+    // Update the product variants' stock
+    for (const variant of order.variantId) {
+      const product = await Product.findOne({ "variants._id": variant.id });
+      const variantIndex = product.variants.findIndex(
+        (v) => v._id.toString() === variant.id.toString()
+      );
+      product.variants[variantIndex].size.stock += variant.total;
+      await product.save();
+    }
+
+    // Update the order status to 'dibatalkan'
+    order.status = "dibatalkan";
+    await order.save();
+
+    res.json({ message: "Order canceled successfully" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };
 
@@ -262,6 +330,7 @@ module.exports = {
   addOrder,
   getAllOrders,
   updateOrderStatus,
+  getOrderDetailById,
   getOrderById,
-  deleteOrder,
+  cancelOrder,
 };
