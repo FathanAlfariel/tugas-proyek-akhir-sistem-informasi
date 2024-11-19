@@ -12,6 +12,7 @@ import IconButton from "../Components/IconButton";
 import { MdClose } from "react-icons/md";
 import { HiOutlineTrash } from "react-icons/hi2";
 import ViewImages from "../Components/ViewImages";
+import Modal from "../Components/Modal";
 
 const EditProduct = () => {
   const { id } = useParams();
@@ -24,13 +25,19 @@ const EditProduct = () => {
       await axios
         .get(`http://localhost:5000/api/product/${id}`)
         .then(({ data }) => {
-          console.log(data);
-          formik.setFieldValue("images", data.results.images);
+          formik.setFieldValue(
+            "images",
+            data.results.images.map((image) => ({
+              id: image.id,
+              name: image.name,
+            }))
+          );
           formik.setFieldValue("name", data.results.name);
           formik.setFieldValue("description", data.results.description);
           formik.setFieldValue(
             "variants",
             data.results.variants.map((variant) => ({
+              id: variant.id,
               color: variant.color,
               size: {
                 length: variant.length,
@@ -65,7 +72,7 @@ const EditProduct = () => {
       .then(({ data }) => {
         const imagesName = [];
         for (const file of data.files) {
-          imagesName.push(file.filename);
+          imagesName.push({ name: file.filename });
         }
         formik.setFieldValue("images", [
           ...formik.values.images,
@@ -141,6 +148,8 @@ const EditProduct = () => {
     formik.setFieldValue("variants", value);
   };
 
+  console.log(formik.values.images);
+
   return (
     <>
       <h1 className="text-[28px] leading-9 font-medium mb-6">Edit produk</h1>
@@ -185,6 +194,7 @@ const EditProduct = () => {
                   >
                     <div className="flex justify-end mb-4">
                       <IconButton
+                        buttonType="icon"
                         type="button"
                         onClick={() => deletevariants(key)}
                       >
@@ -308,28 +318,27 @@ const EditProduct = () => {
 
           {/* Images */}
           <div className="col-span-12 md:col-span-5 order-first md:order-last flex flex-col justify-between">
-            {/* Images */}
             <div>
               <h5 className="text-lg font-medium">Tambah gambar</h5>
 
               <div className="max-h-40 md:max-h-0 overflow-y-auto md:overflow-visible">
-                <ul className="flex items-center gap-x-2 mt-4">
+                <ul className="flex flex-wrap items-center gap-2 mt-4">
                   {formik.values.images &&
                     formik.values.images.map((image, key) => {
                       return (
-                        <li key={key} className="relative">
+                        <li key={key} className="shrink-0 relative">
                           <img
                             src={`http://localhost:5000/public/images/${image.name}`}
                             alt={image.name}
-                            className="relative h-20 w-20 object-cover rounded-xl z-[-1]"
+                            className="h-20 w-20 object-cover rounded-xl"
                           />
 
                           {/* View and delete image */}
                           <div className="absolute top-0 left-0 w-full h-full flex justify-center items-center bg-black/[0.5] rounded-xl">
                             {/* View image */}
                             <IconButton
-                              type="button"
                               buttonType="icon"
+                              type="button"
                               onClick={() => setViewImageFilename(image.name)}
                             >
                               <IoEyeOutline className="text-white text-lg" />
@@ -337,14 +346,15 @@ const EditProduct = () => {
 
                             {/* Delete image */}
                             <IconButton
-                              type="button"
                               buttonType="icon"
+                              type="button"
                               onClick={() => {
-                                const newImages = formik.values.images.filter(
-                                  (item) => item !== image.name
+                                formik.setFieldValue(
+                                  "images",
+                                  formik.values.images.filter(
+                                    (item) => item.name !== image.name
+                                  )
                                 );
-
-                                formik.setFieldValue("images", newImages);
                               }}
                             >
                               <HiOutlineTrash className="text-white text-lg" />

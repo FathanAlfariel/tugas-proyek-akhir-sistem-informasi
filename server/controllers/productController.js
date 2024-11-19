@@ -169,40 +169,80 @@ const updateProduct = async (req, res) => {
 
   try {
     // Check if product is exist
-    const isProductExists = await Product.findById(id);
+    const isProductExists = await prisma.product.findUnique({
+      where: { id: id },
+    });
     if (!isProductExists) {
       return res.status(404).json({ message: "Product not found" });
     }
 
-    const imagesToDelete = isProductExists.images.filter(
-      (img) => !images.includes(img)
-    );
+    // Dapatkan ID dari input variants
+    const inputVariantIds = variants
+      .map((variant) => variant.id)
+      .filter(Boolean); // Pastikan ID valid
 
-    for (let imgPath of imagesToDelete) {
-      // Hapus gambar dari filesystem
-      fs.unlink(path.join(__dirname, "../public/images/", imgPath), (err) => {
-        if (err) {
-          return res
-            .status(500)
-            .json({ message: "Failed to delete image file", error: err });
-        }
-      });
-    }
-
-    const query = await Product.findByIdAndUpdate(
-      id,
-      {
-        images,
-        name,
-        description,
-        variants,
+    // Hapus variants yang tidak ada di input
+    await prisma.productVariant.deleteMany({
+      where: {
+        productId: id,
+        id: { notIn: inputVariantIds },
       },
-      { new: true }
-    );
+    });
 
-    return res
-      .status(200)
-      .json({ message: "Successfully updated product", results: query });
+    // Dapatkan ID dari input images
+    const inputImageIds = images.map((image) => image.id).filter(Boolean); // Pastikan ID valid
+
+    // Hapus variants yang tidak ada di input
+    await prisma.productImage.deleteMany({
+      where: {
+        productId: id,
+        id: { notIn: inputImageIds },
+      },
+    });
+
+    await prisma.product.update({
+      where: {
+        id: id,
+      },
+      data: {
+        name: name,
+        images: {
+          upsert: images.map((image) => ({
+            where: { id: image.id || "" },
+            update: {
+              name: image.name,
+            },
+            create: {
+              name: image.name,
+            },
+          })),
+        },
+        description: description,
+        variants: {
+          upsert: variants.map((variant) => ({
+            where: { id: variant.id || "" },
+            create: {
+              color: variant.color,
+              length: parseFloat(variant.size.length),
+              width: parseFloat(variant.size.width),
+              height: parseFloat(variant.size.height),
+              stock: parseInt(variant.size.stock),
+              price: parseFloat(variant.size.price),
+            },
+            update: {
+              color: variant.color,
+              length: parseFloat(variant.size.length),
+              width: parseFloat(variant.size.width),
+              height: parseFloat(variant.size.height),
+              stock: parseInt(variant.size.stock),
+              price: parseFloat(variant.size.price),
+            },
+          })),
+        },
+      },
+    });
+
+    return res.status(200).json({ message: "Successfully updated product" });
   } catch (err) {
     console.log("Error :" + err);
     return res.status(500).json();

@@ -154,6 +154,7 @@ const AddProduct = () => {
                     <div className="flex justify-end mb-4">
                       <IconButton
                         type="button"
+                        buttonType="icon"
                         onClick={() => deletevariants(key)}
                       >
                         <MdClose />
@@ -292,10 +293,11 @@ const AddProduct = () => {
                           />
 
                           {/* View and delete image */}
-                          <div className="absolute top-0 left-0 w-full h-full flex justify-center items-center bg-black/[0.25] rounded-xl">
+                          <div className="absolute top-0 left-0 w-full h-full flex justify-center items-center bg-black/[0.5] rounded-xl">
                             {/* View image */}
                             <IconButton
                               type="button"
+                              buttonType="icon"
                               onClick={() => setViewImageFilename(name)}
                             >
                               <IoEyeOutline className="text-white text-lg" />
@@ -304,6 +306,7 @@ const AddProduct = () => {
                             {/* Delete image */}
                             <IconButton
                               type="button"
+                              buttonType="icon"
                               onClick={() => {
                                 const newImages = formik.values.images.filter(
                                   (item) => item !== name
