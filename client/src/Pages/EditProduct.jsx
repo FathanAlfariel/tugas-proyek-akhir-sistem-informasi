@@ -24,10 +24,23 @@ const EditProduct = () => {
       await axios
         .get(`http://localhost:5000/api/product/${id}`)
         .then(({ data }) => {
+          console.log(data);
           formik.setFieldValue("images", data.results.images);
           formik.setFieldValue("name", data.results.name);
           formik.setFieldValue("description", data.results.description);
-          formik.setFieldValue("variants", data.results.variants);
+          formik.setFieldValue(
+            "variants",
+            data.results.variants.map((variant) => ({
+              color: variant.color,
+              size: {
+                length: variant.length,
+                width: variant.width,
+                height: variant.height,
+                stock: variant.stock,
+                price: variant.price,
+              },
+            }))
+          );
         })
         .catch((err) => {
           console.log(err);
@@ -302,21 +315,22 @@ const EditProduct = () => {
               <div className="max-h-40 md:max-h-0 overflow-y-auto md:overflow-visible">
                 <ul className="flex items-center gap-x-2 mt-4">
                   {formik.values.images &&
-                    formik.values.images.map((name, key) => {
+                    formik.values.images.map((image, key) => {
                       return (
                         <li key={key} className="relative">
                           <img
-                            src={`http://localhost:5000/public/images/${name}`}
-                            alt={name}
-                            className="h-20 w-20 object-cover rounded-xl"
+                            src={`http://localhost:5000/public/images/${image.name}`}
+                            alt={image.name}
+                            className="relative h-20 w-20 object-cover rounded-xl z-[-1]"
                           />
 
                           {/* View and delete image */}
-                          <div className="absolute top-0 left-0 w-full h-full flex justify-center items-center bg-black/[0.25] rounded-xl">
+                          <div className="absolute top-0 left-0 w-full h-full flex justify-center items-center bg-black/[0.5] rounded-xl">
                             {/* View image */}
                             <IconButton
                               type="button"
-                              onClick={() => setViewImageFilename(name)}
+                              buttonType="icon"
+                              onClick={() => setViewImageFilename(image.name)}
                             >
                               <IoEyeOutline className="text-white text-lg" />
                             </IconButton>
@@ -324,9 +338,10 @@ const EditProduct = () => {
                             {/* Delete image */}
                             <IconButton
                               type="button"
+                              buttonType="icon"
                               onClick={() => {
                                 const newImages = formik.values.images.filter(
-                                  (item) => item !== name
+                                  (item) => item !== image.name
                                 );
 
                                 formik.setFieldValue("images", newImages);

@@ -3,6 +3,8 @@ const imageUpload = require("../middlewares/multerMiddleware");
 const mongoose = require("mongoose");
 const fs = require("fs");
 const path = require("path");
+const { PrismaClient } = require("@prisma/client");
+const prisma = new PrismaClient();
 
 // Image Upload Controller
 const uploadImages = async (req, res) => {
@@ -30,18 +32,27 @@ const addProduct = async (req, res) => {
   const { images, name, description, variants } = req.body;
 
   try {
-    const query = new Product({
-      images,
-      name,
-      description,
-      variants,
+    const createProduct = await prisma.product.create({
+      data: {
+        images: { create: images.map((image) => ({ name: image })) },
+        name: name,
+        description: description,
+        variants: {
+          create: variants.map((variant) => ({
+            color: variant.color,
+            length: parseFloat(variant.size.length),
+            width: parseFloat(variant.size.width),
+            height: parseFloat(variant.size.height),
+            stock: parseFloat(variant.size.stock),
+            price: parseFloat(variant.size.price),
+          })),
+        },
+      },
     });
-
-    await query.save();
 
     return res
       .status(200)
-      .json({ message: "Successfully added product", results: query });
+      .json({ message: "Successfully added product", results: createProduct });
   } catch (err) {
     console.error("Error :", err);
     return res.status(500).json({ message: "Internal server error" });
@@ -51,11 +62,17 @@ const addProduct = async (req, res) => {
 // Get all products
 const getProducts = async (req, res) => {
   try {
-    const query = await Product.find();
+    const getAllProducts = await prisma.product.findMany({
+      include: {
+        images: true,
+        variants: true,
+      },
+    });
 
-    return res
-      .status(200)
-      .json({ message: "Successfully get all the products", results: query });
+    return res.status(200).json({
+      message: "Successfully get all the products",
+      results: getAllProducts,
+    });
   } catch (err) {
     console.error("Error :", err);
     return res.status(500).json({ message: "Internal server error" });
@@ -68,13 +85,14 @@ const updateVisibilityProduct = async (req, res) => {
   const { visibility } = req.body;
 
   try {
-    const query = await Product.findByIdAndUpdate(
-      id,
-      {
+    const query = await prisma.product.update({
+      where: {
+        id: id,
+      },
+      data: {
         visibility: visibility,
       },
-      { new: true }
-    );
+    });
 
     if (!query) {
       return res.status(404).json({ message: "Product not found" });
@@ -95,7 +113,11 @@ const deleteProduct = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const query = await Product.findByIdAndDelete(id, { new: true });
+    const query = await prisma.product.delete({
+      where: {
+        id: id,
+      },
+    });
 
     // If product does'nt exist
     if (!query) {
@@ -116,7 +138,15 @@ const getProductById = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const query = await Product.findById(id);
+    const query = await prisma.product.findUnique({
+      where: {
+        id: id,
+      },
+      include: {
+        images: true,
+        variants: true,
+      },
+    });
 
     // If product doesn't exist
     if (!query) {

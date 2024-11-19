@@ -45,7 +45,7 @@ const Product = () => {
       // Update visibility product
       setProducts((prev) => {
         return prev.map((product) => {
-          return product._id === id
+          return product.id === id
             ? { ...product, visibility: data.results.visibility }
             : product;
         });
@@ -63,11 +63,13 @@ const Product = () => {
       );
 
       // Update data products
-      setProducts((prev) => prev.filter((product) => product._id !== id));
+      setProducts((prev) => prev.filter((product) => product.id !== id));
     } catch (err) {
       console.log(err);
     }
   };
+
+  console.log(products);
 
   return (
     <>
@@ -99,7 +101,7 @@ const Product = () => {
                   <tr key={key} className="border-b">
                     <td className="flex gap-x-4 pl-0 md:pl-6 py-3 whitespace-nowrap">
                       <img
-                        src={`http://localhost:5000/public/images/${product?.images[0]}`}
+                        src={`http://localhost:5000/public/images/${product?.images[0]?.name}`}
                         alt={product?.images[0]}
                         className="w-16 h-16 object-cover rounded-xl"
                       />
@@ -123,13 +125,13 @@ const Product = () => {
                         selectMenu={[
                           {
                             type: "link",
-                            url: `/admin/product/edit/${product?._id}`,
+                            url: `/admin/product/edit/${product?.id}`,
                             icon: <HiOutlinePencil />,
                             label: "Edit",
                           },
                           {
                             handleMenuClicked: () =>
-                              handleDeleteProduct(product?._id),
+                              handleDeleteProduct(product?.id),
                             icon: <HiOutlineTrash />,
                             label: "Hapus",
                           },
@@ -171,13 +173,13 @@ const Product = () => {
                             label: "Public",
                             value: "public",
                             handleMenuClicked: () =>
-                              handleChangeVisibility(product?._id, "public"),
+                              handleChangeVisibility(product?.id, "public"),
                           },
                           {
                             label: "Private",
                             value: "private",
                             handleMenuClicked: () =>
-                              handleChangeVisibility(product?._id, "private"),
+                              handleChangeVisibility(product?.id, "private"),
                           },
                         ]}
                         defaultValue={product?.visibility}
@@ -209,7 +211,7 @@ const Product = () => {
             return (
               <div key={key} className="flex item-start gap-x-3">
                 <img
-                  src={`http://localhost:5000/public/images/${product.images[0]}`}
+                  src={`http://localhost:5000/public/images/${product.images[0]?.name}`}
                   alt={product.images[0]}
                   className="h-20 w-20 object-contain rounded-lg"
                 />
@@ -251,19 +253,19 @@ const Product = () => {
                           label: "Public",
                           value: "public",
                           handleMenuClicked: () =>
-                            handleChangeVisibility(product?._id, "public"),
+                            handleChangeVisibility(product?.id, "public"),
                         },
                         {
                           label: "Private",
                           value: "private",
                           handleMenuClicked: () =>
-                            handleChangeVisibility(product?._id, "private"),
+                            handleChangeVisibility(product?.id, "private"),
                         },
                       ]}
                       defaultValue={product?.visibility}
                     />
 
-                    <Link to={`/admin/product/edit/${product?._id}`}>
+                    <Link to={`/admin/product/edit/${product?.id}`}>
                       <button
                         type="button"
                         className="block transition-all active:scale-90 duration-300"
@@ -276,7 +278,7 @@ const Product = () => {
 
                     <button
                       type="button"
-                      onClick={() => handleDeleteProduct(product?._id)}
+                      onClick={() => handleDeleteProduct(product?.id)}
                       className="transition-all active:scale-90 duration-300"
                     >
                       <span>

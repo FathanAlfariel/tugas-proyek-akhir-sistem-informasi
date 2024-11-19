@@ -1,13 +1,17 @@
 const Admin = require("../models/Admin");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const { PrismaClient } = require("@prisma/client");
+const prisma = new PrismaClient();
 
 // Login Controller
 const login = async (req, res) => {
   const { username, password } = req.body;
 
   try {
-    const findUser = await Admin.findOne({ username: username });
+    const findUser = await prisma.admin.findUnique({
+      where: { username: username },
+    });
 
     if (!findUser) return res.status(404).json({ message: "User not found" });
 
@@ -17,7 +21,7 @@ const login = async (req, res) => {
       return res.status(401).json({ message: "Password incorrect" });
 
     // Create token with jsonwebtoken
-    jwt.sign({ id: findUser._id }, process.env.JWT_TOKEN, (error, token) => {
+    jwt.sign({ id: findUser.id }, process.env.JWT_TOKEN, (error, token) => {
       if (error)
         return res.status(500).json({ message: "Internal server error" });
 
@@ -42,7 +46,9 @@ const getUser = async (req, res) => {
         if (err)
           return res.status(500).json({ message: "Internal server error" });
 
-        const getUser = await Admin.findById(data.id);
+        const getUser = await prisma.admin.findUnique({
+          where: { id: data.id },
+        });
         res.status(200).json({
           message: "Successfully get user data that is currently logged in",
           data: getUser,
