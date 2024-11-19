@@ -1,6 +1,8 @@
 const Order = require("../models/Order");
 const mongoose = require("mongoose");
 const Product = require("../models/Product");
+const { PrismaClient } = require("@prisma/client");
+const prisma = new PrismaClient();
 
 // Add order controller
 const addOrder = async (req, res) => {
@@ -18,51 +20,46 @@ const addOrder = async (req, res) => {
   } = req.body;
 
   try {
-    // Create a new order instance
-    const order = new Order({
-      trackingReceipt: `TRK${Date.now()}${Math.floor(Math.random() * 1000)}`,
-      variantId,
-      name,
-      phone,
-      shippingFee,
-      discount,
-      address,
-      shippingMethod,
-      paymentMethod,
-      additionalNotes,
-      status,
+    const order = await prisma.order.create({
+      data: {
+        trackingReceipt: `TRK${Date.now()}${Math.floor(Math.random() * 1000)}`,
+        orderProducts: {
+          create: variantId.map((variant) => ({
+            variantId: variant.id,
+            quantity: parseInt(variant.total),
+          })),
+        },
+        name: name,
+        phone: phone,
+        shippingFee: parseInt(shippingFee),
+        discount: parseInt(discount),
+        address: {
+          create: {
+            country: address.country,
+            address: address.address,
+            otherDetails: address.otherDetails,
+            province: address.province,
+            city: address.city,
+            postalCode: address.postalCode,
+          },
+        },
+        shippingMethod: shippingMethod,
+        paymentMethod: paymentMethod,
+        additionalNotes: additionalNotes,
+        status: status,
+      },
     });
 
-    // Check and update product variant stock
-    for (const variant of order.variantId) {
-      const product = await Product.findOne({
-        "variants._id": variant.id,
+    for (let item of variantId) {
+      await prisma.productVariant.update({
+        where: {
+          id: item.id,
+        },
+        data: {
+          stock: { decrement: item.total },
+        },
       });
-
-      if (!product) {
-        throw new Error("Product variant not found.");
-      }
-
-      const productVariant = product.variants.find((v) =>
-        v._id.equals(variant.id)
-      );
-
-      if (!productVariant) {
-        throw new Error("Variant not found in product.");
-      }
-
-      // Check if enough stock is available
-      if (productVariant.size.stock < variant.total) {
-        throw new Error(`Insufficient stock for variant ${variant.id}.`);
-      }
-
-      // Reduce stock
-      productVariant.size.stock -= variant.total;
-      await product.save();
     }
-
-    // Save the order
-    await order.save();
 
     return res
       .status(200)

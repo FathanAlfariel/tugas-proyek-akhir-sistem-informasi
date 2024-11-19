@@ -40,7 +40,7 @@ const AddOrder = () => {
       shippingMethod: "",
       paymentMethod: "",
       additionalNotes: "",
-      status: "belum bayar",
+      status: "belum_bayar",
     },
     validationSchema: yup.object({
       receiptInputOptions: yup.string(),
@@ -495,8 +495,8 @@ const AddOrder = () => {
                 label="Status"
                 placeholder="Pilih status pesanan"
                 selectMenu={[
-                  { label: "Belum bayar", value: "belum bayar" },
-                  { label: "Sedang dikemas", value: "sedang dikemas" },
+                  { label: "Belum bayar", value: "belum_bayar" },
+                  { label: "Sedang dikemas", value: "sedang_dikemas" },
                   { label: "Dikirim", value: "dikirim" },
                   { label: "Selesai", value: "selesai" },
                 ]}

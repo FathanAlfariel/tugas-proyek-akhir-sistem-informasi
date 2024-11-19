@@ -32,6 +32,7 @@ const AddProductOrder = ({ formik, productsOrderList }) => {
       await axios
         .get("http://localhost:5000/api/product")
         .then(({ data }) => {
+          console.log(data);
           setProducts(data.results);
         })
         .catch((err) => {
@@ -75,75 +76,71 @@ const AddProductOrder = ({ formik, productsOrderList }) => {
                   <li key={key}>
                     <div className="flex items-start gap-x-3 pb-4 border-b">
                       <img
-                        src={`http://localhost:5000/public/images/${product.images[0]}`}
-                        alt={product.images[0]}
+                        src={`http://localhost:5000/public/images/${product?.images[0]?.name}`}
+                        alt={product?.images[0]?.name}
                         className="h-20 w-20 object-cover rounded-xl"
                       />
 
                       <div className="flex flex-col justify-between gap-y-4">
                         <div className="flex flex-col gap-y-0.5">
                           <h5 className="text-xs font-medium line-clamp-1">
-                            {product.name}
+                            {product?.name}
                           </h5>
                           <p className="text-xs text-[#606060] line-clamp-2">
-                            {product.description}
+                            {product?.description}
                           </p>
                         </div>
 
                         <ul className="grid grid-cols-3 gap-x-2 gap-y-2">
                           {product.variants.map((variant, index) => {
                             const isSelected = formik.values.variantId.find(
-                              (item) => item.id === variant._id
+                              (item) => item.id === variant?.id
                             );
-                            const isDropdownOpen = openDropdown === variant._id;
+                            const isDropdownOpen = openDropdown === variant?.id;
 
                             return (
                               <li key={index}>
                                 <label
-                                  htmlFor={`variant${variant._id}`}
+                                  htmlFor={`variant${variant?.id}`}
                                   className="block px-4 py-1.5 border has-[:checked]:border-[#6750A4] has-[:checked]:bg-[#6750A4]/[.12] rounded-xl text-xs has-[:checked]:text-[#6750A4] has-[:disabled]:opacity-50 has-[:disabled]:cursor-not-allowed font-medium transition-all duration-300 cursor-pointer"
                                 >
                                   <p className="text-nowrap">
-                                    {variant.color}: {variant.size.length}cm x{" "}
-                                    {variant.size.width}cm x{" "}
-                                    {variant.size.height}cm
+                                    {variant?.color}: {variant?.length}cm x{" "}
+                                    {variant?.width}cm x {variant?.height}cm
                                   </p>
                                   <p className="w-full text-nowrap">
                                     Harga:{" "}
-                                    {variant.size.price.toLocaleString(
-                                      "id-ID",
-                                      {
-                                        style: "currency",
-                                        currency: "IDR",
-                                      }
-                                    )}
+                                    {variant?.price?.toLocaleString("id-ID", {
+                                      style: "currency",
+                                      currency: "IDR",
+                                    })}
                                   </p>
                                   <p className="w-full">
-                                    Stok: {variant.size.stock}
+                                    Stok: {variant?.stock}
                                   </p>
 
                                   <input
                                     type="checkbox"
-                                    name={`variant${variant._id}`}
-                                    id={`variant${variant._id}`}
+                                    name={`variant${variant?.id}`}
+                                    id={`variant${variant?.id}`}
                                     className="hidden"
-                                    value={variant._id}
+                                    value={variant?.id}
                                     checked={formik.values.variantId.some(
-                                      (item) => item.id === variant._id
+                                      (item) => item.id === variant?.id
                                     )}
                                     onChange={(e) => {
                                       if (e.target.checked) {
                                         formik.setFieldValue("variantId", [
                                           ...formik.values.variantId,
                                           {
-                                            id: variant._id,
+                                            id: variant?.id,
                                             total: 1,
                                           },
                                         ]);
                                       } else {
                                         const deleteVariant =
                                           formik.values.variantId.filter(
-                                            (item) => item.id !== variant._id
+                                            (item) => item.id !== variant?.id
                                           );
                                         formik.setFieldValue(
                                           "variantId",
@@ -152,7 +149,7 @@ const AddProductOrder = ({ formik, productsOrderList }) => {
                                       }
                                     }}
                                     disabled={
-                                      variant.size.stock === 0 ? true : false
+                                      variant?.size?.stock === 0 ? true : false
                                     }
                                   />
                                 </label>
@@ -170,7 +167,7 @@ const AddProductOrder = ({ formik, productsOrderList }) => {
                                       <button
                                         type="button"
                                         onClick={(e) =>
-                                          handleDropdownClick(variant._id, e)
+                                          handleDropdownClick(variant?.id, e)
                                         }
                                         className="flex items-center gap-x-1 py-1 px-2 text-xs text-[#71717a] border rounded-md shadow-sm"
                                       >
@@ -193,7 +190,7 @@ const AddProductOrder = ({ formik, productsOrderList }) => {
                                               const items = [];
                                               for (
                                                 let i = 1;
-                                                i <= variant.size.stock;
+                                                i <= variant?.stock;
                                                 i++
                                               ) {
                                                 items.push(
@@ -205,7 +202,7 @@ const AddProductOrder = ({ formik, productsOrderList }) => {
                                                           formik.values.variantId.map(
                                                             (item) =>
                                                               item.id ===
-                                                              variant._id
+                                                              variant.id
                                                                 ? {
                                                                     ...item,
                                                                     total: i,
@@ -227,7 +224,7 @@ const AddProductOrder = ({ formik, productsOrderList }) => {
                                                           formik.values.variantId.find(
                                                             (item) =>
                                                               item.id ===
-                                                              variant._id
+                                                              variant?.id
                                                           );
 
                                                         return getStock.total ===
@@ -269,7 +266,7 @@ const AddProductOrder = ({ formik, productsOrderList }) => {
         </li>
         <li className="flex flex-col gap-y-4 max-h-64 overflow-y-auto">
           {productsOrderList &&
-            productsOrderList.map((product, key) => {
+            productsOrderList.map((item, key) => {
               return (
                 <div
                   key={key}
@@ -277,34 +274,29 @@ const AddProductOrder = ({ formik, productsOrderList }) => {
                 >
                   <div className="grow flex items-center gap-x-3">
                     <img
-                      src={`http://localhost:5000/public/images/${product.images[0]}`}
-                      alt={product.images[0]}
+                      src={`http://localhost:5000/public/images/${item?.product?.images[0]?.name}`}
+                      alt={item?.product?.images[0]?.name}
                       className="w-16 h-16 object-cover rounded-xl"
                     />
 
                     <div>
                       <p className="text-xs font-medium line-clamp-1">
-                        {product.name}
+                        {item?.product?.name}
                       </p>
                       <p className="text-xs text-[#606060] font-medium line-clamp-1">
                         Ukuran:{" "}
                         <span className="text-black">
-                          {product.variants[0].size.length}cm x{" "}
-                          {product.variants[0].size.width}cm x{" "}
-                          {product.variants[0].size.height}cm
+                          {item?.length}cm x {item?.width}cm x {item?.height}cm
                         </span>
                       </p>
                       <p className="text-xs font-medium">
-                        {product.variants[0].size.price.toLocaleString(
-                          "id-ID",
-                          {
-                            style: "currency",
-                            currency: "IDR",
-                          }
-                        )}
+                        {item?.price.toLocaleString("id-ID", {
+                          style: "currency",
+                          currency: "IDR",
+                        })}
                         <span className="text-[#606060]">
                           {" x"}
-                          {product.total}
+                          {item?.total}
                         </span>
                       </p>
                     </div>
@@ -312,9 +304,8 @@ const AddProductOrder = ({ formik, productsOrderList }) => {
 
                   <IconButton
                     type="button"
-                    onClick={() =>
-                      handleDeleteProductList(product.variants[0]._id)
-                    }
+                    buttonType="icon"
+                    onClick={() => handleDeleteProductList(item?.id)}
                   >
                     <HiOutlineTrash className="text-xl" />
                   </IconButton>

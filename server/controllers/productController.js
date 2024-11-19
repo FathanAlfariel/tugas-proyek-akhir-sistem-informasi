@@ -254,48 +254,26 @@ const getProductByVariantId = async (req, res) => {
   const { data } = req.body;
 
   try {
-    const values = [];
+    const productData = [];
 
-    for (let item of data) {
-      const query = await Product.aggregate([
-        {
-          $match: {
-            variants: {
-              $elemMatch: { _id: new mongoose.Types.ObjectId(item.id) },
+    for (const item of data) {
+      const getProductVariantById = await prisma.productVariant.findUnique({
+        where: {
+          id: item.id,
+        },
+        include: {
+          product: {
+            include: {
+              images: true,
             },
           },
         },
-        {
-          $project: {
-            images: 1,
-            name: 1, // Menampilkan nama produk
-            description: 1, // Menampilkan deskripsi produk
-            variants: {
-              $filter: {
-                input: "$variants", // Array variants dari produk
-                as: "variant",
-                cond: {
-                  $eq: ["$$variant._id", new mongoose.Types.ObjectId(item.id)],
-                }, // Menyaring variant dengan _id yang sesuai
-              },
-            },
-          },
-        },
-      ]);
+      });
 
-      // Check if query return a data
-      if (query.length > 0) {
-        // Add total to data response
-        const addTotalToResponse = query.map((v) => ({
-          ...v,
-          total: item.total,
-        }));
-
-        values.push(...addTotalToResponse);
-      }
+      productData.push({ ...getProductVariantById, total: item.total });
     }
 
-    return res.status(200).json({ message: "Success", results: values });
+    return res.status(200).json({ message: "Success", results: productData });
   } catch (err) {
     console.log("Error :" + err);
     return res.status(500).json({ message: "Internal server error" });
