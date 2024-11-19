@@ -122,13 +122,14 @@ const updateOrderStatus = async (req, res) => {
   const { status } = req.body;
 
   try {
-    const query = await Order.findByIdAndUpdate(
-      id,
-      {
-        status,
+    const query = await prisma.order.update({
+      where: {
+        id: id,
       },
-      { new: true }
-    );
+      data: {
+        status: status,
+      },
+    });
 
     // If order doesn't exist
     if (!query) {
