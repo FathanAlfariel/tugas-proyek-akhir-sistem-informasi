@@ -12,7 +12,6 @@ import { MdOutlineCancel } from "react-icons/md";
 
 const Order = () => {
   const [orders, setOrders] = useState([]);
-  console.log(orders);
 
   useEffect(() => {
     const getAllOrders = async () => {
@@ -39,9 +38,7 @@ const Order = () => {
 
     setOrders((prev) => {
       return prev.map((item) => {
-        return item._id === id
-          ? { ...item, status: data.results.status }
-          : item;
+        return item.id === id ? { ...item, status: data.results.status } : item;
       });
     });
   };
@@ -76,63 +73,65 @@ const Order = () => {
                   </div>
 
                   {/* Order status */}
-                  {order?.status === "belum bayar" ? (
+                  {order?.status === "belum_bayar" ? (
                     <span className="px-3 py-1.5 bg-[#ECEFF1] rounded-full first-letter:uppercase text-xs text-[#546E7A] font-semibold">
-                      {order?.status}
+                      {order?.status?.split("_").join(" ")}
                     </span>
-                  ) : order?.status === "sedang dikemas" ? (
+                  ) : order?.status === "sedang_dikemas" ? (
                     <span className="px-3 py-1.5 bg-[#FFE0B2] rounded-full first-letter:uppercase text-xs text-[#F57C00] font-semibold">
-                      {order?.status}
+                      {order?.status?.split("_").join(" ")}
                     </span>
                   ) : order?.status === "dikirim" ? (
                     <span className="px-3 py-1.5 bg-[#BBDEFB] rounded-full first-letter:uppercase text-xs text-[#1976D2] font-semibold">
-                      {order?.status}
+                      {order?.status?.split("_").join(" ")}
                     </span>
                   ) : order?.status === "selesai" ? (
                     <span className="px-3 py-1.5 bg-[#C8E6C9] rounded-full first-letter:uppercase text-xs text-[#388E3C] font-semibold">
-                      {order?.status}
+                      {order?.status?.split("_").join(" ")}
                     </span>
                   ) : order?.status === "dibatalkan" ? (
                     <span className="px-3 py-1.5 bg-[#FFCDD2] rounded-full first-letter:uppercase text-xs text-[#D32F2F] font-semibold">
-                      {order?.status}
+                      {order?.status?.split("_").join(" ")}
                     </span>
                   ) : null}
                 </div>
 
                 <div
                   className={`grid ${
-                    order?.product.length > 1
+                    order?.orderProducts?.length > 1
                       ? "grid-cols-1 md:grid-cols-2 gap-x-12"
                       : "grid-cols-1"
                   } max-h-44 md:max-h-80 overflow-y-auto`}
                 >
-                  {order?.product?.map((prod, key) => {
+                  {order?.orderProducts?.map((prod, key) => {
                     return (
                       <div key={key} className="flex items-start gap-x-3 py-4">
                         <img
-                          src={`http://localhost:5000/public/images/${prod?.images[0]}`}
-                          alt={prod?.images[0]}
+                          src={`http://localhost:5000/public/images/${prod?.productVariant?.product?.images[0]?.name}`}
+                          alt={prod?.productVariant?.product?.images[0]?.name}
                           className="w-20 h-20 md:w-28 md:h-28 object-contain rounded-xl"
                         />
 
                         <div className="grow">
-                          <h3 className="text-sm line-clamp-2">{prod?.name}</h3>
+                          <h3 className="text-sm line-clamp-2">
+                            {prod?.productVariant?.product?.name}
+                          </h3>
                           <p className="text-xs text-[#606060] line-clamp-1">
                             Variasi:{" "}
                             <span>
-                              {prod?.variant?.color}(
-                              {`${prod?.variant?.size?.length} cm x ${prod?.variant?.size?.width} cm x ${prod?.variant?.size?.height} cm`}
+                              {prod?.productVariant?.color}(
+                              {`${prod?.productVariant?.length} cm x ${prod?.productVariant?.width} cm x ${prod?.productVariant?.height} cm`}
                               )
                             </span>
                           </p>
                           <p className="text-xs text-[#606060]">
-                            x{prod?.total}
+                            x{prod?.quantity}
                           </p>
                         </div>
 
                         <div>
                           <h3 className="text-sm font-bold">
-                            {prod?.variant?.size?.price?.toLocaleString(
+                            {prod?.productVariant?.price?.toLocaleString(
                               "id-ID",
                               {
                                 style: "currency",
@@ -143,7 +142,7 @@ const Order = () => {
                           <p className="text-xs text-[#606060] text-right">
                             (
                             {(
-                              prod?.variant?.size?.price * prod?.total
+                              prod?.productVariant?.price * prod?.quantity
                             ).toLocaleString("id-ID", {
                               style: "currency",
                               currency: "IDR",
@@ -159,7 +158,7 @@ const Order = () => {
                 <div className="flex justify-between items-center border-y py-4 overflow-x-auto md:overflow-visible">
                   <div className="hidden md:flex items-center gap-x-2">
                     {/* Detail button */}
-                    <Link to={`/admin/order/detail/${order?._id}`}>
+                    <Link to={`/admin/order/detail/${order?.id}`}>
                       <button
                         type="button"
                         className="flex items-center gap-x-2 py-2.5 px-4 text-sm text-[#0f0f0f] font-medium rounded-full transition-all active:scale-90 duration-300 bg-black/[.05] hover:bg-black/[.1] whitespace-nowrap"
@@ -193,27 +192,27 @@ const Order = () => {
                           selectMenu={[
                             {
                               label: "Belum bayar",
-                              value: "belum bayar",
+                              value: "belum_bayar",
                               handleMenuClicked: () =>
-                                handleOrderStatus(order?._id, "belum bayar"),
+                                handleOrderStatus(order?.id, "belum_bayar"),
                             },
                             {
                               label: "Sedang dikemas",
-                              value: "sedang dikemas",
+                              value: "sedang_dikemas",
                               handleMenuClicked: () =>
-                                handleOrderStatus(order?._id, "sedang dikemas"),
+                                handleOrderStatus(order?.id, "sedang_dikemas"),
                             },
                             {
                               label: "Dikirim",
                               value: "dikirim",
                               handleMenuClicked: () =>
-                                handleOrderStatus(order?._id, "dikirim"),
+                                handleOrderStatus(order?.id, "dikirim"),
                             },
                             {
                               label: "Selesai",
                               value: "selesai",
                               handleMenuClicked: () =>
-                                handleOrderStatus(order?._id, "selesai"),
+                                handleOrderStatus(order?.id, "selesai"),
                             },
                           ]}
                           defaultValue={order?.status}
@@ -222,7 +221,7 @@ const Order = () => {
                         {/* Cancel order button */}
                         <button
                           type="button"
-                          onClick={() => handleCancelOrder(order?._id)}
+                          onClick={() => handleCancelOrder(order?.id)}
                           className="flex items-center gap-x-2 py-2.5 px-4 text-sm text-[#0f0f0f] font-medium rounded-full transition-all active:scale-90 duration-300 bg-black/[.05] hover:bg-black/[.1] whitespace-nowrap"
                         >
                           <span className="text-lg text-[#0f0f0f]">
@@ -236,7 +235,7 @@ const Order = () => {
 
                   {/* Total product */}
                   <h3 className="text-sm line-clamp-1">
-                    Total pesanan ({order?.product.length} barang):{" "}
+                    Total pesanan ({order?.orderProducts?.length} barang):{" "}
                     <span className="font-bold">
                       {order?.totalPrice?.toLocaleString("id-ID", {
                         style: "currency",
@@ -256,7 +255,7 @@ const Order = () => {
                       selectMenu={[
                         {
                           type: "link",
-                          url: `/admin/order/detail/${order?._id}`,
+                          url: `/admin/order/detail/${order?.id}`,
                           icon: <FiInfo />,
                           label: "Detail",
                         },
@@ -267,27 +266,27 @@ const Order = () => {
                           selectMenu: [
                             {
                               label: "Belum bayar",
-                              value: "belum bayar",
+                              value: "belum_bayar",
                               handleMenuClicked: () =>
-                                handleOrderStatus(order?._id, "belum bayar"),
+                                handleOrderStatus(order?.id, "belum_bayar"),
                             },
                             {
                               label: "Sedang dikemas",
-                              value: "sedang dikemas",
+                              value: "sedang_dikemas",
                               handleMenuClicked: () =>
-                                handleOrderStatus(order?._id, "sedang dikemas"),
+                                handleOrderStatus(order?.id, "sedang_dikemas"),
                             },
                             {
                               label: "Dikirim",
                               value: "dikirim",
                               handleMenuClicked: () =>
-                                handleOrderStatus(order?._id, "dikirim"),
+                                handleOrderStatus(order?.id, "dikirim"),
                             },
                             {
                               label: "Selesai",
                               value: "selesai",
                               handleMenuClicked: () =>
-                                handleOrderStatus(order?._id, "selesai"),
+                                handleOrderStatus(order?.id, "selesai"),
                             },
                           ],
                           defaultValue: order?.status,
@@ -295,8 +294,7 @@ const Order = () => {
                         {
                           icon: <MdOutlineCancel />,
                           label: "Batal pemesanan",
-                          handleMenuClicked: () =>
-                            handleCancelOrder(order?._id),
+                          handleMenuClicked: () => handleCancelOrder(order?.id),
                         },
                       ]}
                     />

@@ -73,73 +73,42 @@ const addOrder = async (req, res) => {
 // Get all orders controller
 const getAllOrders = async (req, res) => {
   try {
-    const query = await Order.aggregate([
-      {
-        $unwind: "$variantId",
-      },
-      {
-        $lookup: {
-          from: "products",
-          let: { variantId: "$variantId" },
-          pipeline: [
-            { $unwind: "$variants" },
-            { $match: { $expr: { $eq: ["$variants._id", "$$variantId.id"] } } },
-            {
-              $project: {
-                name: 1,
-                description: 1,
-                images: 1,
-                variant: "$variants",
-                variantPrice: "$variants.size.price", // Ambil harga dari setiap variant
-                total: "$$variantId.total",
+    const orders = await prisma.order.findMany({
+      include: {
+        orderProducts: {
+          include: {
+            productVariant: {
+              include: {
+                product: {
+                  include: {
+                    images: true,
+                  },
+                },
               },
             },
-          ],
-          as: "productDetails",
+          },
         },
+        address: true,
       },
-      {
-        $unwind: "$productDetails", // Unwind lagi untuk memproses harga setiap variant
-      },
-      {
-        $group: {
-          _id: "$_id",
-          trackingReceipt: { $first: "$trackingReceipt" },
-          name: { $first: "$name" },
-          phone: { $first: "$phone" },
-          address: { $first: "$address" },
-          shippingFee: { $first: "$shippingFee" },
-          discount: { $first: "$discount" },
-          status: { $first: "$status" },
-          createdAt: { $first: "$createdAt" },
-          updatedAt: { $first: "$updatedAt" },
-          product: { $push: "$productDetails" },
-          totalVariantPrice: {
-            $sum: {
-              $multiply: [
-                "$productDetails.variantPrice",
-                "$productDetails.total",
-              ],
-            },
-          }, // Hitung total harga semua variant
-        },
-      },
-      {
-        $addFields: {
-          totalPrice: {
-            $add: [
-              "$totalVariantPrice",
-              "$shippingFee",
-              { $multiply: ["$discount", -1] },
-            ],
-          }, // Total harga akhir
-        },
-      },
-    ]);
+    });
+
+    const orderData = orders.map((order) => {
+      // Hitung subtotal (harga produk berdasarkan quantity)
+      const subtotal = order.orderProducts.reduce((acc, orderProduct) => {
+        return acc + orderProduct.quantity * orderProduct.productVariant.price;
+      }, 0);
+
+      const totalPrice = subtotal + order.shippingFee - order.discount;
+
+      return {
+        ...order,
+        totalPrice,
+      };
+    });
 
     return res.status(200).json({
       message: "Successfully get all the orders",
-      results: query,
+      results: orderData,
     });
   } catch (err) {
     console.log("Error :" + err);
