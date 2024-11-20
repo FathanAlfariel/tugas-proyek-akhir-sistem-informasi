@@ -182,136 +182,137 @@ const EditProduct = () => {
             />
 
             {/* Variants */}
-            <div className="w-full pt-2 px-3 border-2 rounded-xl max-h-[32rem] overflow-y-auto">
-              <h5 className="text-sm">Variasi</h5>
+            <div className="w-full pt-2 px-3 border-2 rounded-xl">
+              <div className="sticky top-0 flex justify-between items-center py-2">
+                <h5 className="text-sm">Variasi</h5>
 
-              {/* variants */}
-              {formik.values.variants.map((_, key) => {
-                return (
-                  <div
-                    key={key}
-                    className="border-2 border-dashed rounded-lg p-3 my-3"
-                  >
-                    <div className="flex justify-end mb-4">
-                      <IconButton
-                        buttonType="icon"
-                        type="button"
-                        onClick={() => deletevariants(key)}
-                      >
-                        <MdClose />
-                      </IconButton>
-                    </div>
-
-                    <Input
-                      id={`warna-[${key}]`}
-                      name={`variants[${key}].color`}
-                      type="text"
-                      label="Warna produk"
-                      placeholder="Masukkan warna produk"
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      value={formik.values.variants[key].color}
-                      errorMessage={
-                        formik.touched.variants?.[key]?.color &&
-                        formik.errors.variants?.[key]?.color
-                      }
-                    />
-
-                    <div className="mt-4">
-                      <h5 className="text-sm">Ukuran</h5>
-                      <div className="grid grid-cols-3 gap-x-4 mt-2">
-                        <Input
-                          id={`panjang-${key}`}
-                          name={`variants[${key}].size.length`}
-                          type="text"
-                          label="Panjang produk"
-                          placeholder="Masukkan panjang produk"
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                          value={formik.values.variants[key].size.length}
-                          errorMessage={
-                            formik.touched.variants?.[key]?.size?.length &&
-                            formik.errors.variants?.[key]?.size?.length
-                          }
-                        />
-                        <Input
-                          id={`lebar-${key}`}
-                          name={`variants[${key}].size.width`}
-                          type="text"
-                          label="Lebar produk"
-                          placeholder="Masukkan lebar produk"
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                          value={formik.values.variants[key].size.width}
-                          errorMessage={
-                            formik.touched.variants?.[key]?.size?.width &&
-                            formik.errors.variants?.[key]?.size?.width
-                          }
-                        />
-                        <Input
-                          id={`tinggi-${key}`}
-                          name={`variants[${key}].size.height`}
-                          type="text"
-                          label="Tinggi produk"
-                          placeholder="Masukkan tinggi produk"
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                          value={formik.values.variants[key].size.height}
-                          errorMessage={
-                            formik.touched.variants?.[key]?.size?.height &&
-                            formik.errors.variants?.[key]?.size?.height
-                          }
-                        />
-                      </div>
-                    </div>
-
-                    <div className="mt-4">
-                      <h5 className="text-sm">Stok & Harga</h5>
-
-                      <div className="grid grid-cols-2 gap-x-4 mt-2">
-                        <Input
-                          id={`stok-${key}`}
-                          name={`variants[${key}].size.stock`}
-                          type="text"
-                          label="Stok produk"
-                          placeholder="Masukkan stok produk"
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                          value={formik.values.variants[key].size.stock}
-                          errorMessage={
-                            formik.touched.variants?.[key]?.size?.stock &&
-                            formik.errors.variants?.[key]?.size?.stock
-                          }
-                        />
-                        <Input
-                          id={`harga-${key}`}
-                          name={`variants[${key}].size.price`}
-                          type="text"
-                          label="Harga produk"
-                          placeholder="Masukkan harga produk"
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                          value={formik.values.variants[key].size.price}
-                          errorMessage={
-                            formik.touched.variants?.[key]?.size?.price &&
-                            formik.errors.variants?.[key]?.size?.price
-                          }
-                        />
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-
-              <div className="sticky bottom-0 py-3 bg-white">
                 <Button
                   type="button"
                   buttonStyle="filled"
                   onClick={handleAddvariants}
-                  width="full"
                 >
                   Tambah variasi
                 </Button>
+              </div>
+
+              <div className="max-h-[32rem] overflow-y-auto">
+                {/* variants */}
+                {formik.values.variants.map((_, key) => {
+                  return (
+                    <div
+                      key={key}
+                      className="border-2 border-dashed rounded-lg p-3 my-3"
+                    >
+                      <div className="flex justify-end mb-4">
+                        <IconButton
+                          buttonType="icon"
+                          type="button"
+                          onClick={() => deletevariants(key)}
+                        >
+                          <MdClose />
+                        </IconButton>
+                      </div>
+
+                      <Input
+                        id={`warna-[${key}]`}
+                        name={`variants[${key}].color`}
+                        type="text"
+                        label="Warna produk"
+                        placeholder="Masukkan warna produk"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.variants[key].color}
+                        errorMessage={
+                          formik.touched.variants?.[key]?.color &&
+                          formik.errors.variants?.[key]?.color
+                        }
+                      />
+
+                      <div className="mt-4">
+                        <h5 className="text-sm">Ukuran</h5>
+                        <div className="grid grid-cols-3 gap-x-4 mt-2">
+                          <Input
+                            id={`panjang-${key}`}
+                            name={`variants[${key}].size.length`}
+                            type="text"
+                            label="Panjang produk"
+                            placeholder="Masukkan panjang produk"
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            value={formik.values.variants[key].size.length}
+                            errorMessage={
+                              formik.touched.variants?.[key]?.size?.length &&
+                              formik.errors.variants?.[key]?.size?.length
+                            }
+                          />
+                          <Input
+                            id={`lebar-${key}`}
+                            name={`variants[${key}].size.width`}
+                            type="text"
+                            label="Lebar produk"
+                            placeholder="Masukkan lebar produk"
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            value={formik.values.variants[key].size.width}
+                            errorMessage={
+                              formik.touched.variants?.[key]?.size?.width &&
+                              formik.errors.variants?.[key]?.size?.width
+                            }
+                          />
+                          <Input
+                            id={`tinggi-${key}`}
+                            name={`variants[${key}].size.height`}
+                            type="text"
+                            label="Tinggi produk"
+                            placeholder="Masukkan tinggi produk"
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            value={formik.values.variants[key].size.height}
+                            errorMessage={
+                              formik.touched.variants?.[key]?.size?.height &&
+                              formik.errors.variants?.[key]?.size?.height
+                            }
+                          />
+                        </div>
+                      </div>
+
+                      <div className="mt-4">
+                        <h5 className="text-sm">Stok & Harga</h5>
+
+                        <div className="grid grid-cols-2 gap-x-4 mt-2">
+                          <Input
+                            id={`stok-${key}`}
+                            name={`variants[${key}].size.stock`}
+                            type="text"
+                            label="Stok produk"
+                            placeholder="Masukkan stok produk"
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            value={formik.values.variants[key].size.stock}
+                            errorMessage={
+                              formik.touched.variants?.[key]?.size?.stock &&
+                              formik.errors.variants?.[key]?.size?.stock
+                            }
+                          />
+                          <Input
+                            id={`harga-${key}`}
+                            name={`variants[${key}].size.price`}
+                            type="text"
+                            label="Harga produk"
+                            placeholder="Masukkan harga produk"
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            value={formik.values.variants[key].size.price}
+                            errorMessage={
+                              formik.touched.variants?.[key]?.size?.price &&
+                              formik.errors.variants?.[key]?.size?.price
+                            }
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </div>
@@ -398,7 +399,7 @@ const EditProduct = () => {
           </div>
         </div>
 
-        <div className="fixed bottom-0 right-0 flex justify-end items-center gap-x-2 mt-8 mx-6 py-8">
+        <div className="block md:fixed bottom-0 right-0 flex justify-end items-center gap-x-2 mt-8 mx-0 md:mx-6 py-0 md:py-8">
           <Link to={-1}>
             <Button type="button" buttonStyle="text-button">
               Cancel
