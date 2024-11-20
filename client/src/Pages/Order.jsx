@@ -59,9 +59,7 @@ const Order = () => {
 
     await axios
       .put(`http://localhost:5000/api/order/cancel/${id}`)
-      .then(({ data }) => {
-        console.log(data);
-      })
+      .then(({ data }) => {})
       .catch((err) => {
         console.log(err);
       })

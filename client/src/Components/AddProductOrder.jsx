@@ -33,7 +33,6 @@ const AddProductOrder = ({ formik, productsOrderList }) => {
       await axios
         .get("http://localhost:5000/api/product")
         .then(({ data }) => {
-          console.log(data);
           setProducts(data.results);
         })
         .catch((err) => {

@@ -112,8 +112,6 @@ const AddOrder = () => {
           status: values.status,
         })
         .then(({ data }) => {
-          console.log(data);
-
           navigate("/admin/order");
         })
         .catch((err) => {

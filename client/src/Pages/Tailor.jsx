@@ -17,7 +17,6 @@ const Tailor = () => {
         .get("http://localhost:5000/api/tailor")
         .then(({ data }) => {
           setTailors(data.results);
-          console.log(data);
         })
         .catch((err) => {
           console.log(err);
