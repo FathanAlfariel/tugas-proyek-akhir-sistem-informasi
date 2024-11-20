@@ -6,18 +6,21 @@ import {
   HiOutlinePencil,
   HiOutlineGlobeAsiaAustralia,
 } from "react-icons/hi2";
-import { IoChevronDownOutline, IoCheckmarkSharp } from "react-icons/io5";
+import { IoChevronDownOutline } from "react-icons/io5";
 import { PiLockKey } from "react-icons/pi";
 import { Link } from "react-router-dom";
 import DropdownSelect from "../Components/DropdownSelect";
 import Dropdown from "../Components/Dropdown";
-import IconButton from "../Components/IconButton";
+import Loader from "../Components/Loader";
 
 const Product = () => {
   const [products, setProducts] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Get all products
   useEffect(() => {
+    setIsLoading(true);
+
     const fetchProducts = async () => {
       await axios
         .get("http://localhost:5000/api/product")
@@ -26,6 +29,9 @@ const Product = () => {
         })
         .catch((err) => {
           console.log(err);
+        })
+        .finally(() => {
+          setIsLoading(false);
         });
     };
 
@@ -34,6 +40,8 @@ const Product = () => {
 
   // Change visibility product
   const handleChangeVisibility = async (id, visibility) => {
+    setIsLoading(true);
+
     try {
       const { data } = await axios.put(
         `http://localhost:5000/api/product/visibility/${id}`,
@@ -52,11 +60,15 @@ const Product = () => {
       });
     } catch (err) {
       console.log(err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   // Delete product
   const handleDeleteProduct = async (id) => {
+    setIsLoading(true);
+
     try {
       const { data } = await axios.delete(
         `http://localhost:5000/api/product/${id}`
@@ -66,13 +78,15 @@ const Product = () => {
       setProducts((prev) => prev.filter((product) => product.id !== id));
     } catch (err) {
       console.log(err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  console.log(products);
-
   return (
     <>
+      {isLoading && <Loader />}
+
       <h1 className="text-[28px] leading-9 font-medium">Produk</h1>
 
       {/* Products list for tablet and desktop */}

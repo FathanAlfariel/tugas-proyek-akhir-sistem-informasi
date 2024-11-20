@@ -9,11 +9,15 @@ import IconButton from "../Components/IconButton";
 import { IoMdMore } from "react-icons/io";
 import Dropdown from "../Components/Dropdown";
 import { MdOutlineCancel } from "react-icons/md";
+import Loader from "../Components/Loader";
 
 const Order = () => {
   const [orders, setOrders] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    setIsLoading(true);
+
     const getAllOrders = async () => {
       await axios
         .get("http://localhost:5000/api/order")
@@ -22,6 +26,9 @@ const Order = () => {
         })
         .catch((err) => {
           console.log(err);
+        })
+        .finally(() => {
+          setIsLoading(false);
         });
     };
 
@@ -29,6 +36,8 @@ const Order = () => {
   }, []);
 
   const handleOrderStatus = async (id, status) => {
+    setIsLoading(true);
+
     const { data } = await axios.put(
       `http://localhost:5000/api/order/status/${id}`,
       {
@@ -41,9 +50,13 @@ const Order = () => {
         return item.id === id ? { ...item, status: data.results.status } : item;
       });
     });
+
+    setIsLoading(false);
   };
 
   const handleCancelOrder = async (id) => {
+    setIsLoading(true);
+
     await axios
       .put(`http://localhost:5000/api/order/cancel/${id}`)
       .then(({ data }) => {
@@ -51,13 +64,17 @@ const Order = () => {
       })
       .catch((err) => {
         console.log(err);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   };
 
   return (
     <>
-      <h1 className="text-[28px] leading-9 font-medium mb-4">Pesanan</h1>
+      {isLoading && <Loader />}
 
+      <h1 className="text-[28px] leading-9 font-medium mb-4">Pesanan</h1>
       <div className="flex flex-col gap-y-6">
         {orders &&
           orders.map((order, key) => {

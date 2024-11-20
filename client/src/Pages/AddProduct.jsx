@@ -12,9 +12,12 @@ import { HiOutlineTrash } from "react-icons/hi2";
 import { MdClose } from "react-icons/md";
 import { Link, useNavigate } from "react-router-dom";
 import ViewImages from "../Components/ViewImages";
+import Loader from "../Components/Loader";
 
 const AddProduct = () => {
   const navigate = useNavigate();
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const [viewImageFilename, setViewImageFilename] = useState(null);
 
@@ -25,6 +28,8 @@ const AddProduct = () => {
     for (let i = 0; i < files.length; i++) {
       data.append("photos", files[i]);
     }
+
+    setIsLoading(true);
 
     await axios
       .post("http://localhost:5000/api/product/images", data, {
@@ -42,6 +47,9 @@ const AddProduct = () => {
       })
       .catch((err) => {
         console.log(err);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   };
 
@@ -70,6 +78,8 @@ const AddProduct = () => {
       ),
     }),
     onSubmit: async (values) => {
+      setIsLoading(true);
+
       await axios
         .post("http://localhost:5000/api/product", {
           images: values.images,
@@ -82,6 +92,9 @@ const AddProduct = () => {
         })
         .catch((err) => {
           console.log(err);
+        })
+        .finally(() => {
+          setIsLoading(false);
         });
     },
   });
@@ -111,8 +124,9 @@ const AddProduct = () => {
 
   return (
     <>
-      <h1 className="text-[28px] leading-9 font-medium mb-6">Tambah produk</h1>
+      {isLoading && <Loader />}
 
+      <h1 className="text-[28px] leading-9 font-medium mb-6">Tambah produk</h1>
       <form onSubmit={formik.handleSubmit}>
         <div className="grid grid-cols-12 gap-x-6">
           <div className="col-span-12 md:col-span-7 flex flex-col gap-y-4 mt-4 md:mt-0">
@@ -368,7 +382,6 @@ const AddProduct = () => {
           </Button>
         </div>
       </form>
-
       {formik.values.images.length > 0 && viewImageFilename && (
         <ViewImages
           filename={viewImageFilename}

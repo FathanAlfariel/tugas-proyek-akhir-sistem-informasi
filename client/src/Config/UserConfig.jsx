@@ -1,10 +1,12 @@
 import { createContext, useEffect, useState } from "react";
 import axios from "axios";
+import Loader from "../Components/Loader";
 
 export const UserContext = createContext({});
 
 export const UserContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Get user data
   useEffect(() => {
@@ -16,6 +18,9 @@ export const UserContextProvider = ({ children }) => {
         })
         .catch((err) => {
           console.log(err);
+        })
+        .finally(() => {
+          setIsLoading(false);
         });
     }
   }, [user]);
@@ -26,6 +31,12 @@ export const UserContextProvider = ({ children }) => {
   };
 
   return (
-    <UserContext.Provider value={contextValue}>{children}</UserContext.Provider>
+    <>
+      {isLoading && <Loader />}
+
+      <UserContext.Provider value={contextValue}>
+        {children}
+      </UserContext.Provider>
+    </>
   );
 };

@@ -12,15 +12,19 @@ import IconButton from "../Components/IconButton";
 import { MdClose } from "react-icons/md";
 import { HiOutlineTrash } from "react-icons/hi2";
 import ViewImages from "../Components/ViewImages";
-import Modal from "../Components/Modal";
+import Loader from "../Components/Loader";
 
 const EditProduct = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const [viewImageFilename, setViewImageFilename] = useState(null);
 
   useEffect(() => {
+    setIsLoading(true);
+
     const fetchProductData = async () => {
       await axios
         .get(`http://localhost:5000/api/product/${id}`)
@@ -51,6 +55,9 @@ const EditProduct = () => {
         })
         .catch((err) => {
           console.log(err);
+        })
+        .finally(() => {
+          setIsLoading(false);
         });
     };
 
@@ -64,6 +71,8 @@ const EditProduct = () => {
     for (let i = 0; i < files.length; i++) {
       data.append("photos", files[i]);
     }
+
+    setIsLoading(true);
 
     await axios
       .post("http://localhost:5000/api/product/images", data, {
@@ -81,6 +90,9 @@ const EditProduct = () => {
       })
       .catch((err) => {
         console.log(err);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   };
 
@@ -109,6 +121,8 @@ const EditProduct = () => {
       ),
     }),
     onSubmit: async (values) => {
+      setIsLoading(true);
+
       await axios
         .put(`http://localhost:5000/api/product/${id}`, {
           images: values.images,
@@ -121,6 +135,9 @@ const EditProduct = () => {
         })
         .catch((err) => {
           console.log(err);
+        })
+        .finally(() => {
+          setIsLoading(false);
         });
     },
   });
@@ -148,10 +165,10 @@ const EditProduct = () => {
     formik.setFieldValue("variants", value);
   };
 
-  console.log(formik.values.images);
-
   return (
     <>
+      {isLoading && <Loader />}
+
       <h1 className="text-[28px] leading-9 font-medium mb-6">Edit produk</h1>
 
       <form onSubmit={formik.handleSubmit}>

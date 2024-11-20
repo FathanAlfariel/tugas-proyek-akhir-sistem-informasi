@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
+import Loader from "../Components/Loader";
 
 const ProtectedRoute = ({ children }) => {
   const [token, setToken] = useState(null);
@@ -24,7 +25,7 @@ const ProtectedRoute = ({ children }) => {
   }, []);
 
   if (loading) {
-    return <div>Loading...</div>; // Or your loading component
+    return <Loader />; // Or your loading component
   }
 
   if (!token) {
