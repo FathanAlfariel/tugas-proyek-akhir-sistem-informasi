@@ -104,3 +104,10 @@ model OrderAddress {
 
   order         Order     @relation(fields: [orderId], references: [id])
 }
+
+model Expense {
+  id          String      @id @unique @default(uuid())
+  name        String
+  price       Int
+  createdAt   DateTime    @default(now())
+}

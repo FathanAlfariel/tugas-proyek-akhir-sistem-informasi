@@ -1,16 +1,17 @@
-const Expense = require("../models/Expense");
+const { PrismaClient } = require("@prisma/client");
+const prisma = new PrismaClient();
 
 // Add expense controller
 const addExpense = async (req, res) => {
   const { name, price } = req.body;
 
   try {
-    const query = new Expense({
-      name,
-      price,
+    const query = await prisma.expense.create({
+      data: {
+        name: name,
+        price: parseInt(price),
+      },
     });
-
-    await query.save();
 
     return res
       .status(200)
@@ -24,7 +25,7 @@ const addExpense = async (req, res) => {
 // Get all expenses controller
 const getAllExpenses = async (req, res) => {
   try {
-    const query = await Expense.find();
+    const query = await prisma.expense.findMany();
 
     return res
       .status(200)
@@ -40,7 +41,11 @@ const deleteExpense = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const query = await Expense.findByIdAndDelete(id);
+    const query = await prisma.expense.delete({
+      where: {
+        id: id,
+      },
+    });
 
     // If expense does'nt exist
     if (!query) {
@@ -61,7 +66,11 @@ const getExpenseById = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const query = await Expense.findById(id);
+    const query = await prisma.expense.findUnique({
+      where: {
+        id: id,
+      },
+    });
 
     // If expense doesn't exist
     if (!query) return res.status(404).json({ message: "Expense not found" });
@@ -80,11 +89,15 @@ const updateExpense = async (req, res) => {
   const { name, price } = req.body;
 
   try {
-    const query = await Expense.findByIdAndUpdate(
-      id,
-      { name, price },
-      { new: true }
-    );
+    const query = await prisma.expense.update({
+      where: {
+        id: id,
+      },
+      data: {
+        name: name,
+        price: parseInt(price),
+      },
+    });
 
     // If expense doen't exist
     if (!query) return res.status(404).json({ message: "Expense not found" });
