@@ -18,8 +18,8 @@ const Modal = ({
         <div onClick={() => setShowModal((prev) => !prev)}>{button}</div>
 
         {showModal && (
-          <div className="fixed inset-0 flex justify-center items-center bg-black/[0.25] z-10">
-            <div className="w-full min-w-auto md:min-w-40 lg:min-w-72 max-w-auto md:max-w-2xl lg:max-w-4xl bg-white rounded-[28px]">
+          <div className="fixed inset-0 flex justify-center items-center bg-black/[0.25] z-10 px-4 md:px-0">
+            <div className="min-w-full md:min-w-40 lg:min-w-72 max-w-full md:max-w-2xl lg:max-w-4xl bg-white rounded-[28px]">
               {/* Header and Content */}
               <div className="flex flex-col gap-y-6 pt-6 px-6">
                 {/* Header */}

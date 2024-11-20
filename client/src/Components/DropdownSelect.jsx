@@ -7,6 +7,8 @@ const DropdownSelect = ({
   button,
   selectMenu,
   defaultValue,
+  menuSize = "default",
+  menuUpOrDown = "down",
   menuDirection = "left",
   minWidth = undefined,
 }) => {
@@ -41,7 +43,7 @@ const DropdownSelect = ({
   return (
     <>
       {/* Dropdown select */}
-      <div id={id} className="flex relative">
+      <div id={id} className="relative">
         {/* Button */}
         <div
           className="w-full"
@@ -55,29 +57,47 @@ const DropdownSelect = ({
           <>
             {/* Dropdown select menu for tablet, desktop */}
             <div
-              className={`hidden absolute top-0 ${
+              className={`hidden absolute ${
+                menuUpOrDown === "down" ? "top-0" : "bottom-0"
+              } ${
                 menuDirection === "left" ? "left-0" : "right-0"
               } shadow bg-white ${
                 minWidth === undefined ? "min-w-40" : minWidth
               } py-2.5 rounded-2xl border border-[#F1F1F1] z-10 ${
                 isDropdownOpen ? "block" : "hidden"
-              } md:block`}
+              } md:block ${
+                menuSize === "small" ? "max-h-36" : ""
+              } overflow-y-auto`}
             >
               <ul className="flex flex-col gap-y-0.5">
                 {selectMenu.map((menu, key) => {
                   return (
                     <li key={key}>
                       <button
-                        onClick={menu.handleMenuClicked}
-                        className="flex items-center gap-x-4 w-full pl-4 pr-6 py-2 text-left text-sm hover:bg-[#1D1B20]/[.08]"
+                        type="button"
+                        onClick={() => {
+                          menu.handleMenuClicked();
+                          setIsDropdownOpen(false);
+                        }}
+                        className={`flex items-center gap-x-4 w-full pl-4 pr-6 py-2 text-left ${
+                          menuSize === "small" ? "text-xs" : "text-sm"
+                        } hover:bg-[#1D1B20]/[.08]`}
                       >
                         {menu?.value === selectedMenu ? (
                           <span>
-                            <IoCheckmarkSharp className="text-xl" />
+                            <IoCheckmarkSharp
+                              className={`${
+                                menuSize === "small" ? "text-base" : "text-xl"
+                              }`}
+                            />
                           </span>
                         ) : (
                           <span>
-                            <IoCheckmarkSharp className="invisible text-xl" />
+                            <IoCheckmarkSharp
+                              className={`invisible ${
+                                menuSize === "small" ? "text-base" : "text-xl"
+                              }`}
+                            />
                           </span>
                         )}
                         {menu.label}
@@ -104,7 +124,11 @@ const DropdownSelect = ({
                     return (
                       <li key={key}>
                         <button
-                          onClick={menu.handleMenuClicked}
+                          type="button"
+                          onClick={() => {
+                            menu.handleMenuClicked();
+                            setIsDropdownOpen(false);
+                          }}
                           className="flex items-center gap-x-4 w-full pl-4 pr-6 py-2 text-sm hover:bg-[#1D1B20]/[.08]"
                         >
                           {menu?.value === selectedMenu ? (

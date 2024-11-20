@@ -254,7 +254,7 @@ const AddOrder = () => {
                 </label>
               </div>
 
-              <div className="grid grid-cols-3 gap-x-2 mt-2">
+              <div className="flex items-start lg:grid lg:grid-cols-3 gap-x-2 mt-2 overflow-x-auto">
                 <Input
                   id="trackingReceipt"
                   type="text"
@@ -547,7 +547,7 @@ const AddOrder = () => {
           </div>
         </div>
 
-        <div className="sticky bottom-0 right-0 w-full flex justify-end items-center gap-x-2 mx-6 py-8">
+        <div className="block md:fixed bottom-0 right-0 flex justify-end items-center gap-x-2 mt-8 mx-0 md:mx-6 py-0 md:py-8">
           <Link to={-1}>
             <Button type="button" buttonStyle="text-button">
               Cancel

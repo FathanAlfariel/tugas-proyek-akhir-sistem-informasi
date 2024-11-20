@@ -75,7 +75,7 @@ const AddTailor = () => {
           />
         </div>
 
-        <div className="flex justify-end items-center gap-x-2 mt-8 mx-6">
+        <div className="block md:fixed bottom-0 right-0 flex justify-end items-center gap-x-2 mt-8 mx-0 md:mx-6 py-0 md:py-8">
           <Link to={-1}>
             <Button type="button" buttonStyle="text-button">
               Cancel

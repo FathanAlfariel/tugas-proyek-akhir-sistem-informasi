@@ -5,6 +5,7 @@ import IconButton from "./IconButton";
 import axios from "axios";
 import { IoChevronDownOutline, IoCheckmarkSharp } from "react-icons/io5";
 import { HiOutlineTrash } from "react-icons/hi2";
+import DropdownSelect from "./DropdownSelect";
 
 const AddProductOrder = ({ formik, productsOrderList }) => {
   const [products, setProducts] = useState([]);
@@ -70,10 +71,10 @@ const AddProductOrder = ({ formik, productsOrderList }) => {
             singleActionButton={true}
             onCancel={() => formik.setFieldValue("productId", [])}
           >
-            <ul className="flex flex-col gap-y-4 min-w-max">
+            <ul className="flex flex-col gap-y-4">
               {products &&
                 products.map((product, key) => (
-                  <li key={key} className="pb-4 border-b">
+                  <li key={key} className="pb-4 border-b overflow-x-auto">
                     <div className="flex items-start gap-x-3 mb-2">
                       <img
                         src={`http://localhost:5000/public/images/${product?.images[0]?.name}`}
@@ -93,7 +94,7 @@ const AddProductOrder = ({ formik, productsOrderList }) => {
                       </div>
                     </div>
 
-                    <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 max-h-36 gap-2 overflow-y-auto w-full">
+                    <ul className="flex flex-nowrap items-start gap-2">
                       {product.variants.map((variant, index) => {
                         const isSelected = formik.values.variantId.find(
                           (item) => item.id === variant?.id
@@ -160,95 +161,56 @@ const AddProductOrder = ({ formik, productsOrderList }) => {
                                   Total dibeli:
                                 </p>
 
-                                <div
-                                  className="relative w-full"
-                                  id="total-menu"
-                                >
-                                  <button
-                                    type="button"
-                                    onClick={(e) =>
-                                      handleDropdownClick(variant?.id, e)
-                                    }
-                                    className="flex items-center gap-x-1 py-1 px-2 text-xs text-[#71717a] border rounded-md shadow-sm"
-                                  >
-                                    {isSelected.total || "Pilih total dibeli"}
-                                    <span>
-                                      <IoChevronDownOutline
-                                        className={`transition-all duration-300 ${
-                                          isDropdownOpen ? "rotate-180" : ""
-                                        }`}
-                                      />
-                                    </span>
-                                  </button>
-
-                                  {/* Selected total */}
-                                  {isDropdownOpen && (
-                                    <div className="absolute top-full left-0 z-10 w-full py-2 bg-white border rounded-xl max-h-28 overflow-y-auto z-50">
-                                      <ul className="flex flex-col gap-y-0.5">
-                                        {(() => {
-                                          const items = [];
-                                          for (
-                                            let i = 1;
-                                            i <= variant?.stock;
-                                            i++
-                                          ) {
-                                            items.push(
-                                              <li key={i}>
-                                                <button
-                                                  type="button"
-                                                  onClick={() => {
-                                                    const updateTotal =
-                                                      formik.values.variantId.map(
-                                                        (item) =>
-                                                          item.id === variant.id
-                                                            ? {
-                                                                ...item,
-                                                                total: i,
-                                                              }
-                                                            : item
-                                                      );
-
-                                                    formik.setFieldValue(
-                                                      "variantId",
-                                                      updateTotal
-                                                    );
-
-                                                    setOpenDropdown(false);
-                                                  }}
-                                                  className="flex items-center gap-x-4 w-full pl-4 pr-6 py-2 text-xs hover:bg-[#1D1B20]/[.08]"
-                                                >
-                                                  {(() => {
-                                                    const getStock =
-                                                      formik.values.variantId.find(
-                                                        (item) =>
-                                                          item.id ===
-                                                          variant?.id
-                                                      );
-
-                                                    return getStock.total ===
-                                                      i ? (
-                                                      <span>
-                                                        <IoCheckmarkSharp className="text-base" />
-                                                      </span>
-                                                    ) : (
-                                                      <span>
-                                                        <IoCheckmarkSharp className="invisible text-base" />
-                                                      </span>
-                                                    );
-                                                  })()}
-
-                                                  {i}
-                                                </button>
-                                              </li>
+                                <DropdownSelect
+                                  id={"total-menu" + index}
+                                  menuSize="small"
+                                  minWidth="min-w-full"
+                                  menuUpOrDown="top"
+                                  button={
+                                    <button
+                                      type="button"
+                                      className="flex items-center gap-x-1 py-1 px-2 text-xs text-[#71717a] border rounded-md shadow-sm"
+                                    >
+                                      {isSelected.total || "Pilih total dibeli"}
+                                      <span>
+                                        <IoChevronDownOutline
+                                          className={`transition-all duration-300 ${
+                                            isDropdownOpen ? "rotate-180" : ""
+                                          }`}
+                                        />
+                                      </span>
+                                    </button>
+                                  }
+                                  selectMenu={(() => {
+                                    const items = [];
+                                    for (let i = 1; i <= variant?.stock; i++) {
+                                      items.push({
+                                        label: i,
+                                        value: i,
+                                        handleMenuClicked: () => {
+                                          const updateTotal =
+                                            formik.values.variantId.map(
+                                              (item) =>
+                                                item.id === variant.id
+                                                  ? {
+                                                      ...item,
+                                                      total: i,
+                                                    }
+                                                  : item
                                             );
-                                          }
 
-                                          return items;
-                                        })()}
-                                      </ul>
-                                    </div>
-                                  )}
-                                </div>
+                                          formik.setFieldValue(
+                                            "variantId",
+                                            updateTotal
+                                          );
+                                        },
+                                      });
+                                    }
+
+                                    return items;
+                                  })()}
+                                  defaultValue={isSelected.total}
+                                />
                               </div>
                             )}
                           </li>
