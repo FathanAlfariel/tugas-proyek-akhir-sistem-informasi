@@ -1,13 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import Input from "../Components/Input";
 import { Link, useNavigate } from "react-router-dom";
 import Button from "../Components/Button";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import axios from "axios";
+import Loader from "../Components/Loader";
 
 const AddExpense = () => {
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
   const formik = useFormik({
     initialValues: {
@@ -22,6 +24,8 @@ const AddExpense = () => {
         .required("Harga pengeluaran harus diisi."),
     }),
     onSubmit: async (values) => {
+      setIsLoading(true);
+
       await axios
         .post("http://localhost:5000/api/expense", {
           name: values.name,
@@ -32,12 +36,17 @@ const AddExpense = () => {
         })
         .catch((err) => {
           console.log(err);
+        })
+        .finally(() => {
+          setIsLoading(false);
         });
     },
   });
 
   return (
     <>
+      {isLoading && <Loader />}
+
       <h1 className="text-[28px] leading-9 font-medium mb-6">
         Tambah pengeluaran
       </h1>

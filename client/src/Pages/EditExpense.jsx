@@ -1,16 +1,21 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Input from "../Components/Input";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import Button from "../Components/Button";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import axios from "axios";
+import Loader from "../Components/Loader";
 
 const AddExpense = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
+  const [isLoading, setIsLoading] = useState(false);
+
   useEffect(() => {
+    setIsLoading(true);
+
     const getExpenseDataById = async () => {
       await axios
         .get(`http://localhost:5000/api/expense/${id}`)
@@ -20,6 +25,9 @@ const AddExpense = () => {
         })
         .catch((err) => {
           console.log(err);
+        })
+        .finally(() => {
+          setIsLoading(false);
         });
     };
 
@@ -39,6 +47,8 @@ const AddExpense = () => {
         .required("Harga pengeluaran harus diisi."),
     }),
     onSubmit: async (values) => {
+      setIsLoading(true);
+
       await axios
         .put(`http://localhost:5000/api/expense/${id}`, {
           name: values.name,
@@ -49,12 +59,17 @@ const AddExpense = () => {
         })
         .catch((err) => {
           console.log(err);
+        })
+        .finally(() => {
+          setIsLoading(false);
         });
     },
   });
 
   return (
     <>
+      {isLoading && <Loader />}
+
       <h1 className="text-[28px] leading-9 font-medium mb-6">
         Tambah pengeluaran
       </h1>

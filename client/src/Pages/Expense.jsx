@@ -3,11 +3,15 @@ import React, { useEffect, useState } from "react";
 import IconButton from "../Components/IconButton";
 import { HiOutlinePencil, HiOutlineTrash } from "react-icons/hi2";
 import { Link } from "react-router-dom";
+import Loader from "../Components/Loader";
 
 const Expense = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const [expenses, setExpenses] = useState(null);
 
   useEffect(() => {
+    setIsLoading(true);
+
     const getAllExpenses = async () => {
       await axios
         .get("http://localhost:5000/api/expense")
@@ -16,6 +20,9 @@ const Expense = () => {
         })
         .catch((err) => {
           console.log(err);
+        })
+        .finally(() => {
+          setIsLoading(false);
         });
     };
 
@@ -23,6 +30,8 @@ const Expense = () => {
   }, []);
 
   const handleDeleteExpense = async (id) => {
+    setIsLoading(true);
+
     await axios
       .delete(`http://localhost:5000/api/expense/${id}`)
       .then(({ data }) => {
@@ -30,11 +39,16 @@ const Expense = () => {
       })
       .catch((err) => {
         console.log(err);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   };
 
   return (
     <>
+      {isLoading && <Loader />}
+
       <h1 className="text-[28px] leading-9 font-medium">Pengeluaran</h1>
 
       <div className="overflow-x-auto">
