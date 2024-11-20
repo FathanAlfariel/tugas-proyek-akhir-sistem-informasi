@@ -111,3 +111,10 @@ model Expense {
   price       Int
   createdAt   DateTime    @default(now())
 }
+
+model Tailor {
+  id          String          @id @unique @default(uuid())
+  name        String
+  available   Boolean         @default(false)
+  createdAt   DateTime        @default(now())
+}

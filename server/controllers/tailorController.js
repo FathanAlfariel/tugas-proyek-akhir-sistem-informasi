@@ -1,16 +1,17 @@
-const Tailor = require("../models/Tailor");
+const { PrismaClient } = require("@prisma/client");
+const prisma = new PrismaClient();
 
 // Add tailor controller
 const addTailor = async (req, res) => {
   const { name, available } = req.body;
 
   try {
-    const query = new Tailor({
-      name,
-      available,
+    const query = await prisma.tailor.create({
+      data: {
+        name: name,
+        available: Boolean(available),
+      },
     });
-
-    await query.save();
 
     return res
       .status(200)
@@ -24,7 +25,7 @@ const addTailor = async (req, res) => {
 // Get all tailors controller
 const getAllTailors = async (req, res) => {
   try {
-    const query = await Tailor.find();
+    const query = await prisma.tailor.findMany();
 
     return res
       .status(200)
@@ -40,7 +41,11 @@ const getTailorById = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const query = await Tailor.findById(id);
+    const query = await prisma.tailor.findUnique({
+      where: {
+        id: id,
+      },
+    });
     // If tailor doesn't exist
     if (!query) return res.status(404).json({ message: "Tailor not found" });
 
@@ -60,18 +65,23 @@ const updateTailor = async (req, res) => {
 
   try {
     // Find tailor data whether it exists or not
-    const findTailor = await Tailor.findById(id);
+    const findTailor = await prisma.tailor.findUnique({
+      where: {
+        id: id,
+      },
+    });
     if (!findTailor)
       return res.status(404).json({ message: "Tailor not found" });
 
-    const query = await Tailor.findByIdAndUpdate(
-      id,
-      {
-        name,
-        available,
+    const query = await prisma.tailor.update({
+      where: {
+        id: id,
       },
-      { new: true }
-    );
+      data: {
+        name: name,
+        available: Boolean(available),
+      },
+    });
 
     return res
       .status(200)
@@ -88,11 +98,19 @@ const deleteTailor = async (req, res) => {
 
   try {
     // Find tailor data whether it exists or not
-    const findTailor = await Tailor.findById(id);
+    const findTailor = await prisma.tailor.findUnique({
+      where: {
+        id: id,
+      },
+    });
     if (!findTailor)
       return res.status(404).json({ message: "Tailor not found" });
 
-    const query = await Tailor.findByIdAndDelete(id);
+    const query = await prisma.tailor.delete({
+      where: {
+        id: id,
+      },
+    });
 
     return res
       .status(200)

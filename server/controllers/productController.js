@@ -1,8 +1,4 @@
-const Product = require("../models/Product");
 const imageUpload = require("../middlewares/multerMiddleware");
-const mongoose = require("mongoose");
-const fs = require("fs");
-const path = require("path");
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
