@@ -6,7 +6,6 @@ const {
   getAllOrders,
   updateOrderStatus,
   getOrderDetailById,
-  getOrderById,
   cancelOrder,
 } = require("../controllers/orderController");
 
@@ -20,10 +19,7 @@ router.get("/", getAllOrders);
 router.put("/status/:id", updateOrderStatus);
 
 // Get order detail by id
-router.get("/detail/:id", getOrderDetailById);
-
-// Get order by id
-router.get("/:id", getOrderById);
+router.get("/:id", getOrderDetailById);
 
 // Cancel order
 router.put("/cancel/:id", cancelOrder);

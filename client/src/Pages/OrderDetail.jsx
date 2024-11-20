@@ -14,7 +14,7 @@ const OrderDetail = () => {
   useEffect(() => {
     const getOrderDataById = async () => {
       await axios
-        .get(`http://localhost:5000/api/order/detail/${id}`)
+        .get(`http://localhost:5000/api/order/${id}`)
         .then(({ data }) => {
           setOrderDetail(data.results);
         })

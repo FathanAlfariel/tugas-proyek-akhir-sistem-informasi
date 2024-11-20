@@ -200,52 +200,42 @@ const getOrderDetailById = async (req, res) => {
   }
 };
 
-// Get order by id
-const getOrderById = async (req, res) => {
-  const { id } = req.params;
-
-  try {
-    const query = await Order.findById(id);
-
-    // If order doesn't exist
-    if (!query) {
-      return res.status(404).json({ message: "Order not found" });
-    }
-
-    return res
-      .status(200)
-      .json({ message: "Successfully get order data", results: query });
-  } catch (err) {
-    console.log("Error :" + err);
-    return res.status(500).json({ message: "Internal server error" });
-  }
-};
-
 // Cancel order
 const cancelOrder = async (req, res) => {
   const { id } = req.params;
 
   try {
     // Find the order to be canceled
-    const order = await Order.findById(id);
+    const order = await prisma.order.findUnique({
+      where: {
+        id: id,
+      },
+      include: { orderProducts: true },
+    });
 
     if (!order) {
       return res.status(404).json({ error: "Order not found" });
     }
 
-    // Update the product variants' stock
-    for (const variant of order.variantId) {
-      const product = await Product.findOne({ "variants._id": variant.id });
-      const variantIndex = product.variants.findIndex(
-        (v) => v._id.toString() === variant.id.toString()
-      );
-      product.variants[variantIndex].size.stock += variant.total;
-      await product.save();
+    // Update stock
+    for (const item of order.orderProducts) {
+      await prisma.productVariant.update({
+        where: { id: item.variantId },
+        data: {
+          stock: { increment: item.quantity },
+        },
+      });
     }
 
-    // Update the order status to 'dibatalkan'
-    order.status = "dibatalkan";
-    await order.save();
+    // Update order status
+    await prisma.order.update({
+      where: {
+        id: id,
+      },
+      data: {
+        status: "dibatalkan",
+      },
+    });
 
     res.json({ message: "Order canceled successfully" });
   } catch (error) {
@@ -258,6 +248,5 @@ module.exports = {
   getAllOrders,
   updateOrderStatus,
   getOrderDetailById,
-  getOrderById,
   cancelOrder,
 };
