@@ -5,13 +5,18 @@ import { GoPerson } from "react-icons/go";
 import { IoCallOutline } from "react-icons/io5";
 import { TiPrinter } from "react-icons/ti";
 import IconButton from "../Components/IconButton";
+import Loader from "../Components/Loader";
 
 const OrderDetail = () => {
   const { id } = useParams();
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const [orderDetail, setOrderDetail] = useState([]);
 
   useEffect(() => {
+    setIsLoading(true);
+
     const getOrderDataById = async () => {
       await axios
         .get(`http://localhost:5000/api/order/${id}`)
@@ -20,6 +25,9 @@ const OrderDetail = () => {
         })
         .catch((err) => {
           console.log(err);
+        })
+        .finally(() => {
+          setIsLoading(false);
         });
     };
 
@@ -28,6 +36,8 @@ const OrderDetail = () => {
 
   return (
     <>
+      {isLoading && <Loader />}
+
       <h1 className="text-[28px] leading-9 font-medium mb-4">Detail pesanan</h1>
 
       <div className="flex justify-between items-start">
