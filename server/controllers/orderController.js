@@ -150,84 +150,49 @@ const getOrderDetailById = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const query = await Order.aggregate([
-      {
-        $match: { _id: new mongoose.Types.ObjectId(id) },
+    const query = await prisma.order.findUnique({
+      where: {
+        id: id,
       },
-      {
-        $unwind: "$variantId",
-      },
-      {
-        $lookup: {
-          from: "products",
-          let: { variantId: "$variantId" },
-          pipeline: [
-            { $unwind: "$variants" },
-            { $match: { $expr: { $eq: ["$variants._id", "$$variantId.id"] } } },
-            {
-              $project: {
-                name: 1,
-                description: 1,
-                images: 1,
-                variant: "$variants",
-                variantPrice: "$variants.size.price", // Ambil harga dari setiap variant
-                total: "$$variantId.total",
+      include: {
+        orderProducts: {
+          include: {
+            productVariant: {
+              include: {
+                product: {
+                  include: {
+                    images: true,
+                  },
+                },
               },
             },
-          ],
-          as: "productDetails",
+          },
         },
+        address: true,
       },
-      {
-        $unwind: "$productDetails", // Unwind lagi untuk memproses harga setiap variant
-      },
-      {
-        $group: {
-          _id: "$_id",
-          trackingReceipt: { $first: "$trackingReceipt" },
-          name: { $first: "$name" },
-          phone: { $first: "$phone" },
-          address: { $first: "$address" },
-          shippingFee: { $first: "$shippingFee" },
-          discount: { $first: "$discount" },
-          shippingMethod: { $first: "$shippingMethod" },
-          paymentMethod: { $first: "$paymentMethod" },
-          additionalNotes: { $first: "$additionalNotes" },
-          status: { $first: "$status" },
-          createdAt: { $first: "$createdAt" },
-          updatedAt: { $first: "$updatedAt" },
-          product: { $push: "$productDetails" },
-          totalVariantPrice: {
-            $sum: {
-              $multiply: [
-                "$productDetails.variantPrice",
-                "$productDetails.total",
-              ],
-            },
-          }, // Hitung total harga semua variant
-        },
-      },
-      {
-        $addFields: {
-          totalPrice: {
-            $add: [
-              "$totalVariantPrice",
-              "$shippingFee",
-              { $multiply: ["$discount", -1] },
-            ],
-          }, // Total harga akhir
-        },
-      },
-    ]);
+    });
 
     // If order doesn't exist
     if (!query) {
       return res.status(404).json({ message: "Order not found" });
     }
+    // Hitung total harga
+    const subTotal = query.orderProducts.reduce((acc, orderProduct) => {
+      return acc + orderProduct.quantity * orderProduct.productVariant.price;
+    }, 0);
+
+    const totalPrice = subTotal + query.shippingFee - query.discount;
+
+    // Tambahkan totalPrice ke hasil
+    const results = {
+      ...query,
+      subTotal,
+      totalPrice,
+    };
 
     return res.status(200).json({
       message: "Successfully get order detail",
-      results: query[0],
+      results: results,
     });
   } catch (err) {
     console.log("Error :" + err);
@@ -266,11 +231,6 @@ const cancelOrder = async (req, res) => {
 
     if (!order) {
       return res.status(404).json({ error: "Order not found" });
-    }
-
-    // Check if the order is in a cancelable state
-    if (order.status !== "belum bayar") {
-      return res.status(400).json({ error: "Order cannot be canceled" });
     }
 
     // Update the product variants' stock

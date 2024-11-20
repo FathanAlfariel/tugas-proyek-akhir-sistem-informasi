@@ -39,25 +39,25 @@ const OrderDetail = () => {
           </h3>
 
           {/* Order status */}
-          {orderDetail?.status === "belum bayar" ? (
+          {orderDetail?.status === "belum_bayar" ? (
             <span className="px-3 py-1.5 bg-[#ECEFF1] rounded-full first-letter:uppercase text-xs text-[#546E7A] font-semibold whitespace-nowrap">
-              {orderDetail?.status}
+              {orderDetail?.status?.split("_").join(" ")}
             </span>
-          ) : orderDetail?.status === "sedang dikemas" ? (
+          ) : orderDetail?.status === "sedang_dikemas" ? (
             <span className="px-3 py-1.5 bg-[#FFE0B2] rounded-full first-letter:uppercase text-xs text-[#F57C00] font-semibold whitespace-nowrap">
-              {orderDetail?.status}
+              {orderDetail?.status?.split("_").join(" ")}
             </span>
           ) : orderDetail?.status === "dikirim" ? (
             <span className="px-3 py-1.5 bg-[#BBDEFB] rounded-full first-letter:uppercase text-xs text-[#1976D2] font-semibold whitespace-nowrap">
-              {orderDetail?.status}
+              {orderDetail?.status?.split("_").join(" ")}
             </span>
           ) : orderDetail?.status === "selesai" ? (
             <span className="px-3 py-1.5 bg-[#C8E6C9] rounded-full first-letter:uppercase text-xs text-[#388E3C] font-semibold whitespace-nowrap">
-              {orderDetail?.status}
+              {orderDetail?.status?.split("_").join(" ")}
             </span>
           ) : orderDetail?.status === "dibatalkan" ? (
             <span className="px-3 py-1.5 bg-[#FFCDD2] rounded-full first-letter:uppercase text-xs text-[#D32F2F] font-semibold whitespace-nowrap">
-              {orderDetail?.status}
+              {orderDetail?.status?.split("_").join(" ")}
             </span>
           ) : null}
         </div>
@@ -86,48 +86,49 @@ const OrderDetail = () => {
 
             <div className="flex flex-col gap-y-3 max-h-56 overflow-y-auto">
               {/* List of products purchased */}
-              {orderDetail?.product?.map((prod, key) => {
+              {orderDetail?.orderProducts?.map((prod, key) => {
                 return (
                   <div key={key} className="flex items-start gap-x-3">
                     <div className="shrink-0">
                       <img
-                        src={`http://localhost:5000/public/images/${prod.images[0]}`}
-                        alt={prod.images[0]}
+                        src={`http://localhost:5000/public/images/${prod?.productVariant?.product?.images[0]?.name}`}
+                        alt={prod?.productVariant?.product?.images[0]?.name}
                         className="w-16 h-16 md:w-20 md:h-20 rounded-xl object-cover"
                       />
                     </div>
 
                     <div className="grow flex flex-col gap-y-0.5 py-0.5 md:py-1">
                       <p className="text-sm line-clamp-1 md:line-clamp-2">
-                        {prod.name}
+                        {prod?.productVariant?.product?.name}
                       </p>
                       <p className="text-xs text-[#606060] line-clamp-1">
                         Variasi:{" "}
                         <span>
-                          {prod.variant.color}(
-                          {`${prod.variant.size.length} cm x ${prod.variant.size.width} cm x ${prod.variant.size.height} cm`}
+                          {prod?.productVariant?.color}(
+                          {`${prod?.productVariant?.length} cm x ${prod?.productVariant?.width} cm x ${prod?.productVariant?.height} cm`}
                           )
                         </span>
                       </p>
-                      <p className="text-xs text-[#606060]">x{prod.total}</p>
+                      <p className="text-xs text-[#606060]">
+                        x{prod?.quantity}
+                      </p>
                     </div>
 
                     <div>
                       <h3 className="text-sm font-bold">
-                        {prod.variant.size.price.toLocaleString("id-ID", {
+                        {prod?.productVariant?.price.toLocaleString("id-ID", {
                           style: "currency",
                           currency: "IDR",
                         })}
                       </h3>
                       <p className="text-xs text-[#606060] text-right">
                         (
-                        {(prod.variant.size.price * prod.total).toLocaleString(
-                          "id-ID",
-                          {
-                            style: "currency",
-                            currency: "IDR",
-                          }
-                        )}
+                        {(
+                          prod?.productVariant?.price * prod.quantity
+                        ).toLocaleString("id-ID", {
+                          style: "currency",
+                          currency: "IDR",
+                        })}
                         )
                       </p>
                     </div>
@@ -150,7 +151,7 @@ const OrderDetail = () => {
               <div className="flex justify-between items-center text-sm">
                 Subtotal
                 <span>
-                  {orderDetail?.totalVariantPrice?.toLocaleString("id-ID", {
+                  {orderDetail?.subTotal?.toLocaleString("id-ID", {
                     style: "currency",
                     currency: "IDR",
                   })}
@@ -231,7 +232,7 @@ const OrderDetail = () => {
             </div>
           </div>
 
-          {/* Orderer's name */}
+          {/* Orderer's contact */}
           <div className="flex flex-col gap-y-2.5 p-4 rounded-2xl border border-black/[.1]">
             {/* Title */}
             <h5 className="text-lg font-semibold">Informasi kontak</h5>
