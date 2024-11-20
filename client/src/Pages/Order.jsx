@@ -252,51 +252,69 @@ const Order = () => {
                           <IoMdMore className="text-lg" />
                         </IconButton>
                       }
-                      selectMenu={[
-                        {
-                          type: "link",
-                          url: `/admin/order/detail/${order?.id}`,
-                          icon: <FiInfo />,
-                          label: "Detail",
-                        },
-                        {
-                          type: "menu-select",
-                          icon: <GrDeliver />,
-                          label: "Update status",
-                          selectMenu: [
-                            {
-                              label: "Belum bayar",
-                              value: "belum_bayar",
-                              handleMenuClicked: () =>
-                                handleOrderStatus(order?.id, "belum_bayar"),
-                            },
-                            {
-                              label: "Sedang dikemas",
-                              value: "sedang_dikemas",
-                              handleMenuClicked: () =>
-                                handleOrderStatus(order?.id, "sedang_dikemas"),
-                            },
-                            {
-                              label: "Dikirim",
-                              value: "dikirim",
-                              handleMenuClicked: () =>
-                                handleOrderStatus(order?.id, "dikirim"),
-                            },
-                            {
-                              label: "Selesai",
-                              value: "selesai",
-                              handleMenuClicked: () =>
-                                handleOrderStatus(order?.id, "selesai"),
-                            },
-                          ],
-                          defaultValue: order?.status,
-                        },
-                        {
-                          icon: <MdOutlineCancel />,
-                          label: "Batal pemesanan",
-                          handleMenuClicked: () => handleCancelOrder(order?.id),
-                        },
-                      ]}
+                      selectMenu={
+                        order?.status === "dibatalkan"
+                          ? [
+                              {
+                                type: "link",
+                                url: `/admin/order/detail/${order?.id}`,
+                                icon: <FiInfo />,
+                                label: "Detail",
+                              },
+                            ]
+                          : [
+                              {
+                                type: "link",
+                                url: `/admin/order/detail/${order?.id}`,
+                                icon: <FiInfo />,
+                                label: "Detail",
+                              },
+                              {
+                                type: "menu-select",
+                                icon: <GrDeliver />,
+                                label: "Update status",
+                                selectMenu: [
+                                  {
+                                    label: "Belum bayar",
+                                    value: "belum_bayar",
+                                    handleMenuClicked: () =>
+                                      handleOrderStatus(
+                                        order?.id,
+                                        "belum_bayar"
+                                      ),
+                                  },
+                                  {
+                                    label: "Sedang dikemas",
+                                    value: "sedang_dikemas",
+                                    handleMenuClicked: () =>
+                                      handleOrderStatus(
+                                        order?.id,
+                                        "sedang_dikemas"
+                                      ),
+                                  },
+                                  {
+                                    label: "Dikirim",
+                                    value: "dikirim",
+                                    handleMenuClicked: () =>
+                                      handleOrderStatus(order?.id, "dikirim"),
+                                  },
+                                  {
+                                    label: "Selesai",
+                                    value: "selesai",
+                                    handleMenuClicked: () =>
+                                      handleOrderStatus(order?.id, "selesai"),
+                                  },
+                                ],
+                                defaultValue: order?.status,
+                              },
+                              {
+                                icon: <MdOutlineCancel />,
+                                label: "Batal pemesanan",
+                                handleMenuClicked: () =>
+                                  handleCancelOrder(order?.id),
+                              },
+                            ]
+                      }
                     />
                   </div>
                 </div>

@@ -214,10 +214,10 @@ const AddOrder = () => {
       <h1 className="text-[28px] leading-9 font-medium mb-6">Tambah pesanan</h1>
 
       <form onSubmit={formik.handleSubmit}>
-        <div className="grid grid-cols-12 gap-x-6">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-x-0 md:gap-x-6">
           <div className="col-span-7">
             {/* Resi pesanan */}
-            <div className="mb-6">
+            <div className="mb-5">
               <h5 className="text-lg font-medium mb-2.5">Resi pesanan</h5>
 
               <div className="flex items-center gap-x-2.5">
@@ -301,7 +301,7 @@ const AddOrder = () => {
             </div>
 
             {/* Informasi pemesan */}
-            <div className="mb-6">
+            <div className="mb-5">
               <h5 className="text-lg font-medium mb-2.5">Informasi pemesan</h5>
 
               <div className="flex flex-col gap-y-2">
@@ -332,7 +332,7 @@ const AddOrder = () => {
             </div>
 
             {/* Ongkir dan diskon pesanan */}
-            <div className="mb-6">
+            <div className="mb-5">
               <h5 className="text-lg font-medium mb-2.5">
                 Ongkir dan discount
               </h5>
@@ -369,7 +369,7 @@ const AddOrder = () => {
             </div>
 
             {/* Alamat pengiriman */}
-            <div className="mb-6">
+            <div className="mb-5">
               <h5 className="text-lg font-medium mb-2.5">Alamat pengiriman</h5>
 
               <div className="flex flex-col gap-y-2">
@@ -486,7 +486,7 @@ const AddOrder = () => {
               </div>
             </div>
 
-            <div className="mb-6">
+            <div className="mb-5">
               <h5 className="text-lg font-medium mb-2.5">Status pemesanan</h5>
 
               {/* Status selection */}
@@ -529,7 +529,7 @@ const AddOrder = () => {
             </div>
           </div>
 
-          <div className="col-span-5">
+          <div className="order-first md:order-last col-span-5 mb-5 md:mb-0">
             {/* Produk yang dipesan */}
             <AddProductOrder
               formik={formik}
