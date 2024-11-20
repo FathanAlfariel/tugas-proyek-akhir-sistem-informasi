@@ -75,6 +75,7 @@ const Order = () => {
       {isLoading && <Loader />}
 
       <h1 className="text-[28px] leading-9 font-medium mb-4">Pesanan</h1>
+
       <div className="flex flex-col gap-y-6">
         {orders &&
           orders.map((order, key) => {

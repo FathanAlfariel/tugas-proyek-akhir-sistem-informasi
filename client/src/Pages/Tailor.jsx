@@ -3,11 +3,15 @@ import axios from "axios";
 import IconButton from "../Components/IconButton";
 import { HiOutlinePencil, HiOutlineTrash } from "react-icons/hi2";
 import { Link } from "react-router-dom";
+import Loader from "../Components/Loader";
 
 const Tailor = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const [tailors, setTailors] = useState(null);
 
   useEffect(() => {
+    setIsLoading(true);
+
     const getAllTailors = async () => {
       await axios
         .get("http://localhost:5000/api/tailor")
@@ -17,6 +21,9 @@ const Tailor = () => {
         })
         .catch((err) => {
           console.log(err);
+        })
+        .finally(() => {
+          setIsLoading(false);
         });
     };
 
@@ -24,6 +31,8 @@ const Tailor = () => {
   }, []);
 
   const handleDeleteTailor = async (id) => {
+    setIsLoading(true);
+
     await axios
       .delete(`http://localhost:5000/api/tailor/${id}`)
       .then(({ data }) => {
@@ -31,11 +40,16 @@ const Tailor = () => {
       })
       .catch((err) => {
         console.log(err);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   };
 
   return (
     <>
+      {isLoading && <Loader />}
+
       <h1 className="text-[28px] leading-9 font-medium">Penjahit</h1>
 
       <div className="overflow-x-auto">
