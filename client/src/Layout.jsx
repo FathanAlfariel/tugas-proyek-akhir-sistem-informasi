@@ -9,10 +9,6 @@ const Layout = () => {
       <header className="mx-4 md:mx-6 mt-2.5">
         {/* Dashboard header */}
         <Header />
-
-        <div className="mt-6">
-          <Navigation />
-        </div>
       </header>
 
       <main className="mx-4 md:mx-6 my-8">

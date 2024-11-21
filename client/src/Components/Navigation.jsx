@@ -74,21 +74,23 @@ const Navigation = () => {
               <li key={key}>
                 <NavLink
                   to={item.link}
-                  className={({ isActive }) =>
-                    `flex items-center gap-x-2 px-4 py-2.5 rounded-full text-sm font-medium transition-all active:scale-90 duration-300 text-nowrap ${
-                      isActive
-                        ? "text-white bg-[#6750A4]"
-                        : "text-[#6750A4] bg-transparent hover:bg-[#6750A4]/[.08]"
-                    }`
-                  }
+                  className="group relative"
                   end={item.end}
                 >
                   {({ isActive }) => (
                     <>
-                      <span className="text-lg">
-                        {isActive ? item.iconSelected : item.icon}
-                      </span>
-                      {item.label}
+                      <div className="transition-all active:scale-90 flex items-center gap-x-2 px-4 py-4 text-sm font-medium duration-300 text-nowrap ">
+                        <span className="text-lg">
+                          {isActive ? item.iconSelected : item.icon}
+                        </span>
+                        {item.label}
+                      </div>
+
+                      {isActive ? (
+                        <div className="absolute bottom-0 left-0 w-full border-2 border-[#6750A4] rounded-t-full"></div>
+                      ) : (
+                        <div className="hidden group-hover:block absolute bottom-0 left-0 w-full border-2 rounded-t-full bg-[#49454F]/[.08]"></div>
+                      )}
                     </>
                   )}
                 </NavLink>
