@@ -79,7 +79,11 @@ const Navigation = () => {
                 >
                   {({ isActive }) => (
                     <>
-                      <div className="transition-all active:scale-90 flex items-center gap-x-2 px-4 py-4 text-sm font-medium duration-300 text-nowrap ">
+                      <div
+                        className={`flex items-center gap-x-2 px-4 py-4 text-sm font-medium ${
+                          isActive && "text-[#6750A4]"
+                        } transition-all active:scale-90 duration-300 text-nowrap`}
+                      >
                         <span className="text-lg">
                           {isActive ? item.iconSelected : item.icon}
                         </span>

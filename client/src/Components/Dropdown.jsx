@@ -8,6 +8,7 @@ const Dropdown = ({
   id,
   button,
   menuDirection = "left",
+  menuTopOrBottom = "top-0",
   minWidth = undefined,
   selectMenu,
 }) => {
@@ -32,7 +33,7 @@ const Dropdown = ({
   }, [isDropdownOpen, id]);
 
   return (
-    <div id={id} className="inline-flex relative">
+    <div id={id} className="relative">
       {/* Button */}
       <div onClick={() => setIsDropdownOpen(!isDropdownOpen)}>{button}</div>
 
@@ -41,7 +42,7 @@ const Dropdown = ({
         <>
           {/* Dropdown select menu for tablet, desktop */}
           <div
-            className={`hidden absolute top-0 ${
+            className={`hidden absolute ${menuTopOrBottom} ${
               menuDirection === "left" ? "left-0" : "right-0"
             } shadow bg-white ${
               minWidth === undefined ? "min-w-40" : minWidth

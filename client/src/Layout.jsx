@@ -11,7 +11,7 @@ const Layout = () => {
         <Header />
       </header>
 
-      <main className="mx-4 md:mx-6 my-8">
+      <main className="mx-4 md:mx-6 mt-5 mb-8">
         <Outlet />
         <AddFloatingButton />
       </main>

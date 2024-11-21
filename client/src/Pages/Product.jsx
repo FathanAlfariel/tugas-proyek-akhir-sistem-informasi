@@ -144,10 +144,10 @@ const Product = () => {
                             label: "Edit",
                           },
                           {
-                            handleMenuClicked: () =>
-                              handleDeleteProduct(product?.id),
                             icon: <HiOutlineTrash />,
                             label: "Hapus",
+                            handleMenuClicked: () =>
+                              handleDeleteProduct(product?.id),
                           },
                         ]}
                       />
