@@ -5,20 +5,23 @@ import Loader from "../Components/Loader";
 
 const PublicRoute = ({ children }) => {
   const [token, setToken] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    setLoading(true);
+
     const fetchToken = async () => {
-      try {
-        const { data } = await axios.get(
-          "http://localhost:5000/api/auth/getToken"
-        );
-        setToken(data.token);
-      } catch (err) {
-        console.log(err);
-      } finally {
-        setLoading(false);
-      }
+      await axios
+        .get("http://localhost:5000/api/auth/getToken")
+        .then(({ data }) => {
+          setToken(data.token);
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
     };
 
     fetchToken();

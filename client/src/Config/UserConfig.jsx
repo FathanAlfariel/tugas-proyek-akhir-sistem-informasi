@@ -6,10 +6,12 @@ export const UserContext = createContext({});
 
 export const UserContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Get user data
   useEffect(() => {
+    setIsLoading(true);
+
     if (!user) {
       axios
         .get("http://localhost:5000/api/auth/getUser")
@@ -23,6 +25,8 @@ export const UserContextProvider = ({ children }) => {
           setIsLoading(false);
         });
     }
+
+    setIsLoading(false);
   }, [user]);
 
   const contextValue = {

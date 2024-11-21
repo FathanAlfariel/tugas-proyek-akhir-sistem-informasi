@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import Button from "../Components/Button";
 import Input from "../Components/Input";
 import axios from "axios";
@@ -9,6 +9,7 @@ import { UserContext } from "../Config/UserConfig";
 
 const Login = () => {
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
   const { setUser } = useContext(UserContext);
 
@@ -22,6 +23,8 @@ const Login = () => {
       password: yup.string().required("Tolong masukkan password."),
     }),
     onSubmit: async (values) => {
+      setIsLoading(true);
+
       try {
         await axios
           .post("http://localhost:5000/api/auth/login", {
@@ -35,6 +38,8 @@ const Login = () => {
           });
       } catch (err) {
         console.log(err);
+      } finally {
+        setIsLoading(false);
       }
     },
   });
@@ -56,6 +61,7 @@ const Login = () => {
                 onChange={formik.handleChange("username")}
                 onBlur={formik.handleBlur("username")}
                 value={formik.values.username}
+                errorMessage={formik.touched.username && formik.errors.username}
               />
               <Input
                 id="password"
@@ -66,6 +72,7 @@ const Login = () => {
                 onChange={formik.handleChange("password")}
                 onBlur={formik.handleBlur("password")}
                 value={formik.values.password}
+                errorMessage={formik.touched.password && formik.errors.password}
               />
             </div>
 
