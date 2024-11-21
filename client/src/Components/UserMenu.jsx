@@ -3,10 +3,12 @@ import { UserContext } from "../Config/UserConfig";
 import { MdLogout } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import Loader from "./Loader";
 
 const UserMenu = () => {
   const navigate = useNavigate();
   const [showMenu, setShowMenu] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const { user } = useContext(UserContext);
 
@@ -26,6 +28,8 @@ const UserMenu = () => {
   };
 
   const handleLogout = async () => {
+    setIsLoading(true);
+
     await axios
       .post("http://localhost:5000/api/auth/logout")
       .then(({ data }) => {
@@ -33,11 +37,16 @@ const UserMenu = () => {
       })
       .catch((err) => {
         console.log(err);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   };
 
   return (
     <>
+      {isLoading && <Loader />}
+
       <div id="user-menu" className="relative">
         <button
           onClick={handleShowMenu}

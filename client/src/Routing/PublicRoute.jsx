@@ -28,7 +28,7 @@ const PublicRoute = ({ children }) => {
   }, []);
 
   if (loading) {
-    return <Loader />; // Or your loading component
+    return <Loader />;
   }
 
   if (token) {

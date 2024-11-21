@@ -6,6 +6,7 @@ import { useFormik } from "formik";
 import * as yup from "yup";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../Config/UserConfig";
+import Loader from "../Components/Loader";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -46,6 +47,8 @@ const Login = () => {
 
   return (
     <>
+      {isLoading && <Loader />}
+
       <div className="max-w-md mx-auto flex flex-col items-center justify-center py-8">
         <h3 className="text-2xl font-semibold">Login</h3>
 
