@@ -19,7 +19,7 @@ const Modal = ({
 
         {showModal && (
           <div className="fixed inset-0 flex justify-center items-center bg-black/[0.25] z-10 px-4 md:px-0">
-            <div className="min-w-full md:min-w-40 lg:min-w-72 max-w-full md:max-w-2xl lg:max-w-4xl bg-white rounded-[28px]">
+            <div className="min-w-full md:min-w-40 lg:w-4/12 max-w-full md:max-w-2xl lg:max-w-4xl bg-white rounded-[28px]">
               {/* Header and Content */}
               <div className="flex flex-col gap-y-6 pt-6 px-6">
                 {/* Header */}
@@ -34,10 +34,10 @@ const Modal = ({
                   {singleActionButton ? (
                     <Button
                       onClick={() => {
-                        setShowModal(false);
                         if (onSubmit) {
                           onSubmit();
                         }
+                        setShowModal(false);
                       }}
                       type="button"
                       buttonStyle="text-button"
@@ -48,8 +48,10 @@ const Modal = ({
                     <>
                       <Button
                         onClick={() => {
+                          if (onCancel) {
+                            onCancel();
+                          }
                           setShowModal(false);
-                          onCancel();
                         }}
                         type="button"
                         buttonStyle="text-button"
@@ -58,10 +60,10 @@ const Modal = ({
                       </Button>
                       <Button
                         onClick={() => {
-                          setShowModal(false);
                           if (onSubmit) {
                             onSubmit();
                           }
+                          setShowModal(false);
                         }}
                         type="button"
                         buttonStyle="text-button"

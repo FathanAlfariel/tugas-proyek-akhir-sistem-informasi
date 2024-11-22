@@ -64,6 +64,9 @@ const getProducts = async (req, res) => {
         variants: true,
       },
     });
+    if (!getAllProducts) {
+      return res.status(404).json({ message: "Product not found" });
+    }
 
     return res.status(200).json({
       message: "Successfully get all the products",

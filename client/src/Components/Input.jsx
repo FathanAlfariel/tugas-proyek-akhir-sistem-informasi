@@ -12,6 +12,7 @@ const Input = ({
   onBlur,
   errorMessage,
   disabled,
+  step,
 }) => {
   const [isDisabled, setIsDisabled] = useState(false);
 
@@ -98,6 +99,7 @@ const Input = ({
               id={id}
               name={name}
               type={type}
+              step={step}
               placeholder={placeholder}
               className="outline-none placeholder:text-[#71717a] disabled:cursor-not-allowed"
               onChange={onChange}
