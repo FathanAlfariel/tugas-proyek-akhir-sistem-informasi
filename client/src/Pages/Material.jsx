@@ -7,30 +7,30 @@ import * as yup from "yup";
 import axios from "axios";
 import Loader from "../Components/Loader";
 import IconButton from "../Components/IconButton";
-import { Link } from "react-router-dom";
-import { HiOutlinePencil, HiOutlineTrash } from "react-icons/hi2";
+import { HiOutlineTrash } from "react-icons/hi2";
+import EditMaterial from "./EditMaterial";
 
 const Material = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [materials, setMaterials] = useState(null);
+  const [materials, setMaterials] = useState([]);
 
-  useEffect(() => {
+  const getAllMaterials = async () => {
     setIsLoading(true);
 
-    const getAllMaterials = async () => {
-      await axios
-        .get("http://localhost:5000/api/material")
-        .then(({ data }) => {
-          setMaterials(data.results);
-        })
-        .catch((err) => {
-          console.log(err);
-        })
-        .finally(() => {
-          setIsLoading(false);
-        });
-    };
+    await axios
+      .get("http://localhost:5000/api/material")
+      .then(({ data }) => {
+        setMaterials(data.results);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
 
+  useEffect(() => {
     getAllMaterials();
   }, []);
 
@@ -45,11 +45,21 @@ const Material = () => {
       name: yup.string().required("Nama bahan harus diisi."),
       complexity: yup
         .number()
-        .test("is-decimal", "Angka harus dalam bentuk desimal", (value) =>
-          (value + "").match(/^\d*\.{1}\d*$/)
-        )
         .min(1.0, "Kompleksitas minimal 1.0")
         .max(2.0, "Kompleksitas maksimal 2.0")
+        .test(
+          "is-decimal",
+          "Angka harus dalam bentuk desimal (contoh: 1.0, 1.1)",
+          (value) => {
+            if (!value) return false; // Pastikan nilai tidak kosong
+            // Cek format desimal dengan regex
+            return (
+              /^\d+(\.\d+)?$/.test(value) &&
+              parseFloat(value) >= 1.0 &&
+              parseFloat(value) <= 2.0
+            );
+          }
+        )
         .required("Kompleksitas bahan harus diisi."),
       cuttingTime: yup
         .number()
@@ -79,7 +89,7 @@ const Material = () => {
           sewingTime: parseFloat(values.sewingTime),
         })
         .then(({ data }) => {
-          console.log(data);
+          getAllMaterials();
         })
         .catch((err) => {
           console.log(err);
@@ -89,6 +99,22 @@ const Material = () => {
         });
     },
   });
+
+  const handleDeleteMaterial = async (id) => {
+    setIsLoading(true);
+
+    await axios
+      .delete(`http://localhost:5000/api/material/${id}`)
+      .then(({ data }) => {
+        getAllMaterials();
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
 
   return (
     <>
@@ -200,14 +226,14 @@ const Material = () => {
                     </td>
                     <td className="pl-6 py-6 whitespace-nowrap">
                       <div className="flex items-center gap-x-1">
-                        <Link to={`/admin/tailor/edit/${material?.id}`}>
-                          <IconButton type="button" buttonType="icon">
-                            <HiOutlinePencil className="text-lg" />
-                          </IconButton>
-                        </Link>
+                        <EditMaterial
+                          id={material?.id}
+                          onUpdate={getAllMaterials}
+                        />
+
                         <IconButton
                           type="button"
-                          //   onClick={() => handleDeleteTailor(material?.id)}
+                          onClick={() => handleDeleteMaterial(material?.id)}
                           buttonType="icon"
                         >
                           <HiOutlineTrash className="text-lg" />
