@@ -1,6 +1,6 @@
 import React from "react";
 
-const MakeProduct = () => {
+const ProductCreation = () => {
   return (
     <>
       <div>
@@ -10,4 +10,4 @@ const MakeProduct = () => {
   );
 };
 
-export default MakeProduct;
+export default ProductCreation;
