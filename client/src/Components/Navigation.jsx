@@ -61,7 +61,7 @@ const Navigation = () => {
       iconSelected: <IoBagAdd />,
       label: "Pembuatan produk",
       link: "/admin/product-creation",
-      end: true,
+      end: false,
     },
   ];
 

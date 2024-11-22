@@ -118,3 +118,13 @@ model Tailor {
   available   Boolean         @default(false)
   createdAt   DateTime        @default(now())
 }
+
+model Material {
+  id          String    @id @default(uuid())
+  name        String    @unique
+  complexity  Float
+  cuttingTime Float
+  sewingTime  Float
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
