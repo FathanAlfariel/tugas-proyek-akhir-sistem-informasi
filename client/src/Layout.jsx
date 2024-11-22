@@ -1,7 +1,6 @@
 import { Outlet } from "react-router-dom";
 import Header from "./Components/Header";
 import AddFloatingButton from "./Components/AddFloatingButton";
-import Navigation from "./Components/Navigation";
 
 const Layout = () => {
   return (

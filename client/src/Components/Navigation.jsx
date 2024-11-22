@@ -81,7 +81,7 @@ const Navigation = () => {
                     <>
                       <div
                         className={`flex items-center gap-x-2 px-4 py-4 text-sm font-medium ${
-                          isActive && "text-[#6750A4]"
+                          isActive ? "text-[#6750A4]" : "text-[#5F6368]"
                         } transition-all active:scale-90 duration-300 text-nowrap`}
                       >
                         <span className="text-lg">

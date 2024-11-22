@@ -7,7 +7,11 @@ const Header = () => {
   return (
     <>
       <div className="flex flex-wrap justify-between items-center">
-        <div className="">Hello</div>
+        <img
+          src="/logo.png"
+          alt="logo"
+          className="w-20 lg:w-24 h-auto object-contain"
+        />
 
         <div className="order-last lg:order-none overflow-x-auto">
           <Navigation />
