@@ -1,11 +1,17 @@
 import { useEffect, useState } from "react";
 import Input from "../Components/Input";
 import Select from "../Components/Select";
+import Dropdown from "../Components/Dropdown";
+import Button from "../Components/Button";
 import axios from "axios";
 import { FiPlus } from "react-icons/fi";
+import { useFormik } from "formik";
+import * as yup from "yup";
+import { IoWarning } from "react-icons/io5";
 
 const AddProductCreation = () => {
   const [availableTailors, setAvailableTailors] = useState([]);
+  const [materials, setMaterials] = useState([]);
 
   useEffect(() => {
     const getAvailableTailors = async () => {
@@ -23,6 +29,86 @@ const AddProductCreation = () => {
 
     getAvailableTailors();
   }, []);
+
+  useEffect(() => {
+    const getMaterials = async () => {
+      await axios
+        .get("http://localhost:5000/api/material")
+        .then(({ data }) => {
+          setMaterials(data.results);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
+
+    getMaterials();
+  }, []);
+
+  const formik = useFormik({
+    initialValues: {
+      materials: [],
+      size: "",
+      additional_features: "",
+    },
+    validationSchema: yup.object({
+      materials: yup
+        .array()
+        .of(
+          yup.object({
+            material: yup.string(),
+            quantity: yup
+              .number()
+              .typeError("Tolong masukkan angka.")
+              .required("Quantity bahan harus diisi."),
+            size: yup
+              .number()
+              .typeError("Tolong masukkan angka.")
+              .required("Ukuran bahan harus diisi"),
+          })
+        )
+        .min(1, "Bahan harus diisi."),
+      size: yup.string(),
+      additional_features: yup.string(),
+    }),
+    onSubmit: async (values) => {
+      console.log(values);
+    },
+  });
+
+  const estimate = async () => {
+    await axios
+      .post("http://localhost:5000/api/estimate", {
+        materials: formik.values.materials.map((item) => ({
+          material: item.material,
+          quantity: parseInt(item.quantity),
+          size: parseFloat(item.size),
+        })),
+        totalQuantity: 10,
+      })
+      .then(({ data }) => {
+        console.log(data);
+        // Hitung jam, menit, dan detik
+        const hours = Math.floor(data.data.total_estimated_hours / 60); // Total jam
+        const minutes = Math.floor(data.data.total_estimated_hours % 60); // Sisa menit
+        const seconds = Math.round((data.data.total_estimated_hours % 1) * 60); // Hitung detik dari desimal menit
+
+        // Format ke "HH:MM:SS"
+        const formattedTime = `${String(hours).padStart(2, "0")}:${String(
+          minutes
+        ).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+        console.log(formattedTime);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  useEffect(() => {
+    estimate();
+  }, [formik.values.materials]);
+
+  console.log(formik.values.materials);
 
   return (
     <>
@@ -59,15 +145,101 @@ const AddProductCreation = () => {
           <div>
             <h5 className="text-lg font-medium mb-2.5">Bahan-bahan</h5>
 
-            <button
-              type="button"
-              className="flex justify-center items-center gap-x-2 text-sm font-medium items-center w-full p-4 border-2 border-dashed rounded-xl transition-all active:scale-90 duration-300"
-            >
-              <span className="text-xl">
-                <FiPlus />
-              </span>
-              Tambah bahan
-            </button>
+            <Dropdown
+              id="add-materials"
+              button={
+                <Button type="button" buttonStyle="filled">
+                  Tambah bahan
+                </Button>
+              }
+              selectMenu={materials.map((item) => ({
+                label: item.name,
+                handleMenuClicked: () =>
+                  formik.setFieldValue("materials", [
+                    ...formik.values.materials,
+                    {
+                      material: item.name,
+                      quantity: 1,
+                      size: 0,
+                    },
+                  ]),
+              }))}
+            />
+
+            <ul>
+              {formik.values.materials.map((material, key) => {
+                return (
+                  <li
+                    key={key}
+                    className="flex justify-between items-center py-4 border-b"
+                  >
+                    <p className="text-sm">{material.material}</p>
+
+                    <div className="flex flex-col gap-y-2">
+                      <div className="flex flex-col gap-y-0.5">
+                        <label
+                          htmlFor={`materials[${key}].quantity`}
+                          className="inline-flex items-center gap-x-1 text-xs font-medium"
+                        >
+                          Quantity
+                          {formik.touched.materials?.[key]?.quantity &&
+                          formik.errors.materials?.[key]?.quantity ? (
+                            <span className="flex items-center before:content-['('] after:content-[')']">
+                              <IoWarning className="text-xs text-red-600 dark:text-red-500" />
+                              <p className="ml-1.5 text-xs text-red-600 dark:text-red-500">
+                                {formik.touched.materials?.[key]?.quantity &&
+                                  formik.errors.materials?.[key]?.quantity}
+                              </p>
+                            </span>
+                          ) : null}
+                        </label>
+
+                        <input
+                          id={`materials[${key}].quantity`}
+                          type="text"
+                          name={`materials[${key}].quantity`}
+                          className="outline-none border text-xs"
+                          value={formik.values.materials[key].quantity}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                        />
+                      </div>
+
+                      <div className="flex flex-col gap-y-0.5">
+                        <label
+                          htmlFor={`materials[${key}].size`}
+                          className="inline-flex items-center gap-x-1 text-xs font-medium"
+                        >
+                          <span>
+                            Size (cm<sup>2</sup>)
+                          </span>
+                          {formik.touched.materials?.[key]?.size &&
+                          formik.errors.materials?.[key]?.size ? (
+                            <span className="flex items-center before:content-['('] after:content-[')']">
+                              <IoWarning className="text-xs text-red-600 dark:text-red-500" />
+                              <p className="ml-1.5 text-xs text-red-600 dark:text-red-500">
+                                {formik.touched.materials?.[key]?.size &&
+                                  formik.errors.materials?.[key]?.size}
+                              </p>
+                            </span>
+                          ) : null}
+                        </label>
+
+                        <input
+                          id={`materials[${key}].size`}
+                          type="text"
+                          name={`materials[${key}].size`}
+                          className="outline-none border text-xs"
+                          value={formik.values.materials[key].size}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                        />
+                      </div>
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
           </div>
         </div>
       </div>

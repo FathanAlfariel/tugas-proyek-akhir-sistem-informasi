@@ -1,113 +1,55 @@
-// Estimasi waktu pembuatan tas
-const estimate = async (req, res) => {
-  const { materials, size, additional_features } = req.body;
+const { PrismaClient } = require("@prisma/client");
+const prisma = new PrismaClient();
+const axios = require("axios");
 
-  if (
-    !materials ||
-    !Array.isArray(materials) ||
-    materials.length === 0 ||
-    !size
-  ) {
-    return res.status(400).json({ error: "Materials and size are required" });
-  }
+// Endpoint estimasi yang menggunakan data material dari database
+const estimate = async (req, res) => {
+  const { materials, totalQuantity } = req.body;
 
   try {
-    // Factor sizes
-    const sizeFactors = {
-      small: 0.8,
-      medium: 1.0,
-      large: 1.3,
-    };
+    // Ambil semua karakteristik material dari database
+    const materialCharacteristics = {};
+    const dbMaterials = await prisma.material.findMany();
 
-    if (!sizeFactors[size]) {
-      return res.status(400).json({ error: "Invalid size" });
-    }
-
-    let totalBaseTimes = {
-      preparation: 0,
-      cutting: 0,
-      sewing: 0,
-      finishing: 0,
-    };
-    let totalComplexity = 0;
-
-    // Iterate through materials and calculate time for each material
-    for (let materialName of materials) {
-      const materialData = await prismaClient.material.findUnique({
-        where: { name: materialName },
-      });
-
-      if (!materialData) {
-        return res
-          .status(404)
-          .json({ error: `Material ${materialName} not found` });
-      }
-
-      // Base production times
-      const baseProductionTime = {
-        preparation: 0.5,
-        cutting: 1.0,
-        sewing: 2.0,
-        finishing: 1.0,
+    dbMaterials.forEach((mat) => {
+      materialCharacteristics[mat.name] = {
+        complexity: mat.complexity,
+        cutting_time: mat.cuttingTime,
+        sewing_time: mat.sewingTime,
       };
+    });
 
-      // Accumulate base times for each material
-      let baseTimes = {};
-      for (let step in baseProductionTime) {
-        let time = baseProductionTime[step];
-        if (step === "cutting") {
-          baseTimes[step] = time * materialData.cutting_time;
-        } else if (step === "sewing") {
-          baseTimes[step] = time * materialData.sewing_time;
-        } else {
-          baseTimes[step] = time;
-        }
-      }
+    // Kirim request ke Python service dengan karakteristik material
+    const pythonResponse = await axios.post("http://localhost:3000/estimate", {
+      materials,
+      totalQuantity,
+      materialCharacteristics,
+    });
 
-      // Apply size factor for each material
-      const sizeFactor = sizeFactors[size];
-      for (let step in baseTimes) {
-        baseTimes[step] *= sizeFactor;
-        totalBaseTimes[step] += baseTimes[step];
-      }
+    const estimation = pythonResponse.data;
 
-      totalComplexity += materialData.complexity;
-    }
+    // Optional: Simpan hasil estimasi
+    // const savedEstimation = await prisma.productionEstimate.create({
+    //   data: {
+    //     totalEstimatedHours: estimation.total_estimated_hours,
+    //     cuttingHours: estimation.cutting_hours,
+    //     sewingHours: estimation.sewing_hours,
+    //     complexityFactor: estimation.complexity_factor,
+    //     totalQuantity,
+    //     materials: JSON.stringify(materials),
+    //   },
+    // });
 
-    // Add time for additional features
-    let featureTime = additional_features
-      ? additional_features.length * 0.5
-      : 0;
-    totalBaseTimes["additional_features"] = featureTime;
-
-    // Apply random variation (±10%)
-    const variationFactor = Math.random() * (1.1 - 0.9) + 0.9;
-
-    // Total production time
-    const totalHours =
-      Object.values(totalBaseTimes).reduce((a, b) => a + b, 0) *
-      totalComplexity *
-      variationFactor;
-
-    // Estimate completion date (Assume 8 working hours per day)
-    const workingHoursPerDay = 8;
-    const workingDays = Math.ceil(totalHours / workingHoursPerDay);
-    const estimatedCompletionDate = new Date();
-    estimatedCompletionDate.setDate(
-      estimatedCompletionDate.getDate() + workingDays
-    );
-
-    // Return the calculated data
-    res.json({
-      totalHours,
-      baseTimes: totalBaseTimes,
-      estimatedCompletionDate: estimatedCompletionDate
-        .toISOString()
-        .split("T")[0],
+    return res.json({
+      success: true,
+      data: estimation,
     });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Error calculating production time" });
+    console.error("Error:", error);
+    return res.status(500).json({
+      error: "Internal server error",
+      message: error.message,
+    });
   }
 };
 
