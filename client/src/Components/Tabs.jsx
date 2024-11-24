@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const Tabs = ({ menu, content }) => {
+const Tabs = ({ menu }) => {
   const [isSelected, setIsSelected] = useState(0);
 
   const handleIsSelected = (key) => {
@@ -9,7 +9,7 @@ const Tabs = ({ menu, content }) => {
 
   return (
     <>
-      <ul className="flex items-center gap-x-2 border-b">
+      <ul className="flex items-center gap-x-4 border-b overflow-x-auto">
         {menu.map((item, key) => {
           return (
             <li key={key} className="group relative">
@@ -33,7 +33,7 @@ const Tabs = ({ menu, content }) => {
         })}
       </ul>
 
-      <div className="py-3">{menu[isSelected].content}</div>
+      <div className="py-3 w-full">{menu[isSelected].content}</div>
     </>
   );
 };
