@@ -17,7 +17,9 @@ const Tabs = ({ menu }) => {
                 type="button"
                 onClick={() => handleIsSelected(key)}
                 className={`flex items-center gap-x-2 px-4 py-4 text-sm font-medium ${
-                  isSelected === key ? "text-[#6750A4]" : "text-[#5F6368]"
+                  isSelected === key
+                    ? "text-[#6750A4] hover:text-[#6750A4]"
+                    : "text-[#5F6368] hover:text-[#6750A4]"
                 } transition-all active:scale-90 duration-300 text-nowrap`}
               >
                 {item.label}
