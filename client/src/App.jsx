@@ -20,6 +20,7 @@ import EditTailor from "./Pages/EditTailor";
 import AddOrder from "./Pages/AddOrder";
 import OrderDetail from "./Pages/OrderDetail";
 import AddProductCreation from "./Pages/AddProductCreation";
+import HomePage from "./Pages/HomePage";
 
 axios.defaults.withCredentials = true;
 
@@ -27,6 +28,7 @@ const App = () => {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/" element={<HomePage />} />
         <Route
           path="/admin/*"
           element={

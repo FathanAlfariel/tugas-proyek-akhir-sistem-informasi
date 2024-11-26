@@ -24,10 +24,6 @@ const UserMenu = () => {
     }
   }, [showMenu]);
 
-  const handleShowMenu = () => {
-    setShowMenu((prev) => !prev);
-  };
-
   const handleLogout = async () => {
     setIsLoading(true);
 
@@ -54,7 +50,10 @@ const UserMenu = () => {
         menuTopOrBottom="top-auto"
         menuDirection="right"
         button={
-          <button className="p-1.5 rounded-full hover:bg-[#49454F]/[.08] active:[#49454F]/[.12] transition-all active:scale-90 duration-300">
+          <button
+            type="button"
+            className="p-1.5 rounded-full hover:bg-[#49454F]/[.08] active:[#49454F]/[.12] transition-all active:scale-90 duration-300"
+          >
             <div className="w-7 h-7 flex justify-center items-center bg-[#6750A4] rounded-full">
               <p className="text-base font-medium uppercase text-white">
                 {user?.data?.name[0]}
