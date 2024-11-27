@@ -45,7 +45,9 @@ const Carousel = ({ images, className }) => {
           <button
             type="button"
             onClick={prevSlide}
-            className="flex justify-center items-center p-1.5 rounded-full bg-white shadow-lg"
+            className={`${
+              current === 0 && "invisible"
+            } flex justify-center items-center p-1.5 rounded-full bg-white/[.9] shadow-lg transition hover:scale-105 hover:bg-white duration-300`}
           >
             <IoIosArrowBack className="text-lg text-black" />
           </button>
@@ -53,7 +55,9 @@ const Carousel = ({ images, className }) => {
           <button
             type="button"
             onClick={nextSlide}
-            className="flex justify-center items-center p-1.5 rounded-full bg-white shadow-lg"
+            className={`${
+              current === images.length - 1 && "invisible"
+            } flex justify-center items-center p-1.5 rounded-full bg-white/[.9] shadow-lg transition hover:scale-105 hover:bg-white duration-300`}
           >
             <IoIosArrowForward className="text-lg text-black" />
           </button>
