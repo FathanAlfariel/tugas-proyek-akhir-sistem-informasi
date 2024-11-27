@@ -48,6 +48,11 @@
   height: 100%;
   border-radius: 30px;
   animation: moving 1s ease-in-out infinite;
+  transition-property: color, background-color, border-color,
+    text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter,
+    backdrop-filter;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 300ms;
 }
 
 @keyframes moving {
