@@ -4,7 +4,8 @@ import { IoIosArrowForward, IoIosArrowBack } from "react-icons/io";
 const Carousel = ({ images, className }) => {
   const [current, setCurrent] = useState(0);
 
-  const prevSlide = () => {
+  const prevSlide = (e) => {
+    e.preventDefault(); // Mencegah default navigasi
     if (current === 0) {
       setCurrent(images.length - 1);
     } else {
@@ -12,7 +13,8 @@ const Carousel = ({ images, className }) => {
     }
   };
 
-  const nextSlide = () => {
+  const nextSlide = (e) => {
+    e.preventDefault(); // Mencegah default navigasi
     if (current === images.length - 1) {
       setCurrent(0);
     } else {
@@ -41,7 +43,7 @@ const Carousel = ({ images, className }) => {
           })}
         </div>
 
-        <div className="absolute top-0 h-full w-full px-2.5 transition-all opacity-0 group-hover:opacity-100 flex justify-between items-center ease-in-out duration-200 z-10">
+        <div className="absolute top-0 h-full w-full px-2.5 transition-all opacity-0 group-hover:opacity-100 flex justify-between items-center ease-in-out duration-200 z-50">
           <button
             type="button"
             onClick={prevSlide}
@@ -49,7 +51,7 @@ const Carousel = ({ images, className }) => {
               current === 0 && "invisible"
             } flex justify-center items-center p-1.5 rounded-full bg-white/[.9] shadow-lg transition hover:scale-105 hover:bg-white duration-300`}
           >
-            <IoIosArrowBack className="text-lg text-black" />
+            <IoIosArrowBack className="text-base md:text-lg text-black" />
           </button>
 
           <button
@@ -59,7 +61,7 @@ const Carousel = ({ images, className }) => {
               current === images.length - 1 && "invisible"
             } flex justify-center items-center p-1.5 rounded-full bg-white/[.9] shadow-lg transition hover:scale-105 hover:bg-white duration-300`}
           >
-            <IoIosArrowForward className="text-lg text-black" />
+            <IoIosArrowForward className="text-base md:text-lg text-black" />
           </button>
         </div>
       </div>

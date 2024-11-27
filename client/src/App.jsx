@@ -21,6 +21,7 @@ import AddOrder from "./Pages/AddOrder";
 import OrderDetail from "./Pages/OrderDetail";
 import AddProductCreation from "./Pages/AddProductCreation";
 import HomePage from "./Pages/HomePage";
+import ProductDetail from "./Pages/ProductDetail";
 
 axios.defaults.withCredentials = true;
 
@@ -29,6 +30,7 @@ const App = () => {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<HomePage />} />
+        <Route path="/products/:id" element={<ProductDetail />} />
         <Route
           path="/admin/*"
           element={
