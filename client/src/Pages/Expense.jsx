@@ -4,6 +4,7 @@ import IconButton from "../Components/IconButton";
 import { HiOutlinePencil, HiOutlineTrash } from "react-icons/hi2";
 import { Link } from "react-router-dom";
 import Loader from "../Components/Loader";
+import Filter from "../Components/Filter";
 
 const Expense = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -49,7 +50,101 @@ const Expense = () => {
     <>
       {isLoading && <Loader />}
 
-      <h1 className="text-[28px] leading-9 font-medium">Pengeluaran</h1>
+      <h1 className="text-[28px] leading-9 font-medium mb-4">Pengeluaran</h1>
+
+      {/* Filter */}
+      <div className="border-y py-3 mb-1">
+        <h5 className="text-sm font-semibold mb-2.5">Filter berdasarkan:</h5>
+
+        <div className="flex items-center gap-x-2 overflow-x-auto md:overflow-visible">
+          {/* Expense Name Filter */}
+          <Filter
+            id="tracking-receipt-filter"
+            headerTitle="Nama pengeluaran"
+            button={
+              <button
+                type="button"
+                className="flex items-center gap-x-2 py-2 px-4 text-sm font-medium border rounded-full transition duration-300 hover:bg-black/[.07] active:scale-90"
+              >
+                Nama pengeluaran
+              </button>
+            }
+          >
+            <label
+              htmlFor="tracking-receipt"
+              className="block text-xs font-medium"
+            >
+              Masukkan nama pengeluaran
+            </label>
+
+            <input
+              autoFocus
+              id="tracking-receipt"
+              type="text"
+              placeholder="Nama pengeluaran"
+              className="outline-none pt-3 pb-1 text-sm border-b w-full"
+              // value={trackingReceiptParams}
+              // onChange={(e) => setTrackingReceiptParams(e.target.value)}
+            />
+          </Filter>
+
+          {/* Price Filter */}
+          <Filter
+            id="tracking-receipt-filter"
+            headerTitle="Harga"
+            button={
+              <button
+                type="button"
+                className="flex items-center gap-x-2 py-2 px-4 text-sm font-medium border rounded-full transition duration-300 hover:bg-black/[.07] active:scale-90"
+              >
+                Harga
+              </button>
+            }
+          >
+            <div className="flex items-center gap-x-2">
+              <div>
+                <label
+                  htmlFor="tracking-receipt"
+                  className="block text-xs font-medium"
+                >
+                  Minimal
+                </label>
+
+                <input
+                  autoFocus
+                  id="tracking-receipt"
+                  type="number"
+                  placeholder="Min"
+                  min={0}
+                  className="outline-none pt-3 pb-1 text-sm border-b w-full"
+                  // value={trackingReceiptParams}
+                  // onChange={(e) => setTrackingReceiptParams(e.target.value)}
+                />
+              </div>
+
+              <div>
+                <label
+                  htmlFor="tracking-receipt"
+                  className="block text-xs font-medium"
+                >
+                  Maximal
+                </label>
+
+                <input
+                  autoFocus
+                  id="tracking-receipt"
+                  type="number"
+                  placeholder="Max"
+                  min={0}
+                  className="outline-none pt-3 pb-1 text-sm border-b w-full"
+                  // value={trackingReceiptParams}
+                  // onChange={(e) => setTrackingReceiptParams(e.target.value)}
+                />
+              </div>
+            </div>
+          </Filter>
+        </div>
+      </div>
 
       <div className="overflow-x-auto">
         <table className="w-full">

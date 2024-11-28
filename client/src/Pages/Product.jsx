@@ -102,7 +102,7 @@ const Product = () => {
 
       <h1 className="text-[28px] leading-9 font-medium mb-4">Produk</h1>
 
-      {/* Search and filter */}
+      {/* Filter */}
       <div className="border-y py-3">
         <h5 className="text-sm font-semibold mb-2.5">Filter berdasarkan:</h5>
 

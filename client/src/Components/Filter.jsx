@@ -37,7 +37,9 @@ const Filter = ({
           >
             {/* Header */}
             <div className="flex justify-between items-center py-1 pl-3 pr-1">
-              <h5 className="text-sm font-medium">{headerTitle}</h5>
+              <h5 className="text-sm font-medium line-clamp-1">
+                {headerTitle}
+              </h5>
 
               <IconButton
                 type="button"
