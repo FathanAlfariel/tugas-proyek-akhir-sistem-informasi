@@ -3,10 +3,10 @@ import { FiInfo } from "react-icons/fi";
 import { IoChevronDownOutline } from "react-icons/io5";
 import { GrDeliver } from "react-icons/gr";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import DropdownSelect from "../Components/DropdownSelect";
 import IconButton from "../Components/IconButton";
-import { IoMdMore } from "react-icons/io";
+import { IoMdClose, IoMdMore } from "react-icons/io";
 import Dropdown from "../Components/Dropdown";
 import { MdOutlineCancel } from "react-icons/md";
 import Loader from "../Components/Loader";
@@ -16,12 +16,20 @@ const Order = () => {
   const [orders, setOrders] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
+  const [searchParams, setSearchParams] = useSearchParams();
+  const currentParams = Object.fromEntries(searchParams.entries());
+
+  const [trackingReceiptParams, setTrackingReceiptParams] = useState(
+    currentParams?.trackingReceipt || ""
+  );
+
+  // Get all orders
   useEffect(() => {
     setIsLoading(true);
 
     const getAllOrders = async () => {
       await axios
-        .get("http://localhost:5000/api/order")
+        .get(`http://localhost:5000/api/order?${searchParams}`)
         .then(({ data }) => {
           setOrders(data.results);
         })
@@ -34,7 +42,7 @@ const Order = () => {
     };
 
     getAllOrders();
-  }, []);
+  }, [searchParams]);
 
   const handleOrderStatus = async (id, status) => {
     setIsLoading(true);
@@ -80,31 +88,62 @@ const Order = () => {
         <h5 className="text-sm font-semibold mb-2.5">Filter berdasarkan:</h5>
 
         <div className="flex items-center gap-x-2 overflow-x-auto md:overflow-visible">
-          {/* Resi Filter */}
+          {/* Tracking Receipt Filter */}
           <Filter
-            id="resi-filter"
+            id="tracking-receipt-filter"
             headerTitle="No. Resi"
             button={
               <button
                 type="button"
                 className="flex items-center gap-x-2 py-2 px-4 text-sm font-medium border rounded-full transition duration-300 hover:bg-black/[.07] active:scale-90"
               >
-                No. Resi
+                {currentParams?.trackingReceipt ? (
+                  <>
+                    No. Resi: {currentParams.trackingReceipt}
+                    <span
+                      title="Hapus filter no.resi"
+                      className="p-1 rounded-full bg-black/[.15] ml-2"
+                      onClick={(e) => {
+                        e.stopPropagation();
+
+                        const updatedParams = { ...currentParams };
+                        delete updatedParams["trackingReceipt"];
+
+                        setSearchParams(updatedParams);
+                        setTrackingReceiptParams("");
+                      }}
+                    >
+                      <IoMdClose className="text-sm" />
+                    </span>
+                  </>
+                ) : (
+                  "No. Resi"
+                )}
               </button>
             }
+            onClick={() =>
+              setSearchParams({
+                ...currentParams,
+                trackingReceipt: trackingReceiptParams,
+              })
+            }
+            disabledButton={trackingReceiptParams === "" ? true : false}
           >
-            <label htmlFor="resi" className="block text-xs font-medium">
+            <label
+              htmlFor="tracking-receipt"
+              className="block text-xs font-medium"
+            >
               Masukkan nomor resi
             </label>
 
             <input
               autoFocus
-              id="resi"
+              id="tracking-receipt"
               type="text"
               placeholder="No. Resi"
               className="outline-none pt-3 pb-1 text-sm border-b w-full"
-              // value={titleParams}
-              // onChange={(e) => setTitleParams(e.target.value)}
+              value={trackingReceiptParams}
+              onChange={(e) => setTrackingReceiptParams(e.target.value)}
             />
           </Filter>
 

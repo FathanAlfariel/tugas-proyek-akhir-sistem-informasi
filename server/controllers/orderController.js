@@ -69,8 +69,17 @@ const addOrder = async (req, res) => {
 
 // Get all orders controller
 const getAllOrders = async (req, res) => {
+  const { trackingReceipt } = req.query;
+
   try {
     const orders = await prisma.order.findMany({
+      where: {
+        AND: [
+          trackingReceipt
+            ? { trackingReceipt: { contains: trackingReceipt } }
+            : undefined,
+        ].filter(Boolean), // Hapus elemen kosong
+      },
       include: {
         orderProducts: {
           include: {
