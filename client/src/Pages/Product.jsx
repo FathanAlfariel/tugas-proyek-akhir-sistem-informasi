@@ -480,11 +480,17 @@ const Product = () => {
                       </p>
                       <p className="text-xs font-medium">Ditambahkan</p>
                     </td>
-                    <td className="pl-6 py-3 whitespace-nowrap">
+                    <td className="pl-6 py-3 w-auto">
                       {product?.variants?.map((variant, key) => {
                         return (
                           <p key={key} className="text-xs">
-                            {variant?.color}
+                            {variant?.color}:{" "}
+                            <span className="before:content-['('] after:content-[')']">
+                              {`${variant?.length}cm x ${variant?.width}cm x ${variant?.height}cm`}
+                            </span>{" "}
+                            <span className="before:content-['('] after:content-[')'] font-semibold">
+                              {variant.stock}
+                            </span>
                           </p>
                         );
                       })}
