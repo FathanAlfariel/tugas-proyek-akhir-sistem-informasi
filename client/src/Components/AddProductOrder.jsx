@@ -161,7 +161,7 @@ const AddProductOrder = ({ formik, productsOrderList }) => {
                                 </p>
 
                                 <DropdownSelect
-                                  id={"total-menu" + index}
+                                  id={"total-menu" + key + index}
                                   menuSize="small"
                                   minWidth="min-w-full"
                                   menuUpOrDown="top"

@@ -226,7 +226,11 @@ const OrderDetail = () => {
             {/* Title */}
             <h5 className="text-lg font-semibold">Catatan</h5>
 
-            <p className="text-sm">{orderDetail?.additionalNotes}</p>
+            <p className="text-sm">
+              {orderDetail?.additionalNotes
+                ? orderDetail?.additionalNotes
+                : "Tidak ada catatan"}
+            </p>
           </div>
 
           {/* Orderer's name */}

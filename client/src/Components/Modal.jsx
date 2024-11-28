@@ -26,7 +26,7 @@ const Modal = ({
                 <h3 className="text-2xl text-[#1D1B20]">{headerTitle}</h3>
 
                 {/* Content */}
-                <div className="max-h-60 overflow-y-auto">{children}</div>
+                <div className="max-h-96 overflow-y-auto">{children}</div>
               </div>
               {/* Actions Button */}
               <div className="flex justify-end">

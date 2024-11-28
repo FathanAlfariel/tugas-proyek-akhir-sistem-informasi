@@ -10,6 +10,7 @@ import { IoMdMore } from "react-icons/io";
 import Dropdown from "../Components/Dropdown";
 import { MdOutlineCancel } from "react-icons/md";
 import Loader from "../Components/Loader";
+import Filter from "../Components/Filter";
 
 const Order = () => {
   const [orders, setOrders] = useState([]);
@@ -73,6 +74,180 @@ const Order = () => {
       {isLoading && <Loader />}
 
       <h1 className="text-[28px] leading-9 font-medium mb-4">Pesanan</h1>
+
+      {/* Search and filter */}
+      <div className="border-y py-3 mb-5">
+        <h5 className="text-sm font-semibold mb-2.5">Filter berdasarkan:</h5>
+
+        <div className="flex items-center gap-x-2 overflow-x-auto md:overflow-visible">
+          {/* Resi Filter */}
+          <Filter
+            id="resi-filter"
+            headerTitle="No. Resi"
+            button={
+              <button
+                type="button"
+                className="flex items-center gap-x-2 py-2 px-4 text-sm font-medium border rounded-full transition duration-300 hover:bg-black/[.07] active:scale-90"
+              >
+                No. Resi
+              </button>
+            }
+          >
+            <label htmlFor="resi" className="block text-xs font-medium">
+              Masukkan nomor resi
+            </label>
+
+            <input
+              autoFocus
+              id="resi"
+              type="text"
+              placeholder="No. Resi"
+              className="outline-none pt-3 pb-1 text-sm border-b w-full"
+              // value={titleParams}
+              // onChange={(e) => setTitleParams(e.target.value)}
+            />
+          </Filter>
+
+          {/* Status Filter */}
+          <Filter
+            id="status-filter"
+            headerTitle="Status pesanan"
+            button={
+              <button
+                type="button"
+                className="flex items-center gap-x-2 py-2 px-4 text-sm font-medium border rounded-full transition duration-300 hover:bg-black/[.07] active:scale-90"
+              >
+                Status pesanan
+              </button>
+            }
+          >
+            {/* Not paid checkbox */}
+            <label
+              htmlFor="not-paid"
+              className="block flex items-center gap-x-3 text-xs font-medium mb-2.5"
+            >
+              <input
+                id="not-paid"
+                type="checkbox"
+                value="belum_bayar"
+                // onChange={(e) => setTitleParams(e.target.value)}
+              />
+              Belum bayar
+            </label>
+
+            {/* Packed checkbox */}
+            <label
+              htmlFor="packed"
+              className="block flex items-center gap-x-3 text-xs font-medium mb-2.5"
+            >
+              <input
+                id="packed"
+                type="checkbox"
+                value="sedang_dikemas"
+                // onChange={(e) => setTitleParams(e.target.value)}
+              />
+              Sedang dikemas
+            </label>
+
+            {/* Delivered checkbox */}
+            <label
+              htmlFor="delivered"
+              className="block flex items-center gap-x-3 text-xs font-medium mb-2.5"
+            >
+              <input
+                id="delivered"
+                type="checkbox"
+                value="dikirim"
+                // onChange={(e) => setTitleParams(e.target.value)}
+              />
+              Dikirim
+            </label>
+
+            {/* Finish checkbox */}
+            <label
+              htmlFor="finish"
+              className="block flex items-center gap-x-3 text-xs font-medium mb-2.5"
+            >
+              <input
+                id="finish"
+                type="checkbox"
+                value="selesai"
+                // onChange={(e) => setTitleParams(e.target.value)}
+              />
+              Selesai
+            </label>
+
+            {/* Cancel checkbox */}
+            <label
+              htmlFor="cancel"
+              className="block flex items-center gap-x-3 text-xs font-medium mb-2.5"
+            >
+              <input
+                id="cancel"
+                type="checkbox"
+                value="dibatalkan"
+                // onChange={(e) => setTitleParams(e.target.value)}
+              />
+              Dibatalkan
+            </label>
+          </Filter>
+
+          {/* Customer Name Filter */}
+          <Filter
+            id="name-filter"
+            headerTitle="Nama pemesan"
+            button={
+              <button
+                type="button"
+                className="flex items-center gap-x-2 py-2 px-4 text-sm font-medium border rounded-full transition duration-300 hover:bg-black/[.07] active:scale-90"
+              >
+                Nama pemesan
+              </button>
+            }
+          >
+            <label htmlFor="name" className="block text-xs font-medium">
+              Masukkan nama pemesan
+            </label>
+
+            <input
+              autoFocus
+              id="name"
+              type="text"
+              placeholder="Nama pemesan"
+              className="outline-none pt-3 pb-1 text-sm border-b w-full"
+              // value={titleParams}
+              // onChange={(e) => setTitleParams(e.target.value)}
+            />
+          </Filter>
+
+          {/* Order Date Filter */}
+          <Filter
+            id="date-filter"
+            headerTitle="Tanggal pemesanan"
+            button={
+              <button
+                type="button"
+                className="flex items-center gap-x-2 py-2 px-4 text-sm font-medium border rounded-full transition duration-300 hover:bg-black/[.07] active:scale-90"
+              >
+                Tanggal pemesanan
+              </button>
+            }
+          >
+            <label htmlFor="date" className="block text-xs font-medium">
+              Masukkan tanggal pemesanan
+            </label>
+
+            <input
+              autoFocus
+              id="date"
+              type="date"
+              className="outline-none pt-3 pb-1 text-sm border-b w-full"
+              // value={titleParams}
+              // onChange={(e) => setTitleParams(e.target.value)}
+            />
+          </Filter>
+        </div>
+      </div>
 
       <div className="flex flex-col gap-y-6">
         {orders &&

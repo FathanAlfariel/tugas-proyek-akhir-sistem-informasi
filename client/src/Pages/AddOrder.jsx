@@ -8,9 +8,12 @@ import Button from "../Components/Button";
 import Select from "../Components/Select";
 import { IoWarning } from "react-icons/io5";
 import axios from "axios";
+import Loader from "../Components/Loader";
 
 const AddOrder = () => {
   const navigate = useNavigate();
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const [productsOrderList, setProductsOrderList] = useState([]);
   const [countries, setCountries] = useState([]);
@@ -83,6 +86,8 @@ const AddOrder = () => {
       status: yup.string().required("Status pemesanan harus diisi."),
     }),
     onSubmit: async (values) => {
+      setIsLoading(true);
+
       const getCountry = countries.find(
         (item) => item.value === values?.address?.country
       );
@@ -116,6 +121,9 @@ const AddOrder = () => {
         })
         .catch((err) => {
           console.log(err);
+        })
+        .finally(() => {
+          setIsLoading(false);
         });
     },
   });
@@ -209,6 +217,8 @@ const AddOrder = () => {
 
   return (
     <>
+      {isLoading && <Loader />}
+
       <h1 className="text-[28px] leading-9 font-medium mb-6">Tambah pesanan</h1>
 
       <form onSubmit={formik.handleSubmit}>
