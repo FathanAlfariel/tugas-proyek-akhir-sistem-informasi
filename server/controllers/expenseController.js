@@ -24,8 +24,19 @@ const addExpense = async (req, res) => {
 
 // Get all expenses controller
 const getAllExpenses = async (req, res) => {
+  const { name, minPrice, maxPrice } = req.query;
+
   try {
-    const query = await prisma.expense.findMany();
+    const query = await prisma.expense.findMany({
+      where: {
+        AND: [
+          name ? { name: { contains: name } } : undefined,
+          minPrice && maxPrice
+            ? { price: { gte: parseInt(minPrice), lte: parseInt(maxPrice) } }
+            : undefined,
+        ].filter(Boolean),
+      },
+    });
 
     return res
       .status(200)

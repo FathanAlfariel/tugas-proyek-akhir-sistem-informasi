@@ -1,21 +1,34 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 import IconButton from "../Components/IconButton";
 import { HiOutlinePencil, HiOutlineTrash } from "react-icons/hi2";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import Loader from "../Components/Loader";
 import Filter from "../Components/Filter";
+import { IoMdClose } from "react-icons/io";
 
 const Expense = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [expenses, setExpenses] = useState(null);
 
+  const [searchParams, setSearchParams] = useSearchParams();
+  const currentParams = Object.fromEntries(searchParams.entries());
+
+  const [nameParams, setNameParams] = useState(currentParams?.name || "");
+  const [minPriceParams, setMinPriceParams] = useState(
+    currentParams?.minPrice || 0
+  );
+  const [maxPriceParams, setMaxPriceParams] = useState(
+    currentParams?.maxPrice || 0
+  );
+
+  // Get all expenses
   useEffect(() => {
     setIsLoading(true);
 
     const getAllExpenses = async () => {
       await axios
-        .get("http://localhost:5000/api/expense")
+        .get(`http://localhost:5000/api/expense?${searchParams}`)
         .then(({ data }) => {
           setExpenses(data.results);
         })
@@ -28,7 +41,7 @@ const Expense = () => {
     };
 
     getAllExpenses();
-  }, []);
+  }, [searchParams]);
 
   const handleDeleteExpense = async (id) => {
     setIsLoading(true);
@@ -59,52 +72,110 @@ const Expense = () => {
         <div className="flex items-center gap-x-2 overflow-x-auto md:overflow-visible">
           {/* Expense Name Filter */}
           <Filter
-            id="tracking-receipt-filter"
+            id="name-filter"
             headerTitle="Nama pengeluaran"
             button={
               <button
                 type="button"
                 className="flex items-center gap-x-2 py-2 px-4 text-sm font-medium border rounded-full transition duration-300 hover:bg-black/[.07] active:scale-90"
               >
-                Nama pengeluaran
+                {currentParams?.name ? (
+                  <>
+                    Nama pengeluaran: {currentParams?.name}
+                    <span
+                      title="Hapus filter nama pengeluaran"
+                      className="p-1 rounded-full bg-black/[.15] ml-2"
+                      onClick={(e) => {
+                        e.stopPropagation();
+
+                        const updatedParams = { ...currentParams };
+                        delete updatedParams["name"];
+
+                        setSearchParams(updatedParams);
+                        setNameParams("");
+                      }}
+                    >
+                      <IoMdClose className="text-sm" />
+                    </span>
+                  </>
+                ) : (
+                  "Nama pengeluaran"
+                )}
               </button>
             }
+            onClick={() =>
+              setSearchParams({
+                ...currentParams,
+                name: nameParams,
+              })
+            }
+            disabledButton={nameParams === "" ? true : false}
           >
-            <label
-              htmlFor="tracking-receipt"
-              className="block text-xs font-medium"
-            >
+            <label htmlFor="name" className="block text-xs font-medium">
               Masukkan nama pengeluaran
             </label>
 
             <input
               autoFocus
-              id="tracking-receipt"
+              id="name"
               type="text"
               placeholder="Nama pengeluaran"
               className="outline-none pt-3 pb-1 text-sm border-b w-full"
-              // value={trackingReceiptParams}
-              // onChange={(e) => setTrackingReceiptParams(e.target.value)}
+              value={nameParams}
+              onChange={(e) => setNameParams(e.target.value)}
             />
           </Filter>
 
           {/* Price Filter */}
           <Filter
-            id="tracking-receipt-filter"
+            id="price-filter"
             headerTitle="Harga"
             button={
               <button
                 type="button"
                 className="flex items-center gap-x-2 py-2 px-4 text-sm font-medium border rounded-full transition duration-300 hover:bg-black/[.07] active:scale-90"
               >
-                Harga
+                {currentParams?.minPrice && currentParams?.maxPrice ? (
+                  <>
+                    Harga: {currentParams?.minPrice}-{currentParams?.maxPrice}
+                    <span
+                      title="Hapus filter harga"
+                      className="p-1 rounded-full bg-black/[.15] ml-2"
+                      onClick={(e) => {
+                        e.stopPropagation();
+
+                        const updatedParams = { ...currentParams };
+                        delete updatedParams["minPrice"];
+                        delete updatedParams["maxPrice"];
+
+                        setSearchParams(updatedParams);
+                        setMinPriceParams("");
+                        setMaxPriceParams("");
+                      }}
+                    >
+                      <IoMdClose className="text-sm" />
+                    </span>
+                  </>
+                ) : (
+                  "Harga"
+                )}
               </button>
+            }
+            onClick={() =>
+              setSearchParams({
+                ...currentParams,
+                minPrice: minPriceParams,
+                maxPrice: maxPriceParams,
+              })
+            }
+            disabledButton={
+              minPriceParams === 0 && maxPriceParams === 0 ? true : false
             }
           >
             <div className="flex items-center gap-x-2">
               <div>
                 <label
-                  htmlFor="tracking-receipt"
+                  htmlFor="min-price"
                   className="block text-xs font-medium"
                 >
                   Minimal
@@ -112,33 +183,32 @@ const Expense = () => {
 
                 <input
                   autoFocus
-                  id="tracking-receipt"
+                  id="min-price"
                   type="number"
                   placeholder="Min"
                   min={0}
                   className="outline-none pt-3 pb-1 text-sm border-b w-full"
-                  // value={trackingReceiptParams}
-                  // onChange={(e) => setTrackingReceiptParams(e.target.value)}
+                  value={minPriceParams}
+                  onChange={(e) => setMinPriceParams(e.target.value)}
                 />
               </div>
 
               <div>
                 <label
-                  htmlFor="tracking-receipt"
+                  htmlFor="max-price"
                   className="block text-xs font-medium"
                 >
                   Maximal
                 </label>
 
                 <input
-                  autoFocus
-                  id="tracking-receipt"
+                  id="max-price"
                   type="number"
                   placeholder="Max"
                   min={0}
                   className="outline-none pt-3 pb-1 text-sm border-b w-full"
-                  // value={trackingReceiptParams}
-                  // onChange={(e) => setTrackingReceiptParams(e.target.value)}
+                  value={maxPriceParams}
+                  onChange={(e) => setMaxPriceParams(e.target.value)}
                 />
               </div>
             </div>
