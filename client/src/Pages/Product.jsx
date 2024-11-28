@@ -122,7 +122,9 @@ const Product = () => {
                     <span
                       title="Hapus filter judul"
                       className="p-1 rounded-full bg-black/[.15] ml-2"
-                      onClick={() => {
+                      onClick={(e) => {
+                        e.stopPropagation();
+
                         const updatedParams = { ...currentParams };
                         delete updatedParams["title"];
 
@@ -143,7 +145,7 @@ const Product = () => {
             }
             disabledButton={titleParams === "" ? true : false}
           >
-            <label htmlFor="judul" className="text-xs font-medium">
+            <label htmlFor="judul" className="block text-xs font-medium">
               Masukkan judul
             </label>
 
@@ -152,7 +154,7 @@ const Product = () => {
               id="judul"
               type="text"
               placeholder="Judul"
-              className="outline-none pt-3 pb-1 text-sm border-b"
+              className="outline-none pt-3 pb-1 text-sm border-b w-full"
               value={titleParams}
               onChange={(e) => setTitleParams(e.target.value)}
             />
@@ -173,7 +175,9 @@ const Product = () => {
                     <span
                       title="Hapus filter deskripsi"
                       className="p-1 rounded-full bg-black/[.15] ml-2"
-                      onClick={() => {
+                      onClick={(e) => {
+                        e.stopPropagation();
+
                         const updatedParams = { ...currentParams };
                         delete updatedParams["desc"];
 
@@ -194,7 +198,7 @@ const Product = () => {
             }
             disabledButton={descParams === "" ? true : false}
           >
-            <label htmlFor="desc" className="text-xs font-medium">
+            <label htmlFor="desc" className="block text-xs font-medium">
               Masukkan deskripsi
             </label>
 
@@ -203,7 +207,7 @@ const Product = () => {
               id="desc"
               type="text"
               placeholder="Deskripsi"
-              className="outline-none pt-3 pb-1 text-sm border-b"
+              className="outline-none pt-3 pb-1 text-sm border-b w-full"
               value={descParams}
               onChange={(e) => setDescParams(e.target.value)}
             />
@@ -216,18 +220,17 @@ const Product = () => {
             button={
               <button
                 type="button"
-                className="flex items-center gap-x-2 py-2 px-4 text-sm font-medium border rounded-full transition duration-300 hover:bg-black/[.07] active:scale-90"
+                className="flex items-center gap-x-2 py-2 px-4 capitalize text-sm font-medium border rounded-full transition duration-300 hover:bg-black/[.07] active:scale-90"
               >
                 {currentParams?.visibility ? (
                   <>
-                    Visibilitas:{" "}
-                    <span className="capitalize">
-                      {currentParams.visibility}
-                    </span>
+                    Visibilitas: {currentParams?.visibility}
                     <span
                       title="Hapus filter deskripsi"
                       className="p-1 rounded-full bg-black/[.15] ml-2"
-                      onClick={() => {
+                      onClick={(e) => {
+                        e.stopPropagation();
+
                         const updatedParams = { ...currentParams };
                         delete updatedParams["visibility"];
 
@@ -302,7 +305,9 @@ const Product = () => {
                     <span
                       title="Hapus filter tanggal dibuat"
                       className="p-1 rounded-full bg-black/[.15] ml-2"
-                      onClick={() => {
+                      onClick={(e) => {
+                        e.stopPropagation();
+
                         const updatedParams = { ...currentParams };
                         delete updatedParams["date"];
 

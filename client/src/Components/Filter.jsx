@@ -12,7 +12,7 @@ const Filter = ({
   onClick,
   disabledButton = false,
 }) => {
-  const [showFilterMenu, setShowFilterMenu] = useState();
+  const [showFilterMenu, setShowFilterMenu] = useState(false);
 
   const menuPosition =
     menuDirection === "left"
