@@ -15,6 +15,7 @@ import Loader from "../Components/Loader";
 import { RiFilter3Fill } from "react-icons/ri";
 import IconButton from "../Components/IconButton";
 import { useSearchParams } from "react-router-dom";
+import Filter from "../Components/Filter";
 
 const Product = () => {
   const [products, setProducts] = useState(null);
@@ -93,37 +94,72 @@ const Product = () => {
     <>
       {isLoading && <Loader />}
 
-      <h1 className="text-[28px] leading-9 font-medium">Produk</h1>
+      <h1 className="text-[28px] leading-9 font-medium mb-4">Produk</h1>
 
       {/* Search and filter */}
-      <div className="border-y py-0.5">
+      <div className="border-y py-3">
         <h5 className="text-sm font-semibold mb-2.5">Filter berdasarkan:</h5>
 
-        <div className="flex items-center gap-x-2 overflow-x-auto">
-          <button
-            type="button"
-            className="flex items-center gap-x-2 py-2 px-4 text-sm font-medium border rounded-full transition duration-300 hover:bg-black/[.07] active:scale-90"
+        <div className="flex items-center gap-x-2">
+          <Filter
+            id="title-filter"
+            headerTitle="Judul"
+            button={
+              <button
+                type="button"
+                className="flex items-center gap-x-2 py-2 px-4 text-sm font-medium border rounded-full transition duration-300 hover:bg-black/[.07] active:scale-90"
+              >
+                Judul
+              </button>
+            }
           >
             Judul
-          </button>
-          <button
-            type="button"
-            className="flex items-center gap-x-2 py-2 px-4 text-sm font-medium border rounded-full transition duration-300 hover:bg-black/[.07] active:scale-90"
+          </Filter>
+
+          <Filter
+            id="desc-filter"
+            headerTitle="Deskripsi"
+            button={
+              <button
+                type="button"
+                className="flex items-center gap-x-2 py-2 px-4 text-sm font-medium border rounded-full transition duration-300 hover:bg-black/[.07] active:scale-90"
+              >
+                Deskripsi
+              </button>
+            }
           >
             Deskripsi
-          </button>
-          <button
-            type="button"
-            className="flex items-center gap-x-2 py-2 px-4 text-sm font-medium border rounded-full transition duration-300 hover:bg-black/[.07] active:scale-90"
+          </Filter>
+
+          <Filter
+            id="visibility-filter"
+            headerTitle="Visibilitas"
+            button={
+              <button
+                type="button"
+                className="flex items-center gap-x-2 py-2 px-4 text-sm font-medium border rounded-full transition duration-300 hover:bg-black/[.07] active:scale-90"
+              >
+                Visibilitas
+              </button>
+            }
           >
             Visibilitas
-          </button>
-          <button
-            type="button"
-            className="flex items-center gap-x-2 py-2 px-4 text-sm font-medium border rounded-full transition duration-300 hover:bg-black/[.07] active:scale-90"
+          </Filter>
+
+          <Filter
+            id="date-filter"
+            headerTitle="Tanggal dibuat"
+            button={
+              <button
+                type="button"
+                className="flex items-center gap-x-2 py-2 px-4 text-sm font-medium border rounded-full transition duration-300 hover:bg-black/[.07] active:scale-90"
+              >
+                Tanggal dibuat
+              </button>
+            }
           >
             Tanggal dibuat
-          </button>
+          </Filter>
         </div>
       </div>
 
