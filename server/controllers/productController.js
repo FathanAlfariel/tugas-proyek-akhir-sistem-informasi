@@ -57,12 +57,27 @@ const addProduct = async (req, res) => {
 
 // Get all products
 const getProducts = async (req, res) => {
+  const { title, desc, visibility, sortOrder } = req.query;
+
   try {
     const getAllProducts = await prisma.product.findMany({
+      where: {
+        AND: [
+          title ? { name: { contains: title } } : undefined, // Filter name dengan LIKE
+          desc ? { description: { contains: desc } } : undefined, // Filter description dengan LIKE
+          visibility ? { visibility: { equals: visibility } } : undefined, // Filter visibility
+        ].filter(Boolean), // Hapus elemen kosong
+      },
       include: {
         images: true,
         variants: true,
       },
+      orderBy:
+        sortOrder === "latest"
+          ? { createdAt: "desc" }
+          : sortOrder === "oldest"
+          ? { createdAt: "asc" }
+          : undefined, // Jika sortOrder tidak "latest" atau "oldest", tidak ada pengurutan
     });
     if (!getAllProducts) {
       return res.status(404).json({ message: "Product not found" });

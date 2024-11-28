@@ -28,7 +28,7 @@ const Product = () => {
   const [visibilityParams, setVisibilityParams] = useState(
     currentParams?.visibility || ""
   );
-  const [dateParams, setDateParams] = useState(currentParams?.date || "");
+  const [dateParams, setDateParams] = useState(currentParams?.sortOrder || "");
 
   // Get all products
   useEffect(() => {
@@ -36,7 +36,7 @@ const Product = () => {
 
     const fetchProducts = async () => {
       await axios
-        .get("http://localhost:5000/api/product")
+        .get(`http://localhost:5000/api/product?${searchParams}`)
         .then(({ data }) => {
           setProducts(data.results);
         })
@@ -49,7 +49,7 @@ const Product = () => {
     };
 
     fetchProducts();
-  }, []);
+  }, [searchParams]);
 
   // Change visibility product
   const handleChangeVisibility = async (id, visibility) => {
@@ -294,12 +294,12 @@ const Product = () => {
                 type="button"
                 className="flex items-center gap-x-2 py-2 px-4 text-sm font-medium border rounded-full transition duration-300 hover:bg-black/[.07] active:scale-90"
               >
-                {currentParams?.date ? (
+                {currentParams?.sortOrder ? (
                   <>
                     Tanggal dibuat:{" "}
-                    {currentParams.date === "latest"
+                    {currentParams.sortOrder === "latest"
                       ? "Terbaru"
-                      : currentParams.date === "oldest"
+                      : currentParams.sortOrder === "oldest"
                       ? "Terlama"
                       : null}
                     <span
@@ -309,7 +309,7 @@ const Product = () => {
                         e.stopPropagation();
 
                         const updatedParams = { ...currentParams };
-                        delete updatedParams["date"];
+                        delete updatedParams["sortOrder"];
 
                         setSearchParams(updatedParams);
                         setDateParams("");
@@ -324,7 +324,7 @@ const Product = () => {
               </button>
             }
             onClick={() =>
-              setSearchParams({ ...currentParams, date: dateParams })
+              setSearchParams({ ...currentParams, sortOrder: dateParams })
             }
             disabledButton={dateParams === "" ? true : false}
           >
