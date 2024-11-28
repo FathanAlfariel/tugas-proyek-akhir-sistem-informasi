@@ -12,10 +12,9 @@ import { Link } from "react-router-dom";
 import DropdownSelect from "../Components/DropdownSelect";
 import Dropdown from "../Components/Dropdown";
 import Loader from "../Components/Loader";
-import { RiFilter3Fill } from "react-icons/ri";
-import IconButton from "../Components/IconButton";
 import { useSearchParams } from "react-router-dom";
 import Filter from "../Components/Filter";
+import { IoMdClose } from "react-icons/io";
 
 const Product = () => {
   const [products, setProducts] = useState(null);
@@ -23,6 +22,13 @@ const Product = () => {
 
   const [searchParams, setSearchParams] = useSearchParams();
   const currentParams = Object.fromEntries(searchParams.entries());
+
+  const [titleParams, setTitleParams] = useState(currentParams?.title || "");
+  const [descParams, setDescParams] = useState(currentParams?.desc || "");
+  const [visibilityParams, setVisibilityParams] = useState(
+    currentParams?.visibility || ""
+  );
+  const [dateParams, setDateParams] = useState(currentParams?.date || "");
 
   // Get all products
   useEffect(() => {
@@ -100,7 +106,8 @@ const Product = () => {
       <div className="border-y py-3">
         <h5 className="text-sm font-semibold mb-2.5">Filter berdasarkan:</h5>
 
-        <div className="flex items-center gap-x-2">
+        <div className="flex items-center gap-x-2 overflow-x-auto md:overflow-visible">
+          {/* Title Filter */}
           <Filter
             id="title-filter"
             headerTitle="Judul"
@@ -109,13 +116,48 @@ const Product = () => {
                 type="button"
                 className="flex items-center gap-x-2 py-2 px-4 text-sm font-medium border rounded-full transition duration-300 hover:bg-black/[.07] active:scale-90"
               >
-                Judul
+                {currentParams?.title ? (
+                  <>
+                    Judul: {currentParams.title}
+                    <span
+                      title="Hapus filter judul"
+                      className="p-1 rounded-full bg-black/[.15] ml-2"
+                      onClick={() => {
+                        delete currentParams["title"];
+
+                        setSearchParams(currentParams);
+                        setTitleParams("");
+                      }}
+                    >
+                      <IoMdClose className="text-sm" />
+                    </span>
+                  </>
+                ) : (
+                  "Judul"
+                )}
               </button>
             }
+            onClick={() =>
+              setSearchParams({ ...currentParams, title: titleParams })
+            }
+            disabledButton={titleParams === "" ? true : false}
           >
-            Judul
+            <label htmlFor="judul" className="text-xs font-medium">
+              Masukkan judul
+            </label>
+
+            <input
+              autoFocus
+              id="judul"
+              type="text"
+              placeholder="Judul"
+              className="outline-none pt-3 pb-1 text-sm border-b"
+              value={titleParams}
+              onChange={(e) => setTitleParams(e.target.value)}
+            />
           </Filter>
 
+          {/* Description Filter */}
           <Filter
             id="desc-filter"
             headerTitle="Deskripsi"
@@ -124,13 +166,48 @@ const Product = () => {
                 type="button"
                 className="flex items-center gap-x-2 py-2 px-4 text-sm font-medium border rounded-full transition duration-300 hover:bg-black/[.07] active:scale-90"
               >
-                Deskripsi
+                {currentParams?.desc ? (
+                  <>
+                    Deskripsi: {currentParams.desc}
+                    <span
+                      title="Hapus filter deskripsi"
+                      className="p-1 rounded-full bg-black/[.15] ml-2"
+                      onClick={() => {
+                        delete currentParams["desc"];
+
+                        setSearchParams(currentParams);
+                        setDescParams("");
+                      }}
+                    >
+                      <IoMdClose className="text-sm" />
+                    </span>
+                  </>
+                ) : (
+                  "Deskripsi"
+                )}
               </button>
             }
+            onClick={() =>
+              setSearchParams({ ...currentParams, desc: descParams })
+            }
+            disabledButton={descParams === "" ? true : false}
           >
-            Deskripsi
+            <label htmlFor="desc" className="text-xs font-medium">
+              Masukkan deskripsi
+            </label>
+
+            <input
+              autoFocus
+              id="desc"
+              type="text"
+              placeholder="Deskripsi"
+              className="outline-none pt-3 pb-1 text-sm border-b"
+              value={descParams}
+              onChange={(e) => setDescParams(e.target.value)}
+            />
           </Filter>
 
+          {/* Visibility Filter */}
           <Filter
             id="visibility-filter"
             headerTitle="Visibilitas"
@@ -139,13 +216,70 @@ const Product = () => {
                 type="button"
                 className="flex items-center gap-x-2 py-2 px-4 text-sm font-medium border rounded-full transition duration-300 hover:bg-black/[.07] active:scale-90"
               >
-                Visibilitas
+                {currentParams?.visibility ? (
+                  <>
+                    Visibilitas:{" "}
+                    <span className="capitalize">
+                      {currentParams.visibility}
+                    </span>
+                    <span
+                      title="Hapus filter deskripsi"
+                      className="p-1 rounded-full bg-black/[.15] ml-2"
+                      onClick={() => {
+                        delete currentParams["visibility"];
+
+                        setSearchParams(currentParams);
+                        setVisibilityParams("");
+                      }}
+                    >
+                      <IoMdClose className="text-sm" />
+                    </span>
+                  </>
+                ) : (
+                  "Visibilitas"
+                )}
               </button>
             }
+            onClick={() =>
+              setSearchParams({
+                ...currentParams,
+                visibility: visibilityParams,
+              })
+            }
+            disabledButton={visibilityParams === "" ? true : false}
           >
-            Visibilitas
+            <label
+              htmlFor="vis-public"
+              className="block flex items-center gap-x-3 text-xs font-medium mb-2.5"
+            >
+              <input
+                id="vis-public"
+                type="radio"
+                name="visibility"
+                value="public"
+                onChange={(e) => setVisibilityParams(e.target.value)}
+                checked={visibilityParams === "public"}
+              />
+              Public
+            </label>
+
+            <label
+              htmlFor="vis-private"
+              className="block flex items-center gap-x-3 text-xs font-medium"
+            >
+              <input
+                id="vis-private"
+                type="radio"
+                name="visibility"
+                value="private"
+                onChange={(e) => setVisibilityParams(e.target.value)}
+                checked={visibilityParams === "private"}
+              />
+              Private
+            </label>
           </Filter>
 
+          {/* Date Filter */}
           <Filter
             id="date-filter"
             headerTitle="Tanggal dibuat"
@@ -154,11 +288,66 @@ const Product = () => {
                 type="button"
                 className="flex items-center gap-x-2 py-2 px-4 text-sm font-medium border rounded-full transition duration-300 hover:bg-black/[.07] active:scale-90"
               >
-                Tanggal dibuat
+                {currentParams?.date ? (
+                  <>
+                    Tanggal dibuat:{" "}
+                    {currentParams.date === "latest"
+                      ? "Terbaru"
+                      : currentParams.date === "oldest"
+                      ? "Terlama"
+                      : null}
+                    <span
+                      title="Hapus filter tanggal dibuat"
+                      className="p-1 rounded-full bg-black/[.15] ml-2"
+                      onClick={() => {
+                        delete currentParams["date"];
+
+                        setSearchParams(currentParams);
+                        setDateParams("");
+                      }}
+                    >
+                      <IoMdClose className="text-sm" />
+                    </span>
+                  </>
+                ) : (
+                  "Tanggal dibuat"
+                )}
               </button>
             }
+            onClick={() =>
+              setSearchParams({ ...currentParams, date: dateParams })
+            }
+            disabledButton={dateParams === "" ? true : false}
           >
-            Tanggal dibuat
+            <label
+              htmlFor="latest"
+              className="block flex items-center gap-x-3 text-xs font-medium mb-2.5"
+            >
+              <input
+                id="latest"
+                type="radio"
+                name="visibility"
+                value="latest"
+                onChange={(e) => setDateParams(e.target.value)}
+                checked={dateParams === "latest"}
+              />
+              Terbaru
+            </label>
+
+            <label
+              htmlFor="oldest"
+              className="block flex items-center gap-x-3 text-xs font-medium"
+            >
+              <input
+                id="oldest"
+                type="radio"
+                name="visibility"
+                value="oldest"
+                onChange={(e) => setDateParams(e.target.value)}
+                checked={dateParams === "oldest"}
+              />
+              Terlama
+            </label>
           </Filter>
         </div>
       </div>

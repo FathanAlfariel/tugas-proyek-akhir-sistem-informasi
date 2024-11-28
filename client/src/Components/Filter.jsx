@@ -10,6 +10,7 @@ const Filter = ({
   headerTitle,
   children,
   onClick,
+  disabledButton = false,
 }) => {
   const [showFilterMenu, setShowFilterMenu] = useState();
 
@@ -23,7 +24,12 @@ const Filter = ({
   return (
     <>
       <div id={id} className="relative">
-        <div onClick={() => setShowFilterMenu((prev) => !prev)}>{button}</div>
+        <div
+          onClick={() => setShowFilterMenu((prev) => !prev)}
+          className="whitespace-nowrap"
+        >
+          {button}
+        </div>
 
         {showFilterMenu && (
           <div
@@ -56,6 +62,7 @@ const Filter = ({
                 type="button"
                 buttonStyle="tonal-button"
                 onClick={onClick}
+                disabled={disabledButton}
               >
                 Apply
               </Button>
