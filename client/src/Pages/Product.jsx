@@ -123,9 +123,10 @@ const Product = () => {
                       title="Hapus filter judul"
                       className="p-1 rounded-full bg-black/[.15] ml-2"
                       onClick={() => {
-                        delete currentParams["title"];
+                        const updatedParams = { ...currentParams };
+                        delete updatedParams["title"];
 
-                        setSearchParams(currentParams);
+                        setSearchParams(updatedParams);
                         setTitleParams("");
                       }}
                     >
@@ -173,9 +174,10 @@ const Product = () => {
                       title="Hapus filter deskripsi"
                       className="p-1 rounded-full bg-black/[.15] ml-2"
                       onClick={() => {
-                        delete currentParams["desc"];
+                        const updatedParams = { ...currentParams };
+                        delete updatedParams["desc"];
 
-                        setSearchParams(currentParams);
+                        setSearchParams(updatedParams);
                         setDescParams("");
                       }}
                     >
@@ -226,9 +228,10 @@ const Product = () => {
                       title="Hapus filter deskripsi"
                       className="p-1 rounded-full bg-black/[.15] ml-2"
                       onClick={() => {
-                        delete currentParams["visibility"];
+                        const updatedParams = { ...currentParams };
+                        delete updatedParams["visibility"];
 
-                        setSearchParams(currentParams);
+                        setSearchParams(updatedParams);
                         setVisibilityParams("");
                       }}
                     >
@@ -300,9 +303,10 @@ const Product = () => {
                       title="Hapus filter tanggal dibuat"
                       className="p-1 rounded-full bg-black/[.15] ml-2"
                       onClick={() => {
-                        delete currentParams["date"];
+                        const updatedParams = { ...currentParams };
+                        delete updatedParams["date"];
 
-                        setSearchParams(currentParams);
+                        setSearchParams(updatedParams);
                         setDateParams("");
                       }}
                     >
