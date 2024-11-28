@@ -69,15 +69,19 @@ const addOrder = async (req, res) => {
 
 // Get all orders controller
 const getAllOrders = async (req, res) => {
-  const { trackingReceipt } = req.query;
+  const { trackingReceipt, orderStatus } = req.query;
 
   try {
+    // Order status URL query for filtering
+    const statusArray = orderStatus ? orderStatus.split(",") : [];
+
     const orders = await prisma.order.findMany({
       where: {
         AND: [
           trackingReceipt
             ? { trackingReceipt: { contains: trackingReceipt } }
             : undefined,
+          orderStatus ? { status: { in: statusArray } } : undefined,
         ].filter(Boolean), // Hapus elemen kosong
       },
       include: {

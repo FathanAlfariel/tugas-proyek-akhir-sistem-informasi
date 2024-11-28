@@ -22,6 +22,11 @@ const Order = () => {
   const [trackingReceiptParams, setTrackingReceiptParams] = useState(
     currentParams?.trackingReceipt || ""
   );
+  const [orderStatusParams, setOrderStatusParams] = useState(
+    currentParams?.orderStatus || []
+  );
+
+  console.log(orderStatusParams);
 
   // Get all orders
   useEffect(() => {
@@ -75,6 +80,22 @@ const Order = () => {
       .finally(() => {
         setIsLoading(false);
       });
+  };
+
+  const handleOrderStatusCheckboxChange = (e) => {
+    const value = e.target.value;
+    let updatedStatus;
+
+    if (e.target.checked) {
+      // Tambahkan status baru
+      updatedStatus = [...orderStatusParams, value];
+    } else {
+      // Hapus status jika tidak dicentang
+      updatedStatus = orderStatusParams.filter((status) => status !== value);
+    }
+
+    // Update state
+    setOrderStatusParams(updatedStatus);
   };
 
   return (
@@ -156,9 +177,49 @@ const Order = () => {
                 type="button"
                 className="flex items-center gap-x-2 py-2 px-4 text-sm font-medium border rounded-full transition duration-300 hover:bg-black/[.07] active:scale-90"
               >
-                Status pesanan
+                {currentParams?.orderStatus ? (
+                  <>
+                    Status pesanan:{" "}
+                    {currentParams?.orderStatus
+                      .split(",") // Pisahkan berdasarkan koma
+                      .map((item) => {
+                        const formattedItem = item
+                          .split("_") // Pisahkan berdasarkan underscore
+                          .join(" "); // Gabungkan dengan spasi
+                        return (
+                          formattedItem.charAt(0).toUpperCase() +
+                          formattedItem.slice(1)
+                        ); // Kapitalisasi huruf pertama
+                      })
+                      .join(", ")}
+                    <span
+                      title="Hapus filter no.resi"
+                      className="p-1 rounded-full bg-black/[.15] ml-2"
+                      onClick={(e) => {
+                        e.stopPropagation();
+
+                        const updatedParams = { ...currentParams };
+                        delete updatedParams["orderStatus"];
+
+                        setSearchParams(updatedParams);
+                        setOrderStatusParams("");
+                      }}
+                    >
+                      <IoMdClose className="text-sm" />
+                    </span>
+                  </>
+                ) : (
+                  "Status pesanan"
+                )}
               </button>
             }
+            onClick={() =>
+              setSearchParams({
+                ...currentParams,
+                orderStatus: orderStatusParams.join(","),
+              })
+            }
+            disabledButton={orderStatusParams.length === 0 ? true : false}
           >
             {/* Not paid checkbox */}
             <label
@@ -169,7 +230,8 @@ const Order = () => {
                 id="not-paid"
                 type="checkbox"
                 value="belum_bayar"
-                // onChange={(e) => setTitleParams(e.target.value)}
+                checked={orderStatusParams.includes("belum_bayar")}
+                onChange={handleOrderStatusCheckboxChange}
               />
               Belum bayar
             </label>
@@ -183,7 +245,8 @@ const Order = () => {
                 id="packed"
                 type="checkbox"
                 value="sedang_dikemas"
-                // onChange={(e) => setTitleParams(e.target.value)}
+                checked={orderStatusParams.includes("sedang_dikemas")}
+                onChange={handleOrderStatusCheckboxChange}
               />
               Sedang dikemas
             </label>
@@ -197,7 +260,8 @@ const Order = () => {
                 id="delivered"
                 type="checkbox"
                 value="dikirim"
-                // onChange={(e) => setTitleParams(e.target.value)}
+                checked={orderStatusParams.includes("dikirim")}
+                onChange={handleOrderStatusCheckboxChange}
               />
               Dikirim
             </label>
@@ -211,7 +275,8 @@ const Order = () => {
                 id="finish"
                 type="checkbox"
                 value="selesai"
-                // onChange={(e) => setTitleParams(e.target.value)}
+                checked={orderStatusParams.includes("selesai")}
+                onChange={handleOrderStatusCheckboxChange}
               />
               Selesai
             </label>
@@ -225,7 +290,8 @@ const Order = () => {
                 id="cancel"
                 type="checkbox"
                 value="dibatalkan"
-                // onChange={(e) => setTitleParams(e.target.value)}
+                checked={orderStatusParams.includes("dibatalkan")}
+                onChange={handleOrderStatusCheckboxChange}
               />
               Dibatalkan
             </label>
