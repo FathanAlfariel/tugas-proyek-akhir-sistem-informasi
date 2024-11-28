@@ -11,11 +11,6 @@ const AddProductOrder = ({ formik, productsOrderList }) => {
   const [products, setProducts] = useState([]);
   const [openDropdown, setOpenDropdown] = useState(null);
 
-  const handleDropdownClick = (variantId, event) => {
-    event.stopPropagation();
-    setOpenDropdown(openDropdown === variantId ? null : variantId);
-  };
-
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {

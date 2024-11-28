@@ -12,6 +12,19 @@ const Modal = ({
 }) => {
   const [showModal, setShowModal] = useState(false);
 
+  const handleSubmit = async () => {
+    if (!onSubmit) return;
+
+    try {
+      const isValid = await onSubmit(); // Tunggu validasi
+      if (isValid) {
+        setShowModal(false); // Tutup modal hanya jika validasi berhasil
+      }
+    } catch (error) {
+      console.error("Error during submission:", error);
+    }
+  };
+
   return (
     <>
       <div id={id}>
@@ -59,12 +72,7 @@ const Modal = ({
                         Cancel
                       </Button>
                       <Button
-                        onClick={() => {
-                          if (onSubmit) {
-                            onSubmit();
-                          }
-                          setShowModal(false);
-                        }}
+                        onClick={handleSubmit}
                         type="button"
                         buttonStyle="text-button"
                       >

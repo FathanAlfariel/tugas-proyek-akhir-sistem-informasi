@@ -13,6 +13,8 @@ import { MdClose } from "react-icons/md";
 import { HiOutlineTrash } from "react-icons/hi2";
 import ViewImages from "../Components/ViewImages";
 import Loader from "../Components/Loader";
+import AddVariant from "../Components/AddVariant";
+import EditVariant from "../Components/EditVariant";
 
 const EditProduct = () => {
   const { id } = useParams();
@@ -21,6 +23,8 @@ const EditProduct = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const [viewImageFilename, setViewImageFilename] = useState(null);
+
+  const [variants, setVariants] = useState([]);
 
   useEffect(() => {
     setIsLoading(true);
@@ -38,8 +42,7 @@ const EditProduct = () => {
           );
           formik.setFieldValue("name", data.results.name);
           formik.setFieldValue("description", data.results.description);
-          formik.setFieldValue(
-            "variants",
+          setVariants(
             data.results.variants.map((variant) => ({
               id: variant.id,
               color: variant.color,
@@ -101,24 +104,11 @@ const EditProduct = () => {
       images: [],
       name: "",
       description: "",
-      variants: [],
     },
     validationSchema: yup.object({
       images: yup.array().min(1, "Gambar harus diisi."),
       name: yup.string().required("Nama produk harus diisi."),
       description: yup.string().required("Nama produk harus diisi."),
-      variants: yup.array().of(
-        yup.object({
-          color: yup.string().required("Warna harus diisi."),
-          size: yup.object({
-            length: yup.number().required("Panjang produk harus diisi."),
-            width: yup.number().required("Lebar produk harus diisi."),
-            height: yup.number().required("Tinggi produk harus diisi."),
-            stock: yup.number().required("Stok varian produk harus diisi."),
-            price: yup.number().required("Harga varian produk harus diisi."),
-          }),
-        })
-      ),
     }),
     onSubmit: async (values) => {
       setIsLoading(true);
@@ -128,7 +118,7 @@ const EditProduct = () => {
           images: values.images,
           name: values.name,
           description: values.description,
-          variants: values.variants,
+          variants: variants,
         })
         .then(({ data }) => {
           navigate("/admin/product");
@@ -141,29 +131,6 @@ const EditProduct = () => {
         });
     },
   });
-
-  const handleAddvariants = () => {
-    formik.setFieldValue("variants", [
-      ...formik.values.variants,
-      {
-        color: "",
-        size: {
-          length: "",
-          width: "",
-          height: "",
-          stock: "",
-          price: "",
-        },
-      },
-    ]);
-  };
-
-  const deletevariants = (key) => {
-    const value = formik.values.variants;
-    value.splice(key, 1);
-
-    formik.setFieldValue("variants", value);
-  };
 
   return (
     <>
@@ -198,139 +165,66 @@ const EditProduct = () => {
               }
             />
 
-            {/* Variants */}
-            <div className="w-full pt-2 px-3 border-2 rounded-xl">
+            {/* Variant */}
+            <div className="w-full px-3 border-2 rounded-xl">
               <div className="sticky top-0 flex justify-between items-center py-2">
-                <h5 className="text-sm">Variasi</h5>
+                <h5 className="text-sm">Variant</h5>
 
-                <Button
-                  type="button"
-                  buttonStyle="filled"
-                  onClick={handleAddvariants}
-                >
-                  Tambah variasi
-                </Button>
+                <AddVariant setVariants={setVariants} />
               </div>
 
-              <div className="max-h-[32rem] overflow-y-auto">
-                {/* variants */}
-                {formik.values.variants.map((_, key) => {
+              <ul
+                className={`flex items-center flex-wrap gap-4 ${
+                  variants.length > 0 && "pb-3"
+                }`}
+              >
+                {variants?.map((variant, key) => {
                   return (
-                    <div
+                    <li
                       key={key}
-                      className="border-2 border-dashed rounded-lg p-3 my-3"
+                      className="flex items-center gap-x-4 pl-4 pr-1 py-1 border rounded-xl"
                     >
-                      <div className="flex justify-end mb-4">
+                      <div>
+                        <p className="text-nowrap text-xs font-medium">
+                          {variant?.color}: {variant?.size?.length}cm x{" "}
+                          {variant?.size?.width}
+                          cm x {variant?.size?.height}cm
+                        </p>
+                        <p className="text-xs text-nowrap">
+                          Harga:{" "}
+                          {variant?.size?.price?.toLocaleString("id-ID", {
+                            style: "currency",
+                            currency: "IDR",
+                          })}
+                        </p>
+                        <p className="text-xs">Stok: {variant?.size?.stock}</p>
+                      </div>
+
+                      <div className="flex flex-col">
+                        <EditVariant
+                          index={key}
+                          variants={variants}
+                          setVariants={setVariants}
+                        />
+
                         <IconButton
-                          buttonType="icon"
                           type="button"
-                          onClick={() => deletevariants(key)}
+                          buttonType="icon"
+                          onClick={() => {
+                            const newData = variants.filter(
+                              (item, index) => index !== key
+                            );
+
+                            setVariants(newData);
+                          }}
                         >
-                          <MdClose />
+                          <HiOutlineTrash className="text-sm" />
                         </IconButton>
                       </div>
-
-                      <Input
-                        id={`warna-[${key}]`}
-                        name={`variants[${key}].color`}
-                        type="text"
-                        label="Warna produk"
-                        placeholder="Masukkan warna produk"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        value={formik.values.variants[key].color}
-                        errorMessage={
-                          formik.touched.variants?.[key]?.color &&
-                          formik.errors.variants?.[key]?.color
-                        }
-                      />
-
-                      <div className="mt-4">
-                        <h5 className="text-sm">Ukuran</h5>
-                        <div className="grid grid-cols-3 gap-x-4 mt-2">
-                          <Input
-                            id={`panjang-${key}`}
-                            name={`variants[${key}].size.length`}
-                            type="text"
-                            label="Panjang produk"
-                            placeholder="Masukkan panjang produk"
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            value={formik.values.variants[key].size.length}
-                            errorMessage={
-                              formik.touched.variants?.[key]?.size?.length &&
-                              formik.errors.variants?.[key]?.size?.length
-                            }
-                          />
-                          <Input
-                            id={`lebar-${key}`}
-                            name={`variants[${key}].size.width`}
-                            type="text"
-                            label="Lebar produk"
-                            placeholder="Masukkan lebar produk"
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            value={formik.values.variants[key].size.width}
-                            errorMessage={
-                              formik.touched.variants?.[key]?.size?.width &&
-                              formik.errors.variants?.[key]?.size?.width
-                            }
-                          />
-                          <Input
-                            id={`tinggi-${key}`}
-                            name={`variants[${key}].size.height`}
-                            type="text"
-                            label="Tinggi produk"
-                            placeholder="Masukkan tinggi produk"
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            value={formik.values.variants[key].size.height}
-                            errorMessage={
-                              formik.touched.variants?.[key]?.size?.height &&
-                              formik.errors.variants?.[key]?.size?.height
-                            }
-                          />
-                        </div>
-                      </div>
-
-                      <div className="mt-4">
-                        <h5 className="text-sm">Stok & Harga</h5>
-
-                        <div className="grid grid-cols-2 gap-x-4 mt-2">
-                          <Input
-                            id={`stok-${key}`}
-                            name={`variants[${key}].size.stock`}
-                            type="text"
-                            label="Stok produk"
-                            placeholder="Masukkan stok produk"
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            value={formik.values.variants[key].size.stock}
-                            errorMessage={
-                              formik.touched.variants?.[key]?.size?.stock &&
-                              formik.errors.variants?.[key]?.size?.stock
-                            }
-                          />
-                          <Input
-                            id={`harga-${key}`}
-                            name={`variants[${key}].size.price`}
-                            type="text"
-                            label="Harga produk"
-                            placeholder="Masukkan harga produk"
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            value={formik.values.variants[key].size.price}
-                            errorMessage={
-                              formik.touched.variants?.[key]?.size?.price &&
-                              formik.errors.variants?.[key]?.size?.price
-                            }
-                          />
-                        </div>
-                      </div>
-                    </div>
+                    </li>
                   );
                 })}
-              </div>
+              </ul>
             </div>
           </div>
 
