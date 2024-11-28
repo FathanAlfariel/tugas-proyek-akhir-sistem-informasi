@@ -69,11 +69,26 @@ const addOrder = async (req, res) => {
 
 // Get all orders controller
 const getAllOrders = async (req, res) => {
-  const { trackingReceipt, orderStatus } = req.query;
+  const { trackingReceipt, orderStatus, name, date } = req.query;
 
   try {
     // Order status URL query for filtering
     const statusArray = orderStatus ? orderStatus.split(",") : [];
+
+    // Jika ada `date`, buat rentang waktu untuk hari itu
+    let dateFilter = undefined;
+    if (date) {
+      const startOfDay = new Date(date);
+      startOfDay.setHours(0, 0, 0, 0); // Mulai dari awal hari
+      const endOfDay = new Date(date);
+      endOfDay.setHours(23, 59, 59, 999); // Akhir hari
+      dateFilter = {
+        createdAt: {
+          gte: startOfDay, // >= awal hari
+          lte: endOfDay, // <= akhir hari
+        },
+      };
+    }
 
     const orders = await prisma.order.findMany({
       where: {
@@ -82,6 +97,8 @@ const getAllOrders = async (req, res) => {
             ? { trackingReceipt: { contains: trackingReceipt } }
             : undefined,
           orderStatus ? { status: { in: statusArray } } : undefined,
+          name ? { name: { contains: name } } : undefined,
+          dateFilter,
         ].filter(Boolean), // Hapus elemen kosong
       },
       include: {

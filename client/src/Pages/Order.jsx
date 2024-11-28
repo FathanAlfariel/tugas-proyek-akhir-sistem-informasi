@@ -25,8 +25,8 @@ const Order = () => {
   const [orderStatusParams, setOrderStatusParams] = useState(
     currentParams?.orderStatus || []
   );
-
-  console.log(orderStatusParams);
+  const [nameParams, setNameParams] = useState(currentParams?.name || "");
+  const [dateParams, setDateParams] = useState(currentParams?.date || "");
 
   // Get all orders
   useEffect(() => {
@@ -193,7 +193,7 @@ const Order = () => {
                       })
                       .join(", ")}
                     <span
-                      title="Hapus filter no.resi"
+                      title="Hapus filter status pesanan"
                       className="p-1 rounded-full bg-black/[.15] ml-2"
                       onClick={(e) => {
                         e.stopPropagation();
@@ -306,9 +306,37 @@ const Order = () => {
                 type="button"
                 className="flex items-center gap-x-2 py-2 px-4 text-sm font-medium border rounded-full transition duration-300 hover:bg-black/[.07] active:scale-90"
               >
-                Nama pemesan
+                {currentParams?.name ? (
+                  <>
+                    Nama pemesan: {currentParams?.name}
+                    <span
+                      title="Hapus filter nama pemesan"
+                      className="p-1 rounded-full bg-black/[.15] ml-2"
+                      onClick={(e) => {
+                        e.stopPropagation();
+
+                        const updatedParams = { ...currentParams };
+                        delete updatedParams["name"];
+
+                        setSearchParams(updatedParams);
+                        setNameParams("");
+                      }}
+                    >
+                      <IoMdClose className="text-sm" />
+                    </span>
+                  </>
+                ) : (
+                  "Nama pemesan"
+                )}
               </button>
             }
+            onClick={() =>
+              setSearchParams({
+                ...currentParams,
+                name: nameParams,
+              })
+            }
+            disabledButton={nameParams === "" ? true : false}
           >
             <label htmlFor="name" className="block text-xs font-medium">
               Masukkan nama pemesan
@@ -320,8 +348,8 @@ const Order = () => {
               type="text"
               placeholder="Nama pemesan"
               className="outline-none pt-3 pb-1 text-sm border-b w-full"
-              // value={titleParams}
-              // onChange={(e) => setTitleParams(e.target.value)}
+              value={nameParams}
+              onChange={(e) => setNameParams(e.target.value)}
             />
           </Filter>
 
@@ -334,21 +362,48 @@ const Order = () => {
                 type="button"
                 className="flex items-center gap-x-2 py-2 px-4 text-sm font-medium border rounded-full transition duration-300 hover:bg-black/[.07] active:scale-90"
               >
-                Tanggal pemesanan
+                {currentParams?.date ? (
+                  <>
+                    Tanggal pemesanan: {currentParams?.date}
+                    <span
+                      title="Hapus filter tanggal pemesanan"
+                      className="p-1 rounded-full bg-black/[.15] ml-2"
+                      onClick={(e) => {
+                        e.stopPropagation();
+
+                        const updatedParams = { ...currentParams };
+                        delete updatedParams["date"];
+
+                        setSearchParams(updatedParams);
+                        setDateParams("");
+                      }}
+                    >
+                      <IoMdClose className="text-sm" />
+                    </span>
+                  </>
+                ) : (
+                  "Tanggal pemesanan"
+                )}
               </button>
             }
+            onClick={() =>
+              setSearchParams({
+                ...currentParams,
+                date: dateParams,
+              })
+            }
+            disabledButton={dateParams === "" ? true : false}
           >
             <label htmlFor="date" className="block text-xs font-medium">
               Masukkan tanggal pemesanan
             </label>
 
             <input
-              autoFocus
               id="date"
               type="date"
               className="outline-none pt-3 pb-1 text-sm border-b w-full"
-              // value={titleParams}
-              // onChange={(e) => setTitleParams(e.target.value)}
+              value={dateParams}
+              onChange={(e) => setDateParams(e.target.value)}
             />
           </Filter>
         </div>
