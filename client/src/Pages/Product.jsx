@@ -12,10 +12,16 @@ import { Link } from "react-router-dom";
 import DropdownSelect from "../Components/DropdownSelect";
 import Dropdown from "../Components/Dropdown";
 import Loader from "../Components/Loader";
+import { RiFilter3Fill } from "react-icons/ri";
+import IconButton from "../Components/IconButton";
+import { useSearchParams } from "react-router-dom";
 
 const Product = () => {
   const [products, setProducts] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  const currentParams = Object.fromEntries(searchParams.entries());
 
   // Get all products
   useEffect(() => {
@@ -89,6 +95,38 @@ const Product = () => {
 
       <h1 className="text-[28px] leading-9 font-medium">Produk</h1>
 
+      {/* Search and filter */}
+      <div className="border-y py-0.5">
+        <h5 className="text-sm font-semibold mb-2.5">Filter berdasarkan:</h5>
+
+        <div className="flex items-center gap-x-2 overflow-x-auto">
+          <button
+            type="button"
+            className="flex items-center gap-x-2 py-2 px-4 text-sm font-medium border rounded-full transition duration-300 hover:bg-black/[.07] active:scale-90"
+          >
+            Judul
+          </button>
+          <button
+            type="button"
+            className="flex items-center gap-x-2 py-2 px-4 text-sm font-medium border rounded-full transition duration-300 hover:bg-black/[.07] active:scale-90"
+          >
+            Deskripsi
+          </button>
+          <button
+            type="button"
+            className="flex items-center gap-x-2 py-2 px-4 text-sm font-medium border rounded-full transition duration-300 hover:bg-black/[.07] active:scale-90"
+          >
+            Visibilitas
+          </button>
+          <button
+            type="button"
+            className="flex items-center gap-x-2 py-2 px-4 text-sm font-medium border rounded-full transition duration-300 hover:bg-black/[.07] active:scale-90"
+          >
+            Tanggal dibuat
+          </button>
+        </div>
+      </div>
+
       {/* Products list for tablet and desktop */}
       <div className="hidden md:block overflow-x-auto md:overflow-visible">
         <table className="w-full">
@@ -104,7 +142,7 @@ const Product = () => {
                 Tanggal
               </th>
               <th className="pl-6 py-4 text-xs text-left font-medium">
-                Dibeli
+                Variant
               </th>
             </tr>
           </thead>
@@ -209,7 +247,13 @@ const Product = () => {
                       <p className="text-xs font-medium">Ditambahkan</p>
                     </td>
                     <td className="pl-6 py-3 whitespace-nowrap">
-                      <p className="text-xs">0</p>
+                      {product?.variants?.map((variant, key) => {
+                        return (
+                          <p key={key} className="text-xs">
+                            {variant?.color}
+                          </p>
+                        );
+                      })}
                     </td>
                   </tr>
                 );
