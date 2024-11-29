@@ -4,7 +4,7 @@ const router = express.Router();
 const {
   addProductCreation,
   getAllProductCreation,
-  updateStatus,
+  updateStatuses,
 } = require("../controllers/productCreationController");
 
 // Create
@@ -14,6 +14,6 @@ router.post("/", addProductCreation);
 router.get("/", getAllProductCreation);
 
 // Update status
-router.put("/status/:id", updateStatus);
+router.put("/statuses", updateStatuses);
 
 module.exports = router;

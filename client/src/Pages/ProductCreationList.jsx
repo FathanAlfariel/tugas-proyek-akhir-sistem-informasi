@@ -35,24 +35,12 @@ const ProductCreationList = () => {
   }, []);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      products.forEach(async (product) => {
-        const now = new Date();
-        const start = new Date(product?.startDate);
-
-        if (
-          now.getTime() >= start.getTime() &&
-          product.status === "belum_dimulai"
-        ) {
-          await axios.put(
-            `http://localhost:5000/api/product-creation/status/${product.id}`
-          );
-        }
-      });
-    }, 1000);
+    const interval = setInterval(async () => {
+      await axios.put("http://localhost:5000/api/product-creation/statuses");
+    }, 1000); // Setiap 1 detik
 
     return () => clearInterval(interval);
-  }, [products]);
+  }, []);
 
   return (
     <>
@@ -110,26 +98,34 @@ const ProductCreationList = () => {
                     </td>
                     <td className="pl-6 py-6 whitespace-nowrap">
                       <span className="px-3 py-1.5 bg-[#C62E2E]/[.12] rounded-full text-xs text-[#C62E2E] font-medium">
-                        <span title="Hari" className="after:content-[':']">
-                          {product?.countdown?.days
-                            ?.toString()
-                            .padStart(2, "0")}
-                        </span>
-                        <span title="Jam" className="after:content-[':']">
-                          {product?.countdown?.hours
-                            ?.toString()
-                            .padStart(2, "0")}
-                        </span>
-                        <span title="Menit" className="after:content-[':']">
-                          {product?.countdown?.minutes
-                            ?.toString()
-                            .padStart(2, "0")}
-                        </span>
-                        <span title="Detik">
-                          {product?.countdown?.seconds
-                            ?.toString()
-                            .padStart(2, "0")}
-                        </span>
+                        {product?.status === "belum_dimulai" ? (
+                          "00:00:00:00"
+                        ) : product?.status === "dalam_proses" ? (
+                          <>
+                            <span title="Hari" className="after:content-[':']">
+                              {product?.countdown?.days
+                                ?.toString()
+                                .padStart(2, "0")}
+                            </span>
+                            <span title="Jam" className="after:content-[':']">
+                              {product?.countdown?.hours
+                                ?.toString()
+                                .padStart(2, "0")}
+                            </span>
+                            <span title="Menit" className="after:content-[':']">
+                              {product?.countdown?.minutes
+                                ?.toString()
+                                .padStart(2, "0")}
+                            </span>
+                            <span title="Detik">
+                              {product?.countdown?.seconds
+                                ?.toString()
+                                .padStart(2, "0")}
+                            </span>
+                          </>
+                        ) : product?.status === "selesai" ? (
+                          "00:00:00:00"
+                        ) : null}
                       </span>
                     </td>
                     <td className="pl-6 py-6 whitespace-nowrap">

@@ -116,40 +116,55 @@ const getAllProductCreation = async (req, res) => {
 };
 
 // Update production status
-const updateStatus = async (req, res) => {
-  const { id } = req.params;
-
+const updateStatuses = async (req, res) => {
   try {
-    const getProduction = await prisma.productCreation.findUnique({
-      where: { id },
-    });
-    if (!getProduction) {
-      return res.status(404).json({ message: "Product not found" });
-    }
-
     const now = new Date();
-    const start = new Date(getProduction?.startDate);
 
-    // Perbandingan waktu menggunakan getTime()
-    if (
-      now.getTime() >= start.getTime() &&
-      getProduction.status === "belum_dimulai"
-    ) {
-      await prisma.productCreation.update({
-        where: {
-          id: id,
-        },
-        data: {
-          status: "dalam_proses",
-        },
+    // Update status "belum_dimulai" menjadi "dalam_proses"
+    const inProgress = await prisma.productCreation.updateMany({
+      where: {
+        startDate: { lte: now },
+        status: "belum_dimulai",
+      },
+      data: { status: "dalam_proses" },
+    });
+
+    // Cari produk yang akan diubah statusnya menjadi "selesai"
+    const productsToComplete = await prisma.productCreation.findMany({
+      where: {
+        estimationTime: { lte: now },
+        status: "dalam_proses",
+      },
+      select: { tailorId: true }, // Ambil tailorId untuk pembaruan
+    });
+
+    // Update status "dalam_proses" menjadi "selesai"
+    const completed = await prisma.productCreation.updateMany({
+      where: {
+        estimationTime: { lte: now },
+        status: "dalam_proses",
+      },
+      data: { status: "selesai" },
+    });
+
+    // Ambil unique tailorId dari produk yang selesai
+    const tailorIds = [...new Set(productsToComplete.map((p) => p.tailorId))];
+
+    // Update status penjahit menjadi "ada" untuk penjahit terkait
+    if (tailorIds.length > 0) {
+      await prisma.tailor.updateMany({
+        where: { id: { in: tailorIds } },
+        data: { available: true },
       });
-
-      return res.status(200).json({ message: "Successfully updated product" });
     }
+
+    return res.status(200).json({
+      message: `${inProgress.count} products started, ${completed.count} products completed, ${tailorIds.length} tailors updated to available`,
+    });
   } catch (err) {
-    console.log("Error :" + err);
+    console.error("Error :" + err);
     return res.status(500).json({ message: "Internal server error" });
   }
 };
 
-module.exports = { addProductCreation, getAllProductCreation, updateStatus };
+module.exports = { addProductCreation, getAllProductCreation, updateStatuses };
