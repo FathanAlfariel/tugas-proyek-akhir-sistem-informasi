@@ -15,12 +15,12 @@ const addProductCreation = async (req, res) => {
       // Pisahkan estimationTime ke dalam jam, menit, dan detik
       const [hours, minutes, seconds] = estimationTime.split(":").map(Number);
 
-      // Tambahkan waktu estimasi ke startDate
-      start.setHours(start.getHours() + hours);
-      start.setMinutes(start.getMinutes() + minutes);
-      start.setSeconds(start.getSeconds() + seconds);
+      // Hitung total waktu estimasi dalam milidetik
+      const totalMilliseconds =
+        hours * 60 * 60 * 1000 + minutes * 60 * 1000 + seconds * 1000;
 
-      return start;
+      // Tambahkan waktu estimasi ke startDate
+      return new Date(start.getTime() + totalMilliseconds);
     };
 
     // Tentukan status berdasarkan startDate
@@ -92,14 +92,22 @@ const getAllProductCreation = async (req, res) => {
       const now = new Date();
 
       // Menghitung selisih waktu dalam milidetik
-      const timeDifference = estimationTime - now;
+      const timeDifference = estimationTime.getTime() - now.getTime();
 
       // Mengonversi ke format hari, jam, menit, dan detik
       const countdown = {
-        days: Math.floor(timeDifference / (1000 * 60 * 60 * 24)),
-        hours: Math.floor((timeDifference / (1000 * 60 * 60)) % 24),
-        minutes: Math.floor((timeDifference / (1000 * 60)) % 60),
-        seconds: Math.floor((timeDifference / 1000) % 60),
+        days: Math.max(0, Math.floor(timeDifference / (1000 * 60 * 60 * 24))),
+        hours: Math.max(
+          0,
+          Math.floor(
+            (timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+          )
+        ),
+        minutes: Math.max(
+          0,
+          Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60))
+        ),
+        seconds: Math.max(0, Math.floor((timeDifference % (1000 * 60)) / 1000)),
       };
 
       return { ...product, countdown };
@@ -190,9 +198,45 @@ const deleteProductCreation = async (req, res) => {
   }
 };
 
+// Cancel production
+const cancelProductCreation = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const query = await prisma.productCreation.update({
+      where: {
+        id: id,
+      },
+      data: {
+        status: "dibatalkan",
+      },
+    });
+    if (!query) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    await prisma.tailor.update({
+      where: {
+        id: query.tailorId,
+      },
+      data: {
+        available: true,
+      },
+    });
+
+    return res
+      .status(200)
+      .json({ message: "Product canceled successfully", results: query });
+  } catch (err) {
+    console.log("Error :" + err);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 module.exports = {
   addProductCreation,
   getAllProductCreation,
   updateStatuses,
   deleteProductCreation,
+  cancelProductCreation,
 };

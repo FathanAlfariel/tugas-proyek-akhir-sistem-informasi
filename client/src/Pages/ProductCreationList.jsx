@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import Loader from "../Components/Loader";
 import IconButton from "../Components/IconButton";
 import { HiOutlineTrash } from "react-icons/hi2";
+import { AiOutlineStop } from "react-icons/ai";
 
 const ProductCreationList = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -51,6 +52,22 @@ const ProductCreationList = () => {
         const updateData = products.filter((item) => item.id !== id);
 
         setProducts(updateData);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+
+  const handleCancel = async (id) => {
+    setIsLoading(true);
+
+    await axios
+      .put(`http://localhost:5000/api/product-creation/cancel/${id}`)
+      .then(({ data }) => {
+        console.log(data);
       })
       .catch((err) => {
         console.log(err);
@@ -112,11 +129,18 @@ const ProductCreationList = () => {
                           {product?.status?.charAt(0).toUpperCase() +
                             product?.status?.slice(1)}
                         </span>
+                      ) : product?.status === "dibatalkan" ? (
+                        <span className="px-3 py-1.5 bg-[#C62E2E]/[.12] rounded-full text-xs text-[#C62E2E] font-medium">
+                          {product?.status?.charAt(0).toUpperCase() +
+                            product?.status?.slice(1)}
+                        </span>
                       ) : null}
                     </td>
                     <td className="pl-6 py-6 whitespace-nowrap">
                       <span className="px-3 py-1.5 bg-[#C62E2E]/[.12] rounded-full text-xs text-[#C62E2E] font-medium">
-                        {product?.status === "belum_dimulai" ? (
+                        {product?.status === "belum_dimulai" ||
+                        product?.status === "selesai" ||
+                        product?.status === "dibatalkan" ? (
                           "00:00:00:00"
                         ) : product?.status === "dalam_proses" ? (
                           <>
@@ -141,15 +165,26 @@ const ProductCreationList = () => {
                                 .padStart(2, "0")}
                             </span>
                           </>
-                        ) : product?.status === "selesai" ? (
-                          "00:00:00:00"
                         ) : null}
                       </span>
                     </td>
                     <td className="pl-6 py-6 whitespace-nowrap">
                       <div className="flex items-center gap-x-1">
+                        {product?.status === "belum_dimulai" ||
+                        product?.status === "dalam_proses" ? (
+                          <IconButton
+                            type="button"
+                            title="Batalkan pembuatan"
+                            onClick={() => handleCancel(product?.id)}
+                            buttonType="icon"
+                          >
+                            <AiOutlineStop className="text-lg" />
+                          </IconButton>
+                        ) : null}
+
                         <IconButton
                           type="button"
+                          title="Hapus pembuatan"
                           onClick={() => handleDelete(product?.id)}
                           buttonType="icon"
                         >
