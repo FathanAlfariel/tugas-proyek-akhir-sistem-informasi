@@ -138,6 +138,7 @@ model ProductCreation {
   materials       ProductCreationMaterial[]    
   startDate       DateTime                    @default(now())
   estimationTime  DateTime
+  total           Int
   status          productionStatus
   createdAt       DateTime                    @default(now())
   updatedAt       DateTime                    @updatedAt
@@ -160,6 +161,6 @@ model ProductCreationMaterial {
   createdAt             DateTime            @default(now())
   updatedAt             DateTime            @updatedAt
 
-  productCreation       ProductCreation     @relation(fields: [productCreationId], references: [id])
+  productCreation       ProductCreation     @relation(fields: [productCreationId], references: [id], onDelete: Cascade)
   material              Material            @relation(fields: [materialId], references: [id])
 }

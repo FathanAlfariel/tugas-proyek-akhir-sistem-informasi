@@ -10,6 +10,7 @@ const tailorRoute = require("./routes/tailorRoute");
 const orderRoute = require("./routes/orderRoute");
 const estimateRoute = require("./routes/estimateRoute");
 const materialRoute = require("./routes/materialRoute");
+const productCreationRoute = require("./routes/productCreationRoute");
 const countryAPIRoute = require("./routes/countryAPIRoute");
 
 dotenv.config();
@@ -52,6 +53,9 @@ app.use("/api/material", materialRoute);
 
 // Estimate route
 app.use("/api/estimate", estimateRoute);
+
+// Product creation route
+app.use("/api/product-creation", productCreationRoute);
 
 // Running the server on
 app.listen(PORT, () => {

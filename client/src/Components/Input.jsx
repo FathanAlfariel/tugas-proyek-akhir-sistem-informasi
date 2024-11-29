@@ -13,6 +13,7 @@ const Input = ({
   errorMessage,
   disabled,
   step,
+  min,
 }) => {
   const [isDisabled, setIsDisabled] = useState(false);
 
@@ -100,6 +101,7 @@ const Input = ({
               name={name}
               type={type}
               step={step}
+              min={min}
               placeholder={placeholder}
               className="outline-none placeholder:text-[#71717a] disabled:cursor-not-allowed"
               onChange={onChange}
