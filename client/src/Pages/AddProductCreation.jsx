@@ -123,13 +123,23 @@ const AddProductCreation = () => {
         <div>
           <h5 className="text-lg font-medium mb-2.5">Informasi produk</h5>
 
-          <Input
-            id="name"
-            label="Nama produk"
-            type="text"
-            name="name"
-            placeholder="Masukkan nama produk"
-          />
+          <div className="flex flex-col gap-y-2">
+            <Input
+              id="name"
+              name="name"
+              label="Nama produk"
+              type="text"
+              placeholder="Masukkan nama produk"
+            />
+
+            <Input
+              id="startDate"
+              name="startDate"
+              label="Tanggal diproduksi"
+              type="datetime-local"
+              placeholder="Masukkan tanggal mulai produksi produk"
+            />
+          </div>
         </div>
 
         <div>
