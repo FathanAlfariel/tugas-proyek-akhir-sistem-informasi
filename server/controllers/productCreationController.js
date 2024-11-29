@@ -115,4 +115,41 @@ const getAllProductCreation = async (req, res) => {
   }
 };
 
-module.exports = { addProductCreation, getAllProductCreation };
+// Update production status
+const updateStatus = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const getProduction = await prisma.productCreation.findUnique({
+      where: { id },
+    });
+    if (!getProduction) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    const now = new Date();
+    const start = new Date(getProduction?.startDate);
+
+    // Perbandingan waktu menggunakan getTime()
+    if (
+      now.getTime() >= start.getTime() &&
+      getProduction.status === "belum_dimulai"
+    ) {
+      await prisma.productCreation.update({
+        where: {
+          id: id,
+        },
+        data: {
+          status: "dalam_proses",
+        },
+      });
+
+      return res.status(200).json({ message: "Successfully updated product" });
+    }
+  } catch (err) {
+    console.log("Error :" + err);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+module.exports = { addProductCreation, getAllProductCreation, updateStatus };

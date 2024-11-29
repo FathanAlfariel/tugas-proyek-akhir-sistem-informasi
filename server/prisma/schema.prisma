@@ -150,6 +150,7 @@ enum productionStatus {
   belum_dimulai
   dalam_proses
   selesai
+  dibatalkan
 }
 
 model ProductCreationMaterial {

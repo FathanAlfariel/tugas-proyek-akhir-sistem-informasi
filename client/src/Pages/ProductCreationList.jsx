@@ -34,7 +34,25 @@ const ProductCreationList = () => {
     return () => clearInterval(interval);
   }, []);
 
-  console.log(products);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      products.forEach(async (product) => {
+        const now = new Date();
+        const start = new Date(product?.startDate);
+
+        if (
+          now.getTime() >= start.getTime() &&
+          product.status === "belum_dimulai"
+        ) {
+          await axios.put(
+            `http://localhost:5000/api/product-creation/status/${product.id}`
+          );
+        }
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [products]);
 
   return (
     <>
