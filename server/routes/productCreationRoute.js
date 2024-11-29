@@ -5,6 +5,7 @@ const {
   addProductCreation,
   getAllProductCreation,
   updateStatuses,
+  deleteProductCreation,
 } = require("../controllers/productCreationController");
 
 // Create
@@ -15,5 +16,8 @@ router.get("/", getAllProductCreation);
 
 // Update status
 router.put("/statuses", updateStatuses);
+
+// Delete
+router.delete("/:id", deleteProductCreation);
 
 module.exports = router;

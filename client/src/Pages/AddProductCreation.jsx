@@ -8,10 +8,12 @@ import axios from "axios";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { IoWarning } from "react-icons/io5";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const AddProductCreation = () => {
   const [isLoading, setIsLoading] = useState(false);
+
+  const navigate = useNavigate();
 
   const [availableTailors, setAvailableTailors] = useState([]);
   const [materials, setMaterials] = useState([]);
@@ -109,7 +111,8 @@ const AddProductCreation = () => {
           total: values.total,
         })
         .then(({ data }) => {
-          console.log(data);
+          // console.log(data);
+          navigate("/admin/product-creation");
         })
         .catch((err) => {
           console.log(err);

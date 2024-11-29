@@ -167,4 +167,32 @@ const updateStatuses = async (req, res) => {
   }
 };
 
-module.exports = { addProductCreation, getAllProductCreation, updateStatuses };
+// Delete production
+const deleteProductCreation = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const query = await prisma.productCreation.delete({
+      where: {
+        id: id,
+      },
+    });
+    if (!query) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    return res
+      .status(200)
+      .json({ message: "Product deleted successfully", results: query });
+  } catch (err) {
+    console.log("Error :" + err);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+module.exports = {
+  addProductCreation,
+  getAllProductCreation,
+  updateStatuses,
+  deleteProductCreation,
+};

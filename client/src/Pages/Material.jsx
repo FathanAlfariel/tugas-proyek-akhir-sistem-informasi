@@ -137,67 +137,73 @@ const Material = () => {
     <>
       {isLoading && <Loader />}
 
-      {/* Add material */}
-      <Modal
-        id="add-material"
-        button={
-          <Button type="button" buttonStyle="filled">
-            Tambah bahan
-          </Button>
-        }
-        headerTitle="Tambah bahan"
-        onSubmit={handleModalSubmit}
-      >
-        <form
-          onSubmit={formik.handleSubmit}
-          className="flex flex-col gap-y-2.5"
+      <div className="my-2.5">
+        {/* Add material */}
+        <Modal
+          id="add-material"
+          button={
+            <Button type="button" buttonStyle="filled">
+              Tambah bahan
+            </Button>
+          }
+          headerTitle="Tambah bahan"
+          onSubmit={handleModalSubmit}
         >
-          <Input
-            id="name"
-            type="text"
-            label="Nama bahan"
-            placeholder="Masukkan nama bahan"
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.name}
-            errorMessage={formik.touched.name && formik.errors.name}
-          />
-          <Input
-            id="complexity"
-            type="number"
-            label="Kompleksitas bahan"
-            placeholder="Masukkan angka dari 1.0 - 2.0"
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.complexity}
-            errorMessage={formik.touched.complexity && formik.errors.complexity}
-          />
-          <Input
-            id="cuttingTime"
-            type="number"
-            step="0.1"
-            label="Waktu pemotongan"
-            placeholder="Contoh: 1.0 (1 jam proses pemotongan) & 0.5 (0.5 jam proses pemotongan)"
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.cuttingTime}
-            errorMessage={
-              formik.touched.cuttingTime && formik.errors.cuttingTime
-            }
-          />
-          <Input
-            id="sewingTime"
-            type="number"
-            step="0.1"
-            label="Waktu penjahitan"
-            placeholder="Contoh: 1.0 (1 jam proses penjahitan) & 0.5 (0.5 jam proses penjahitan)"
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.sewingTime}
-            errorMessage={formik.touched.sewingTime && formik.errors.sewingTime}
-          />
-        </form>
-      </Modal>
+          <form
+            onSubmit={formik.handleSubmit}
+            className="flex flex-col gap-y-2.5"
+          >
+            <Input
+              id="name"
+              type="text"
+              label="Nama bahan"
+              placeholder="Masukkan nama bahan"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.name}
+              errorMessage={formik.touched.name && formik.errors.name}
+            />
+            <Input
+              id="complexity"
+              type="number"
+              label="Kompleksitas bahan"
+              placeholder="Masukkan angka dari 1.0 - 2.0"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.complexity}
+              errorMessage={
+                formik.touched.complexity && formik.errors.complexity
+              }
+            />
+            <Input
+              id="cuttingTime"
+              type="number"
+              step="0.1"
+              label="Waktu pemotongan"
+              placeholder="Contoh: 1.0 (1 jam proses pemotongan) & 0.5 (0.5 jam proses pemotongan)"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.cuttingTime}
+              errorMessage={
+                formik.touched.cuttingTime && formik.errors.cuttingTime
+              }
+            />
+            <Input
+              id="sewingTime"
+              type="number"
+              step="0.1"
+              label="Waktu penjahitan"
+              placeholder="Contoh: 1.0 (1 jam proses penjahitan) & 0.5 (0.5 jam proses penjahitan)"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.sewingTime}
+              errorMessage={
+                formik.touched.sewingTime && formik.errors.sewingTime
+              }
+            />
+          </form>
+        </Modal>
+      </div>
 
       <div className="overflow-x-auto">
         <table className="w-full">

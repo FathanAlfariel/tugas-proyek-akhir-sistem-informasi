@@ -42,6 +42,24 @@ const ProductCreationList = () => {
     return () => clearInterval(interval);
   }, []);
 
+  const handleDelete = async (id) => {
+    setIsLoading(true);
+
+    await axios
+      .delete(`http://localhost:5000/api/product-creation/${id}`)
+      .then(({ data }) => {
+        const updateData = products.filter((item) => item.id !== id);
+
+        setProducts(updateData);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+
   return (
     <>
       {isLoading && <Loader />}
@@ -132,7 +150,7 @@ const ProductCreationList = () => {
                       <div className="flex items-center gap-x-1">
                         <IconButton
                           type="button"
-                          //   onClick={() => handleDeleteMaterial(product?.id)}
+                          onClick={() => handleDelete(product?.id)}
                           buttonType="icon"
                         >
                           <HiOutlineTrash className="text-lg" />

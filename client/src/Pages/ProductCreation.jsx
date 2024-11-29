@@ -6,7 +6,9 @@ import ProductCreationList from "./ProductCreationList";
 const ProductCreation = () => {
   return (
     <>
-      <h1 className="text-[28px] leading-9 font-medium">Pembuatan produk</h1>
+      <h1 className="text-[28px] leading-9 font-medium mb-2.5">
+        Pembuatan produk
+      </h1>
 
       <div>
         <Tabs
