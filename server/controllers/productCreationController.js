@@ -1,6 +1,7 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
+// Add product creation controller
 const addProductCreation = async (req, res) => {
   const { name, tailor, materials, startDate, estimationTime, total } =
     req.body;
@@ -73,4 +74,45 @@ const addProductCreation = async (req, res) => {
   }
 };
 
-module.exports = { addProductCreation };
+// Get all product creation controller
+const getAllProductCreation = async (req, res) => {
+  try {
+    const query = await prisma.productCreation.findMany({
+      include: {
+        tailor: true,
+      },
+    });
+    if (!query) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    // Menambahkan countdown untuk setiap produk
+    const resultsWithCountdown = query.map((product) => {
+      const estimationTime = new Date(product.estimationTime);
+      const now = new Date();
+
+      // Menghitung selisih waktu dalam milidetik
+      const timeDifference = estimationTime - now;
+
+      // Mengonversi ke format hari, jam, menit, dan detik
+      const countdown = {
+        days: Math.floor(timeDifference / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((timeDifference / (1000 * 60 * 60)) % 24),
+        minutes: Math.floor((timeDifference / (1000 * 60)) % 60),
+        seconds: Math.floor((timeDifference / 1000) % 60),
+      };
+
+      return { ...product, countdown };
+    });
+
+    return res.status(200).json({
+      message: "Successfully get all the products",
+      results: resultsWithCountdown,
+    });
+  } catch (err) {
+    console.log("Error :" + err);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+module.exports = { addProductCreation, getAllProductCreation };

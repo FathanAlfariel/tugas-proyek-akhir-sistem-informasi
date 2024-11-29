@@ -1,6 +1,7 @@
 import React from "react";
 import Tabs from "../Components/Tabs";
 import Material from "./Material";
+import ProductCreationList from "./ProductCreationList";
 
 const ProductCreation = () => {
   return (
@@ -11,7 +12,7 @@ const ProductCreation = () => {
         <Tabs
           menu={[
             { label: "Bahan-bahan", content: <Material /> },
-            { label: "Pembuatan produk", content: "Pembuatan" },
+            { label: "Produk", content: <ProductCreationList /> },
           ]}
         />
       </div>
