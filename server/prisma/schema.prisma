@@ -113,18 +113,38 @@ model Expense {
 }
 
 model Tailor {
-  id          String          @id @unique @default(uuid())
-  name        String
-  available   Boolean         @default(false)
-  createdAt   DateTime        @default(now())
+  id                String              @id @unique @default(uuid())
+  name              String
+  available         Boolean             @default(false)
+  createdAt         DateTime            @default(now())
+  productCreation   ProductCreation[]
 }
 
 model Material {
-  id          String    @id @default(uuid())
+  id          String    @id @unique @default(uuid())
   name        String    @unique
   complexity  Float
   cuttingTime Float
   sewingTime  Float
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+}
+
+model ProductCreation {
+  id              String              @id @unique @default(uuid())
+  name            String 
+  tailorId        String
+  startDate       DateTime            @default(now())
+  estimationTime  DateTime
+  status          productionStatus
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+
+  tailor          Tailor              @relation(fields: [tailorId], references: [id])
+}
+
+enum productionStatus {
+  belum_dimulai
+  dalam_proses
+  selesai
 }

@@ -14,7 +14,7 @@ const Select = ({
   setSelectMenu,
   showSearch,
   defaultValue,
-  value,
+  onChange,
   errorMessage,
   disabled = false,
 }) => {
@@ -53,7 +53,9 @@ const Select = ({
 
   const handleSelectedMenu = (menu) => {
     setSelectedMenu(menu);
-    value(menu?.value);
+    if (onChange) {
+      onChange(menu?.value);
+    }
   };
 
   // If the default menu has been initialized

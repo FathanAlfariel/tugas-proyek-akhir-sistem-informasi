@@ -101,7 +101,7 @@ const EditTailor = () => {
               },
             ]}
             defaultValue={formik.values.available}
-            value={(value) => {
+            onChange={(value) => {
               formik.setFieldValue("available", value);
             }}
             errorMessage={formik.touched.available && formik.errors.available}

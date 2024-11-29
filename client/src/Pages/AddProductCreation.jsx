@@ -13,6 +13,8 @@ const AddProductCreation = () => {
   const [availableTailors, setAvailableTailors] = useState([]);
   const [materials, setMaterials] = useState([]);
 
+  const [estimation, setEstimation] = useState([]);
+
   useEffect(() => {
     const getAvailableTailors = async () => {
       await axios
@@ -97,7 +99,8 @@ const AddProductCreation = () => {
         const formattedTime = `${String(hours).padStart(2, "0")}:${String(
           minutes
         ).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
-        console.log(formattedTime);
+
+        setEstimation(formattedTime);
       })
       .catch((err) => {
         console.log(err);
@@ -118,6 +121,8 @@ const AddProductCreation = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-x-0 md:gap-x-6">
         <div>
+          <h5 className="text-lg font-medium mb-2.5">Informasi produk</h5>
+
           <Input
             id="name"
             label="Nama produk"
@@ -143,8 +148,16 @@ const AddProductCreation = () => {
           </div>
 
           <div>
-            <h5 className="text-lg font-medium mb-2.5">Bahan-bahan</h5>
+            <div className="flex justify-between items-center mb-2.5">
+              <h5 className="text-lg font-medium">Bahan-bahan</h5>
 
+              <span
+                title="Estimasi produk selesai dibuat"
+                className="py-1.5 px-4 text-sm font-medium border rounded-full"
+              >
+                {estimation}
+              </span>
+            </div>
             <Dropdown
               id="add-materials"
               button={
@@ -165,7 +178,6 @@ const AddProductCreation = () => {
                   ]),
               }))}
             />
-
             <ul>
               {formik.values.materials.map((material, key) => {
                 return (

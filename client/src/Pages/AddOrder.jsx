@@ -389,7 +389,7 @@ const AddOrder = () => {
                   selectMenu={countries}
                   setSelectMenu={setCountries}
                   showSearch={true}
-                  value={(value) => {
+                  onChange={(value) => {
                     setSelectedCountry(value);
                     formik.setFieldValue("address.country", value);
                   }}
@@ -440,7 +440,7 @@ const AddOrder = () => {
                   setSelectMenu={setStates}
                   showSearch={true}
                   disabled={selectedCountry === "" ? true : false}
-                  value={(value) => {
+                  onChange={(value) => {
                     setSelectedState(value);
                     formik.setFieldValue("address.province", value);
                   }}
@@ -461,7 +461,7 @@ const AddOrder = () => {
                       setSelectMenu={setCities}
                       showSearch={true}
                       disabled={selectedState === "" ? true : false}
-                      value={(value) => {
+                      onChange={(value) => {
                         setSelectedCity(value);
                         formik.setFieldValue("address.city", value);
                       }}
@@ -509,7 +509,7 @@ const AddOrder = () => {
                   { label: "Selesai", value: "selesai" },
                 ]}
                 defaultValue={formik.values.status}
-                value={(value) => formik.setFieldValue("status", value)}
+                onChange={(value) => formik.setFieldValue("status", value)}
                 errorMessage={formik.touched.status && formik.errors.status}
               />
             </div>
