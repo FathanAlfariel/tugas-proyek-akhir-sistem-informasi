@@ -78,7 +78,7 @@ const Material = () => {
         })
         .required("Waktu penjahitan bahan harus diisi."),
     }),
-    onSubmit: async (values) => {
+    onSubmit: async (values, { resetForm }) => {
       setIsLoading(true);
 
       await axios
@@ -97,6 +97,8 @@ const Material = () => {
         .finally(() => {
           setIsLoading(false);
         });
+
+      resetForm();
     },
   });
 
@@ -116,6 +118,21 @@ const Material = () => {
       });
   };
 
+  const handleModalSubmit = async () => {
+    const errors = await formik.validateForm();
+    if (Object.keys(errors).length > 0) {
+      formik.setTouched({
+        name: true,
+        complexity: true,
+        cuttingTime: true,
+        sewingTime: true,
+      });
+      return false; // Jangan tutup modal jika ada error
+    }
+    formik.handleSubmit(); // Jalankan submit jika validasi berhasil
+    return true; // Tutup modal jika validasi berhasil
+  };
+
   return (
     <>
       {isLoading && <Loader />}
@@ -129,7 +146,7 @@ const Material = () => {
           </Button>
         }
         headerTitle="Tambah bahan"
-        onSubmit={() => formik.handleSubmit()}
+        onSubmit={handleModalSubmit}
       >
         <form
           onSubmit={formik.handleSubmit}

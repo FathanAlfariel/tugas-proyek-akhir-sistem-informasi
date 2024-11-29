@@ -90,6 +90,21 @@ const EditMaterial = ({ id, onUpdate }) => {
     },
   });
 
+  const handleModalSubmit = async () => {
+    const errors = await formik.validateForm();
+    if (Object.keys(errors).length > 0) {
+      formik.setTouched({
+        name: true,
+        complexity: true,
+        cuttingTime: true,
+        sewingTime: true,
+      });
+      return false; // Jangan tutup modal jika ada error
+    }
+    formik.handleSubmit(); // Jalankan submit jika validasi berhasil
+    return true; // Tutup modal jika validasi berhasil
+  };
+
   return (
     <>
       {isLoading && <Loader />}
@@ -103,7 +118,7 @@ const EditMaterial = ({ id, onUpdate }) => {
           </IconButton>
         }
         headerTitle="Edit bahan"
-        onSubmit={() => formik.handleSubmit()}
+        onSubmit={handleModalSubmit}
       >
         <form
           onSubmit={formik.handleSubmit}
