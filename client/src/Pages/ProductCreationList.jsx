@@ -21,6 +21,7 @@ const ProductCreationList = () => {
     currentParams?.product || ""
   );
   const [tailorParams, setTailorParams] = useState(currentParams?.tailor || []);
+  const [statusParams, setStatusParams] = useState(currentParams?.status || []);
 
   // Get all productions
   useEffect(() => {
@@ -109,20 +110,38 @@ const ProductCreationList = () => {
       });
   };
 
+  // Handle tailor filter
   const handleTailorCheckboxChange = (e) => {
+    const value = e.target.value;
+    let updatedTailor;
+
+    if (e.target.checked) {
+      // Tambahkan status baru
+      updatedTailor = [...tailorParams, value];
+    } else {
+      // Hapus status jika tidak dicentang
+      updatedTailor = tailorParams.filter((id) => id !== value);
+    }
+
+    // Update state
+    setTailorParams(updatedTailor);
+  };
+
+  // Handle status filter
+  const handleStatusCheckboxChange = (e) => {
     const value = e.target.value;
     let updatedStatus;
 
     if (e.target.checked) {
       // Tambahkan status baru
-      updatedStatus = [...tailorParams, value];
+      updatedStatus = [...statusParams, value];
     } else {
       // Hapus status jika tidak dicentang
-      updatedStatus = tailorParams.filter((id) => id !== value);
+      updatedStatus = statusParams.filter((item) => item !== value);
     }
 
     // Update state
-    setTailorParams(updatedStatus);
+    setStatusParams(updatedStatus);
   };
 
   return (
@@ -264,11 +283,105 @@ const ProductCreationList = () => {
                 type="button"
                 className="flex items-center gap-x-2 py-2 px-4 capitalize text-sm font-medium border rounded-full transition duration-300 hover:bg-black/[.07] active:scale-90"
               >
-                Status
+                {currentParams?.status ? (
+                  <>
+                    Status:{" "}
+                    {currentParams?.status
+                      .split(",") // Pisahkan berdasarkan koma
+                      .map((item) => {
+                        const formattedItem = item
+                          .split("_") // Pisahkan berdasarkan underscore
+                          .join(" "); // Gabungkan dengan spasi
+                        return (
+                          formattedItem.charAt(0).toUpperCase() +
+                          formattedItem.slice(1)
+                        ); // Kapitalisasi huruf pertama
+                      })
+                      .join(", ")}
+                    <span
+                      title="Hapus filter status"
+                      className="p-1 rounded-full bg-black/[.15] ml-2"
+                      onClick={(e) => {
+                        e.stopPropagation();
+
+                        const updatedParams = { ...currentParams };
+                        delete updatedParams["status"];
+
+                        setSearchParams(updatedParams);
+                        setStatusParams([]);
+                      }}
+                    >
+                      <IoMdClose className="text-sm" />
+                    </span>
+                  </>
+                ) : (
+                  "Status"
+                )}
               </button>
             }
+            onClick={() =>
+              setSearchParams({
+                ...currentParams,
+                status: statusParams.join(","),
+              })
+            }
+            disabledButton={statusParams.length === 0 ? true : false}
           >
-            Hai
+            <label
+              htmlFor="belum_dimulai-checkbox"
+              className="block flex items-center gap-x-3 text-xs font-medium mb-2.5"
+            >
+              <input
+                id="belum_dimulai-checkbox"
+                type="checkbox"
+                value="belum_dimulai"
+                checked={statusParams.includes("belum_dimulai")}
+                onChange={handleStatusCheckboxChange}
+              />
+              Belum dimulai
+            </label>
+
+            <label
+              htmlFor="dalam_proses-checkbox"
+              className="block flex items-center gap-x-3 text-xs font-medium mb-2.5"
+            >
+              <input
+                id="dalam_proses-checkbox"
+                type="checkbox"
+                value="dalam_proses"
+                checked={statusParams.includes("dalam_proses")}
+                onChange={handleStatusCheckboxChange}
+              />
+              Dalam proses
+            </label>
+
+            <label
+              htmlFor="selesai-checkbox"
+              className="block flex items-center gap-x-3 text-xs font-medium mb-2.5"
+            >
+              <input
+                id="selesai-checkbox"
+                type="checkbox"
+                value="selesai"
+                checked={statusParams.includes("selesai")}
+                onChange={handleStatusCheckboxChange}
+              />
+              Selesai
+            </label>
+
+            <label
+              htmlFor="dibatalkan-checkbox"
+              className="block flex items-center gap-x-3 text-xs font-medium mb-2.5"
+            >
+              <input
+                id="dibatalkan-checkbox"
+                type="checkbox"
+                value="dibatalkan"
+                checked={statusParams.includes("dibatalkan")}
+                onChange={handleStatusCheckboxChange}
+              />
+              Dibatalkan
+            </label>
           </Filter>
         </div>
       </div>
@@ -389,6 +502,12 @@ const ProductCreationList = () => {
               })}
           </tbody>
         </table>
+
+        {products.length === 0 && (
+          <div className="text-sm text-center py-6 text-[#606060]">
+            Tidak ada data yang ditemukan
+          </div>
+        )}
       </div>
     </>
   );
