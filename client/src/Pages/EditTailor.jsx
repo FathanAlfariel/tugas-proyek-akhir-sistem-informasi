@@ -68,8 +68,8 @@ const EditTailor = () => {
     <>
       {isLoading && <Loader />}
 
-      <h1 className="text-[28px] leading-9 font-medium mb-6">
-        Tambah penjahit
+      <h1 className="text-2xl md:text-[28px] leading-9 font-medium mb-3 md:mb-6">
+        Edit penjahit
       </h1>
 
       <form onSubmit={formik.handleSubmit}>

@@ -136,7 +136,9 @@ const EditProduct = () => {
     <>
       {isLoading && <Loader />}
 
-      <h1 className="text-[28px] leading-9 font-medium mb-6">Edit produk</h1>
+      <h1 className="text-2xl md:text-[28px] leading-9 font-medium mb-3 md:mb-6">
+        Edit produk
+      </h1>
 
       <form onSubmit={formik.handleSubmit}>
         <div className="grid grid-cols-12 gap-x-6 ">
@@ -174,7 +176,7 @@ const EditProduct = () => {
               </div>
 
               <ul
-                className={`flex items-center flex-wrap gap-4 ${
+                className={`grid grid-cols-2 gap-2 md:flex items-center flex-wrap md:gap-4 ${
                   variants.length > 0 && "pb-3"
                 }`}
               >
@@ -184,8 +186,8 @@ const EditProduct = () => {
                       key={key}
                       className="flex items-center gap-x-4 pl-4 pr-1 py-1 border rounded-xl"
                     >
-                      <div>
-                        <p className="text-nowrap text-xs font-medium">
+                      <div className="overflow-x-auto">
+                        <p className="text-nowrap text-xs font-medium ">
                           {variant?.color}: {variant?.size?.length}cm x{" "}
                           {variant?.size?.width}
                           cm x {variant?.size?.height}cm

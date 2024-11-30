@@ -49,7 +49,9 @@ const Tailor = () => {
     <>
       {isLoading && <Loader />}
 
-      <h1 className="text-[28px] leading-9 font-medium">Penjahit</h1>
+      <h1 className="text-2xl md:text-[28px] leading-9 font-medium mb-3 md:mb-6">
+        Penjahit
+      </h1>
 
       <div className="overflow-x-auto">
         <table className="w-full">
@@ -75,7 +77,7 @@ const Tailor = () => {
                 return (
                   <tr key={key} className="border-b">
                     <td className="pl-0 md:pl-6 py-6 whitespace-nowrap">
-                      <p className="text-sm">{tailor?.name}</p>
+                      <p className="text-sm line-clamp-2">{tailor?.name}</p>
                     </td>
                     <td className="pl-6 py-6 whitespace-nowrap">
                       {tailor?.available === true ? (

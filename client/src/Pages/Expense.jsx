@@ -63,7 +63,9 @@ const Expense = () => {
     <>
       {isLoading && <Loader />}
 
-      <h1 className="text-[28px] leading-9 font-medium mb-4">Pengeluaran</h1>
+      <h1 className="text-2xl md:text-[28px] leading-9 font-medium mb-3 md:mb-6">
+        Pengeluaran
+      </h1>
 
       {/* Filter */}
       <div className="border-y py-3 mb-1">

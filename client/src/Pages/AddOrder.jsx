@@ -219,7 +219,9 @@ const AddOrder = () => {
     <>
       {isLoading && <Loader />}
 
-      <h1 className="text-[28px] leading-9 font-medium mb-6">Tambah pesanan</h1>
+      <h1 className="text-2xl md:text-[28px] leading-9 font-medium mb-3 md:mb-6">
+        Tambah pesanan
+      </h1>
 
       <form onSubmit={formik.handleSubmit}>
         <div className="grid grid-cols-1 md:grid-cols-12 gap-x-0 md:gap-x-6">

@@ -70,8 +70,8 @@ const AddExpense = () => {
     <>
       {isLoading && <Loader />}
 
-      <h1 className="text-[28px] leading-9 font-medium mb-6">
-        Tambah pengeluaran
+      <h1 className="text-2xl md:text-[28px] leading-9 font-medium mb-3 md:mb-6">
+        Edit pengeluaran
       </h1>
 
       <form onSubmit={formik.handleSubmit}>

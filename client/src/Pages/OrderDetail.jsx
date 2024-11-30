@@ -38,7 +38,9 @@ const OrderDetail = () => {
     <>
       {isLoading && <Loader />}
 
-      <h1 className="text-[28px] leading-9 font-medium mb-4">Detail pesanan</h1>
+      <h1 className="text-2xl md:text-[28px] leading-9 font-medium mb-3 md:mb-6">
+        Detail pesanan
+      </h1>
 
       <div className="flex justify-between items-start">
         {/* Receipt number and status */}

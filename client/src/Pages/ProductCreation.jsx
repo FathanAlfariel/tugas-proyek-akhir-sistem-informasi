@@ -6,18 +6,16 @@ import ProductCreationList from "./ProductCreationList";
 const ProductCreation = () => {
   return (
     <>
-      <h1 className="text-[28px] leading-9 font-medium mb-2.5">
+      <h1 className="text-2xl md:text-[28px] leading-9 font-medium mb-3 md:mb-6">
         Pembuatan produk
       </h1>
 
-      <div>
-        <Tabs
-          menu={[
-            { label: "Bahan-bahan", content: <Material /> },
-            { label: "Produk", content: <ProductCreationList /> },
-          ]}
-        />
-      </div>
+      <Tabs
+        menu={[
+          { label: "Bahan-bahan", content: <Material /> },
+          { label: "Produk", content: <ProductCreationList /> },
+        ]}
+      />
     </>
   );
 };

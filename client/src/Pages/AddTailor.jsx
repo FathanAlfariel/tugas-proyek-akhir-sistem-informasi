@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Input from "../Components/Input";
 import Select from "../Components/Select";
 import { useFormik } from "formik";
@@ -6,9 +6,13 @@ import * as yup from "yup";
 import { Link, useNavigate } from "react-router-dom";
 import Button from "../Components/Button";
 import axios from "axios";
+import Loader from "../Components/Loader";
 
 const AddTailor = () => {
   const navigate = useNavigate();
+
+  const [isLoading, setIsLoading] = useState(false);
+
   const formik = useFormik({
     initialValues: {
       name: "",
@@ -19,6 +23,8 @@ const AddTailor = () => {
       available: yup.boolean().required("Status penjahit harus diisi."),
     }),
     onSubmit: async (values) => {
+      setIsLoading(true);
+
       await axios
         .post("http://localhost:5000/api/tailor", {
           name: values.name,
@@ -29,13 +35,18 @@ const AddTailor = () => {
         })
         .catch((err) => {
           console.log(err);
+        })
+        .finally(() => {
+          setIsLoading(false);
         });
     },
   });
 
   return (
     <>
-      <h1 className="text-[28px] leading-9 font-medium mb-6">
+      {isLoading && <Loader />}
+
+      <h1 className="text-2xl md:text-[28px] leading-9 font-medium mb-3 md:mb-6">
         Tambah penjahit
       </h1>
 

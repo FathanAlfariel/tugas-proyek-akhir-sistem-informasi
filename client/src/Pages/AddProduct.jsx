@@ -92,7 +92,9 @@ const AddProduct = () => {
     <>
       {isLoading && <Loader />}
 
-      <h1 className="text-[28px] leading-9 font-medium mb-6">Tambah produk</h1>
+      <h1 className="text-2xl md:text-[28px] leading-9 font-medium mb-3 md:mb-6">
+        Tambah produk
+      </h1>
 
       <form onSubmit={formik.handleSubmit}>
         <div className="grid grid-cols-12 gap-x-6">
