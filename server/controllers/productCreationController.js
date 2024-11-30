@@ -76,8 +76,18 @@ const addProductCreation = async (req, res) => {
 
 // Get all product creation controller
 const getAllProductCreation = async (req, res) => {
+  const { product, tailor } = req.query;
+
   try {
+    const tailorArray = tailor ? tailor.split(",") : [];
+
     const query = await prisma.productCreation.findMany({
+      where: {
+        AND: [
+          product ? { name: { contains: product } } : undefined,
+          tailor ? { tailorId: { in: tailorArray } } : undefined,
+        ].filter(Boolean),
+      },
       include: {
         tailor: true,
       },

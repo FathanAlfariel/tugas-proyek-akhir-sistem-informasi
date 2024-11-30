@@ -4,18 +4,31 @@ import Loader from "../Components/Loader";
 import IconButton from "../Components/IconButton";
 import { HiOutlineTrash } from "react-icons/hi2";
 import { AiOutlineStop } from "react-icons/ai";
+import Filter from "../Components/Filter";
+import { useSearchParams } from "react-router-dom";
+import { IoMdClose } from "react-icons/io";
 
 const ProductCreationList = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const [products, setProducts] = useState([]);
+  const [tailors, setTailors] = useState([]);
 
+  const [searchParams, setSearchParams] = useSearchParams();
+  const currentParams = Object.fromEntries(searchParams.entries());
+
+  const [productParams, setProductParams] = useState(
+    currentParams?.product || ""
+  );
+  const [tailorParams, setTailorParams] = useState(currentParams?.tailor || []);
+
+  // Get all productions
   useEffect(() => {
     setIsLoading(true);
 
     const fetchProducts = async () => {
       await axios
-        .get("http://localhost:5000/api/product-creation")
+        .get(`http://localhost:5000/api/product-creation?${searchParams}`)
         .then(({ data }) => {
           setProducts(data.results);
         })
@@ -33,8 +46,25 @@ const ProductCreationList = () => {
     const interval = setInterval(fetchProducts, 1000);
 
     return () => clearInterval(interval);
+  }, [searchParams]);
+
+  // Get all tailors
+  useEffect(() => {
+    const fetchTailors = async () => {
+      await axios
+        .get("http://localhost:5000/api/tailor")
+        .then(({ data }) => {
+          setTailors(data.results);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
+
+    fetchTailors();
   }, []);
 
+  // Updated status
   useEffect(() => {
     const interval = setInterval(async () => {
       await axios.put("http://localhost:5000/api/product-creation/statuses");
@@ -43,6 +73,7 @@ const ProductCreationList = () => {
     return () => clearInterval(interval);
   }, []);
 
+  // Delete production
   const handleDelete = async (id) => {
     setIsLoading(true);
 
@@ -61,6 +92,7 @@ const ProductCreationList = () => {
       });
   };
 
+  // Cancel production
   const handleCancel = async (id) => {
     setIsLoading(true);
 
@@ -77,9 +109,169 @@ const ProductCreationList = () => {
       });
   };
 
+  const handleTailorCheckboxChange = (e) => {
+    const value = e.target.value;
+    let updatedStatus;
+
+    if (e.target.checked) {
+      // Tambahkan status baru
+      updatedStatus = [...tailorParams, value];
+    } else {
+      // Hapus status jika tidak dicentang
+      updatedStatus = tailorParams.filter((id) => id !== value);
+    }
+
+    // Update state
+    setTailorParams(updatedStatus);
+  };
+
   return (
     <>
       {isLoading && <Loader />}
+
+      <div className="border-b pt-1 pb-3">
+        <h5 className="text-sm font-semibold mb-2.5">Filter berdasarkan:</h5>
+
+        <div className="flex items-center gap-x-2 overflow-x-auto md:overflow-visible">
+          {/* Product Filter */}
+          <Filter
+            id="produk-filter"
+            headerTitle="Nama produk"
+            button={
+              <button
+                type="button"
+                className="flex items-center gap-x-2 py-2 px-4 capitalize text-sm font-medium border rounded-full transition duration-300 hover:bg-black/[.07] active:scale-90"
+              >
+                {currentParams?.product ? (
+                  <>
+                    Nama produk: {currentParams.product}
+                    <span
+                      title="Hapus filter nama produk"
+                      className="p-1 rounded-full bg-black/[.15] ml-2"
+                      onClick={(e) => {
+                        e.stopPropagation();
+
+                        const updatedParams = { ...currentParams };
+                        delete updatedParams["product"];
+
+                        setSearchParams(updatedParams);
+                        setProductParams("");
+                      }}
+                    >
+                      <IoMdClose className="text-sm" />
+                    </span>
+                  </>
+                ) : (
+                  "Nama produk"
+                )}
+              </button>
+            }
+            onClick={() =>
+              setSearchParams({ ...currentParams, product: productParams })
+            }
+            disabledButton={productParams === "" ? true : false}
+          >
+            <label htmlFor="produk" className="block text-xs font-medium">
+              Masukkan produk
+            </label>
+
+            <input
+              autoFocus
+              id="judul"
+              type="text"
+              placeholder="Masukkan nama produk"
+              className="outline-none pt-3 pb-1 text-sm border-b w-full"
+              value={productParams}
+              onChange={(e) => setProductParams(e.target.value)}
+            />
+          </Filter>
+
+          {/* Tailor Filter */}
+          <Filter
+            id="tailor-filter"
+            headerTitle="Penjahit"
+            button={
+              <button
+                type="button"
+                className="flex items-center gap-x-2 py-2 px-4 text-sm font-medium border rounded-full transition duration-300 hover:bg-black/[.07] active:scale-90"
+              >
+                {currentParams?.tailor ? (
+                  <>
+                    Penjahit:{" "}
+                    {(() => {
+                      const tailor = tailors?.find(
+                        (item) => item.id === currentParams?.tailor
+                      );
+
+                      return tailor?.name;
+                    })()}
+                    <span
+                      title="Hapus filter status pesanan"
+                      className="p-1 rounded-full bg-black/[.15] ml-2"
+                      onClick={(e) => {
+                        e.stopPropagation();
+
+                        const updatedParams = { ...currentParams };
+                        delete updatedParams["tailor"];
+
+                        setSearchParams(updatedParams);
+                        setTailorParams("");
+                      }}
+                    >
+                      <IoMdClose className="text-sm" />
+                    </span>
+                  </>
+                ) : (
+                  "Penjahit"
+                )}
+              </button>
+            }
+            onClick={() =>
+              setSearchParams({
+                ...currentParams,
+                tailor: tailorParams.join(","),
+              })
+            }
+            disabledButton={tailorParams.length === 0 ? true : false}
+          >
+            {tailors &&
+              tailors?.map((tailor, key) => {
+                return (
+                  <label
+                    key={key}
+                    htmlFor={tailor?.name}
+                    className="block flex items-center gap-x-3 text-xs font-medium mb-2.5"
+                  >
+                    <input
+                      id={tailor?.name}
+                      type="checkbox"
+                      value={tailor?.id}
+                      checked={tailorParams.includes(tailor?.id)}
+                      onChange={handleTailorCheckboxChange}
+                    />
+                    {tailor?.name}
+                  </label>
+                );
+              })}
+          </Filter>
+
+          {/* Status Filter */}
+          <Filter
+            id="status-filter"
+            headerTitle="Status"
+            button={
+              <button
+                type="button"
+                className="flex items-center gap-x-2 py-2 px-4 capitalize text-sm font-medium border rounded-full transition duration-300 hover:bg-black/[.07] active:scale-90"
+              >
+                Status
+              </button>
+            }
+          >
+            Hai
+          </Filter>
+        </div>
+      </div>
 
       <div className="overflow-x-auto">
         <table className="w-full">
