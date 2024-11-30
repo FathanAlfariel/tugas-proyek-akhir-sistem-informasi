@@ -79,7 +79,7 @@ const DropdownSelect = ({
                           menu.handleMenuClicked();
                           setIsDropdownOpen(false);
                         }}
-                        className={`flex items-center gap-x-4 w-full pl-4 pr-6 py-2 text-left ${
+                        className={`flex items-center gap-x-4 w-full pl-4 pr-6 py-2 text-left whitespace-nowrap ${
                           menuSize === "small" ? "text-xs" : "text-sm"
                         } hover:bg-[#1D1B20]/[.08]`}
                       >

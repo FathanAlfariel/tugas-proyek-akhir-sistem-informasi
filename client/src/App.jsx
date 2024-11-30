@@ -1,6 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Dashboard from "./Pages/Dashboard";
-import Layout from "./Layout";
 import Login from "./Pages/Login";
 import axios from "axios";
 import PublicRoute from "./Routing/PublicRoute";
@@ -22,6 +21,7 @@ import OrderDetail from "./Pages/OrderDetail";
 import AddProductCreation from "./Pages/AddProductCreation";
 import HomePage from "./Pages/HomePage";
 import ProductDetail from "./Pages/ProductDetail";
+import AdminLayout from "./AdminLayout";
 
 axios.defaults.withCredentials = true;
 
@@ -35,7 +35,7 @@ const App = () => {
           path="/admin/*"
           element={
             <ProtectedRoute>
-              <Layout />
+              <AdminLayout />
             </ProtectedRoute>
           }
         >

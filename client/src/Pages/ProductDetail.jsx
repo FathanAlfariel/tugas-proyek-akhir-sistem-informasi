@@ -43,36 +43,40 @@ const ProductDetail = () => {
 
       <div className="grid grid-cols-12 gap-x-5 mx-4 md:mx-6 mt-5 mb-8">
         {/* Images */}
-        <div className="col-span-4 sticky top-5 flex items-start gap-x-4 max-h-[34rem]">
-          <div className="inline-flex flex-col gap-y-2">
-            {product?.images?.map((img, key) => {
-              return (
-                <div
-                  key={key}
-                  onMouseEnter={() => setSelectedImage(key)}
-                  className={`${
-                    selectedImage === key ? "ring-2 ring-[#6750A4]" : ""
-                  } ring-offset-2 rounded-lg`}
-                >
-                  <img
-                    src={`http://localhost:5000/public/images/${img?.name}`}
-                    alt={img?.name}
-                    className="min-w-12 w-12  min-h-12 h-12 rounded-lg object-cover"
-                  />
-                </div>
-              );
-            })}
-          </div>
+        <div className="col-span-12 md:col-span-6 lg:col-span-5 2xl:col-span-4">
+          <div className="sticky top-5 flex flex-col lg:flex-row items-start gap-x-4">
+            <div className="order-last lg:order-first flex flex-row lg:flex-col gap-2 mt-3 lg:mt-0 mb-5 lg:mb-0">
+              {product?.images?.map((img, key) => {
+                return (
+                  <div
+                    key={key}
+                    onMouseEnter={() => setSelectedImage(key)}
+                    className={`${
+                      selectedImage === key ? "ring-2 ring-[#6750A4]" : ""
+                    } ring-offset-2 rounded-lg`}
+                  >
+                    <img
+                      src={`http://localhost:5000/public/images/${img?.name}`}
+                      alt={img?.name}
+                      className="min-w-16 lg:min-w-12 w-16 lg:w-12 min-h-16 lg:min-h-12 h-16 lg:h-12 rounded-lg object-cover"
+                    />
+                  </div>
+                );
+              })}
+            </div>
 
-          <img
-            src={`http://localhost:5000/public/images/${product?.images[selectedImage]?.name}`}
-            alt={product?.images[selectedImage]?.name}
-            className="w-full h-full object-cover"
-          />
+            <div className="w-full h-96 lg:h-[34rem]">
+              <img
+                src={`http://localhost:5000/public/images/${product?.images[selectedImage]?.name}`}
+                alt={product?.images[selectedImage]?.name}
+                className="w-full h-full object-cover"
+              />
+            </div>
+          </div>
         </div>
 
         {/* Product info */}
-        <div className="col-span-6">
+        <div className="col-span-12 md:col-span-6 lg:col-span-5 2xl:col-span-6">
           <h1 title={product?.name} className="text-xl line-clamp-4">
             {product?.name}
           </h1>
@@ -264,7 +268,7 @@ const ProductDetail = () => {
           </div>
         </div>
 
-        <div className="col-span-2">
+        <div className="col-span-12 lg:col-span-2 2xl:col-span-2">
           <Button type="button" buttonStyle="filled" width="full">
             Beli dan bagikan ke WhatsApp
           </Button>

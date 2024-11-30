@@ -3,6 +3,7 @@ import axios from "axios";
 import Loader from "../Components/Loader";
 import { Link } from "react-router-dom";
 import Carousel from "../Components/Carousel";
+import HomePageHeader from "../Components/HomePageHeader";
 
 const HomePage = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -35,7 +36,10 @@ const HomePage = () => {
     <>
       {isLoading && <Loader />}
 
-      <div className="mx-4 md:mx-6 mt-5 mb-8">
+      {/* Header */}
+      <HomePageHeader />
+
+      <main className="mx-4 md:mx-6 mt-5 mb-8">
         <ul className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 2xl:grid-cols-7 gap-3 md:gap-4 lg:gap-5">
           {productList?.map((product, key) => {
             return (
@@ -89,7 +93,7 @@ const HomePage = () => {
             );
           })}
         </ul>
-      </div>
+      </main>
     </>
   );
 };

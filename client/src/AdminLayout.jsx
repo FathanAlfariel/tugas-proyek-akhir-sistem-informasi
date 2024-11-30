@@ -2,7 +2,7 @@ import { Outlet } from "react-router-dom";
 import Header from "./Components/Header";
 import AddFloatingButton from "./Components/AddFloatingButton";
 
-const Layout = () => {
+const AdminLayout = () => {
   return (
     <>
       <header className="mx-4 md:mx-6 mt-2.5">
@@ -18,4 +18,4 @@ const Layout = () => {
   );
 };
 
-export default Layout;
+export default AdminLayout;
