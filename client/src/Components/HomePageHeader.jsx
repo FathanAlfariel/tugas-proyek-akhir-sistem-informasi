@@ -2,11 +2,12 @@ import React from "react";
 import { IoIosSearch } from "react-icons/io";
 import { IoCaretDown } from "react-icons/io5";
 import DropdownSelect from "./DropdownSelect";
+import ProductNameSearch from "./ProductNameSearch";
 
 const HomePageHeader = () => {
   return (
     <>
-      <header className="relative h-full mx-4 md:mx-6 mt-2.5 py-3 px-6">
+      <header className="relative h-full mx-4 md:mx-6 mt-4 py-4">
         <img
           src="/logo.png"
           alt="logo"
@@ -14,20 +15,15 @@ const HomePageHeader = () => {
         />
 
         <div className="absolute inset-0 w-full flex justify-center">
-          <div className="w-auto flex items-center gap-x-4 py-3 pl-6 pr-2 border rounded-full">
+          <div className="flex items-center gap-x-2 p-1.5 border rounded-full">
             {/* Search by product name */}
-            <div className="flex flex-col gap-y-0.5">
-              <p className="text-xs font-semibold">Produk</p>
-              <p className="text-sm text-[#606060]">
-                Cari berdasarkan nama produk
-              </p>
-            </div>
+            <ProductNameSearch />
 
             {/* Divider */}
             <div className="h-full w-px bg-[#CAC4D0]"></div>
 
             {/* Filter by price */}
-            <div className="flex flex-col gap-y-0.5">
+            <div className="flex flex-col gap-y-0.5 hover:bg-zinc-100 py-3 px-6 rounded-full cursor-pointer">
               <p className="text-xs font-semibold">Harga</p>
 
               <div className="flex items-center">

@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Loader from "../Components/Loader";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import Carousel from "../Components/Carousel";
 import HomePageHeader from "../Components/HomePageHeader";
 
 const HomePage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [productList, setProductList] = useState([]);
+
+  // const [searchParams, setSearchParams] = useSearchParams();
+  // const currentParams = Object.fromEntries(searchParams.entries());
 
   // Get all products
   useEffect(() => {
@@ -30,7 +33,7 @@ const HomePage = () => {
     fetchProducts();
   }, []);
 
-  console.log(productList);
+  // console.log(productList);
 
   return (
     <>
@@ -39,7 +42,20 @@ const HomePage = () => {
       {/* Header */}
       <HomePageHeader />
 
-      <main className="mx-4 md:mx-6 mt-5 mb-8">
+      <main className="mx-4 md:mx-6 mt-6 mb-8">
+        <ul className="flex items-center gap-x-2 mb-4">
+          <li className="py-2 px-4 rounded-xl text-sm font-medium bg-zinc-200">
+            Terkait
+          </li>
+          <li className="py-2 px-4 rounded-xl text-sm font-medium bg-zinc-200">
+            Terbaru
+          </li>
+          <li className="py-2 px-4 rounded-xl text-sm font-medium bg-zinc-200">
+            Terlaris
+          </li>
+        </ul>
+
+        {/* Products list */}
         <ul className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 2xl:grid-cols-7 gap-3 md:gap-4 lg:gap-5">
           {productList?.map((product, key) => {
             return (
