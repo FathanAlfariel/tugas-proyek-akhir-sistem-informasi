@@ -3,8 +3,25 @@ import { IoIosSearch } from "react-icons/io";
 import { IoCaretDown } from "react-icons/io5";
 import DropdownSelect from "./DropdownSelect";
 import ProductNameSearch from "./ProductNameSearch";
+import { useSearchParams } from "react-router-dom";
 
 const HomePageHeader = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const currentParams = Object.fromEntries(searchParams.entries());
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+
+    if (e.target.product_name.value !== "") {
+      setSearchParams({ ...currentParams, title: e.target.product_name.value });
+    } else {
+      const updatedParams = { ...currentParams };
+      delete updatedParams["title"];
+
+      setSearchParams(updatedParams);
+    }
+  };
+
   return (
     <>
       <header className="relative h-full mx-4 md:mx-6 mt-4 py-4">
@@ -14,7 +31,10 @@ const HomePageHeader = () => {
           className="w-20 lg:w-24 h-auto object-contain"
         />
 
-        <div className="absolute inset-0 w-full flex justify-center">
+        <form
+          onSubmit={handleSearchSubmit}
+          className="absolute inset-0 w-full flex justify-center"
+        >
           <div className="flex items-center gap-x-2 p-1.5 border rounded-full">
             {/* Search by product name */}
             <ProductNameSearch />
@@ -33,7 +53,10 @@ const HomePageHeader = () => {
                   <DropdownSelect
                     id="price-filter"
                     button={
-                      <button className="flex items-center gap-x-1 hover:bg-black/[.07] py-0.5 px-1 text-xs font-medium">
+                      <button
+                        type="button"
+                        className="flex items-center gap-x-1 hover:bg-black/[.07] py-0.5 px-1 text-xs font-medium"
+                      >
                         Urutkan berdasarkan
                         <span>
                           <IoCaretDown />
@@ -57,11 +80,14 @@ const HomePageHeader = () => {
               </div>
             </div>
 
-            <button className="p-3 text-2xl rounded-full transition-all active:scale-90 duration-300 bg-[#6750A4] shadow-none hover:shadow-md">
+            <button
+              type="submit"
+              className="p-3 text-2xl rounded-full transition-all active:scale-90 duration-300 bg-[#6750A4] shadow-none hover:shadow-md"
+            >
               <IoIosSearch className="text-white" />
             </button>
           </div>
-        </div>
+        </form>
       </header>
     </>
   );

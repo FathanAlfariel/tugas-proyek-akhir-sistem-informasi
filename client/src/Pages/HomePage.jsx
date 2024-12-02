@@ -9,8 +9,8 @@ const HomePage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [productList, setProductList] = useState([]);
 
-  // const [searchParams, setSearchParams] = useSearchParams();
-  // const currentParams = Object.fromEntries(searchParams.entries());
+  const [searchParams, setSearchParams] = useSearchParams();
+  const currentParams = Object.fromEntries(searchParams.entries());
 
   // Get all products
   useEffect(() => {
@@ -18,7 +18,7 @@ const HomePage = () => {
 
     const fetchProducts = async () => {
       await axios
-        .get("http://localhost:5000/api/product")
+        .get(`http://localhost:5000/api/product?${searchParams}`)
         .then(({ data }) => {
           setProductList(data.results);
         })
@@ -31,7 +31,7 @@ const HomePage = () => {
     };
 
     fetchProducts();
-  }, []);
+  }, [searchParams]);
 
   // console.log(productList);
 

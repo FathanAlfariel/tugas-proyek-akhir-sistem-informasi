@@ -11,18 +11,15 @@ const ProductNameSearch = () => {
   const [products, setIsProducts] = useState([]);
 
   const [searchParams, setSearchParams] = useSearchParams();
-  const currentParams = Object.firstEntries(searchParams.entries());
+  const currentParams = Object.fromEntries(searchParams.entries());
 
-  const [productName, setProductName] = useState(
-    currentParams?.productName || ""
-  );
+  const [productName, setProductName] = useState(currentParams?.title || "");
 
   // Get all products
   const fetchProducts = async () => {
     await axios
-      .get("http://localhost:5000/api/product")
+      .get(`http://localhost:5000/api/product?title=${productName}`)
       .then(({ data }) => {
-        // Get 3 random data
         const shuffled = [...data.results].sort(() => 0.5 - Math.random()); // Acak array
         const selected = shuffled.slice(0, 3); // Ambil 3 data pertama
         setIsProducts(selected);
@@ -35,9 +32,7 @@ const ProductNameSearch = () => {
   // Get all products
   useEffect(() => {
     fetchProducts();
-  }, []);
-
-  console.log(products);
+  }, [productName]);
 
   // Handle click outside
   useEffect(() => {
@@ -74,8 +69,11 @@ const ProductNameSearch = () => {
           <input
             ref={productNameInput}
             type="text"
+            name="product_name"
             className="outline-none bg-transparent text-sm"
             placeholder="Cari berdasarkan nama produk"
+            value={productName}
+            onChange={(e) => setProductName(e.target.value)}
           />
         </div>
 
@@ -87,7 +85,16 @@ const ProductNameSearch = () => {
                   {products?.map((product, key) => {
                     return (
                       <li key={key}>
-                        <button className="w-full text-left text-sm pl-4 pr-6 py-2 hover:bg-[#1D1B20]/[.08]">
+                        <button
+                          type="button"
+                          className="w-full text-left text-sm pl-4 pr-6 py-2 hover:bg-[#1D1B20]/[.08]"
+                          onClick={() => {
+                            setSearchParams({ title: product?.name });
+                            setProductName(product?.name);
+
+                            setIsFocused(false);
+                          }}
+                        >
                           {product.name}
                         </button>
                       </li>
@@ -95,7 +102,9 @@ const ProductNameSearch = () => {
                   })}
                 </ul>
               ) : (
-                <p className="text-sm">Tidak ada produk</p>
+                <p className="text-sm text-[#606060] text-center">
+                  Tidak ada produk
+                </p>
               )}
 
               {products?.length > 0 && (
@@ -110,7 +119,10 @@ const ProductNameSearch = () => {
                   return (
                     <li key={key}>
                       <Link to={`/products/${product?.id}`}>
-                        <button className="flex items-center gap-x-4 w-full text-left text-sm pl-4 pr-6 py-2 hover:bg-[#1D1B20]/[.08]">
+                        <button
+                          type="button"
+                          className="flex items-center gap-x-4 w-full text-left text-sm pl-4 pr-6 py-2 hover:bg-[#1D1B20]/[.08]"
+                        >
                           <img
                             src={`http://localhost:5000/public/images/${product?.images[0]?.name}`}
                             alt={product?.images[0]?.name}
@@ -119,7 +131,7 @@ const ProductNameSearch = () => {
 
                           <div className="flex flex-col gap-y-0.5">
                             <p className="text-sm line-clamp-1">
-                              {product.name}
+                              {product?.name}
                             </p>
                             <p className="text-sm text-[#6A6A6A] line-clamp-1">
                               Warna:{" "}
