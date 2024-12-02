@@ -72,8 +72,31 @@ const ProductNameSearch = () => {
         </div>
 
         {isFocused && (
-          <div className="absolute top-auto left-auto mt-3 border">
-            <div className="bg-white">Hai</div>
+          <div className="w-3/12 absolute top-auto left-auto mt-3 z-[999]">
+            <div className="py-3 bg-white shadow-lg rounded-2xl">
+              {products?.length > 0 ? (
+                <ul>
+                  {products?.map((product, key) => {
+                    return (
+                      <li key={key}>
+                        <button className="w-full text-left text-sm pl-4 pr-6 py-2 hover:bg-[#1D1B20]/[.08]">
+                          {product.name}
+                        </button>
+                      </li>
+                    );
+                  })}
+                </ul>
+              ) : (
+                <p className="text-sm">Tidak ada produk</p>
+              )}
+
+              {products?.length > 0 && (
+                <>
+                  {/* Divider */}
+                  <div className="w-full h-px bg-[#CAC4D0] my-3"></div>
+                </>
+              )}
+            </div>
           </div>
         )}
       </div>
