@@ -46,13 +46,13 @@ const PriceFilter = () => {
                   type="button"
                   className="flex items-center gap-x-1 hover:bg-black/[.07] py-0.5 px-1 text-xs font-medium"
                 >
-                  {currentParams?.sortOrder
-                    ? currentParams?.sortOrder === "priceAsc"
+                  {currentParams?.sortPrice
+                    ? currentParams?.sortPrice === "priceAsc"
                       ? "Rendah ke tinggi"
                       : "Tinggi ke rendah"
                     : "Urutkan berdasarkan"}
 
-                  {currentParams?.sortOrder ? (
+                  {currentParams?.sortPrice ? (
                     <span
                       title="Hapus filter harga"
                       className="p-0.5 rounded-full bg-black/[.1] ml-2"
@@ -60,7 +60,7 @@ const PriceFilter = () => {
                         e.stopPropagation();
 
                         const updatedParams = { ...currentParams };
-                        delete updatedParams["sortOrder"];
+                        delete updatedParams["sortPrice"];
 
                         setSearchParams(updatedParams);
                       }}
@@ -83,7 +83,7 @@ const PriceFilter = () => {
                   handleMenuClicked: () =>
                     setSearchParams({
                       ...currentParams,
-                      sortOrder: "priceAsc",
+                      sortPrice: "priceAsc",
                     }),
                 },
                 {
@@ -92,12 +92,12 @@ const PriceFilter = () => {
                   handleMenuClicked: () =>
                     setSearchParams({
                       ...currentParams,
-                      sortOrder: "priceDesc",
+                      sortPrice: "priceDesc",
                     }),
                 },
               ]}
-              defaultValue={currentParams?.sortOrder}
-            ></DropdownSelect>
+              defaultValue={currentParams?.sortPrice}
+            />
           </div>
         </div>
       </div>

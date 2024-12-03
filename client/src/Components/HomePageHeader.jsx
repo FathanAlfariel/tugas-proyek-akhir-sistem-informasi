@@ -13,28 +13,31 @@ const HomePageHeader = () => {
   const handleSearchSubmit = (e) => {
     e.preventDefault();
 
+    // Buat salinan dari parameter saat ini
+    const updatedParams = { ...currentParams };
+
+    // Update title jika ada nilai
     if (e.target.product_name.value !== "") {
-      setSearchParams({ ...currentParams, title: e.target.product_name.value });
+      updatedParams.title = e.target.product_name.value;
     } else {
-      const updatedParams = { ...currentParams };
-      delete updatedParams["title"];
-
-      setSearchParams(updatedParams);
+      delete updatedParams.title;
     }
 
-    if (e.target.min_price.value || e.target.max_price.value !== "") {
-      setSearchParams({
-        ...currentParams,
-        minPrice: e.target.min_price.value,
-        maxPrice: e.target.max_price.value,
-      });
+    // Update minPrice dan maxPrice jika ada nilai
+    if (e.target.min_price.value) {
+      updatedParams.minPrice = e.target.min_price.value;
     } else {
-      const updatedParams = { ...currentParams };
-      delete updatedParams["minPrice"];
-      delete updatedParams["maxPrice"];
-
-      setSearchParams(updatedParams);
+      delete updatedParams.minPrice;
     }
+
+    if (e.target.max_price.value) {
+      updatedParams.maxPrice = e.target.max_price.value;
+    } else {
+      delete updatedParams.maxPrice;
+    }
+
+    // Set semua perubahan dalam satu panggilan
+    setSearchParams(updatedParams);
   };
 
   return (

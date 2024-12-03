@@ -149,6 +149,7 @@ const DropdownSelect = ({
 
                 <div className="border-t py-2.5">
                   <button
+                    type="button"
                     onClick={() => {
                       setIsDropdownOpen(false);
                     }}

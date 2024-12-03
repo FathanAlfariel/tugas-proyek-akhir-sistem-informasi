@@ -55,21 +55,25 @@ const addProduct = async (req, res) => {
   }
 };
 
-// Get all products
 const getProducts = async (req, res) => {
-  const { title, desc, visibility, sortOrder, minPrice, maxPrice } = req.query;
+  const {
+    title,
+    desc,
+    visibility,
+    sortOrder,
+    minPrice,
+    maxPrice,
+    sortPrice,
+    popularVariants, // Filter baru
+  } = req.query;
 
   try {
-    // Ambil data dari Prisma
+    // Ambil data semua produk
     const getAllProducts = await prisma.product.findMany({
       where: {
         AND: [
-          title
-            ? { name: { contains: title, mode: "insensitive" } }
-            : undefined, // Filter name dengan LIKE (case-insensitive)
-          desc
-            ? { description: { contains: desc, mode: "insensitive" } }
-            : undefined, // Filter description dengan LIKE (case-insensitive)
+          title ? { name: { contains: title } } : undefined, // Filter name dengan LIKE (case-insensitive)
+          desc ? { description: { contains: desc } } : undefined, // Filter description dengan LIKE (case-insensitive)
           visibility ? { visibility: { equals: visibility } } : undefined, // Filter visibility
           (minPrice || maxPrice) && {
             variants: {
@@ -85,7 +89,15 @@ const getProducts = async (req, res) => {
       },
       include: {
         images: true,
-        variants: true,
+        variants: {
+          include: {
+            orderProducts: {
+              select: {
+                quantity: true,
+              },
+            },
+          },
+        },
       },
       // Pengurutan berdasarkan waktu pembuatan (jika diperlukan)
       orderBy:
@@ -100,21 +112,40 @@ const getProducts = async (req, res) => {
       return res.status(404).json({ message: "No products found" });
     }
 
-    // Urutkan data secara manual berdasarkan harga varian
+    // Gabungkan total pembelian untuk setiap variant
+    const productsWithPopularity = getAllProducts.map((product) => {
+      const variantsWithPopularity = product.variants.map((variant) => {
+        const totalQuantity = variant.orderProducts.reduce(
+          (sum, orderProduct) => sum + orderProduct.quantity,
+          0
+        );
+        return { ...variant, totalQuantity };
+      });
+
+      return { ...product, variants: variantsWithPopularity };
+    });
+
+    // Jika popularVariants diaktifkan, urutkan berdasarkan total pembelian
     const sortedProducts =
-      sortOrder === "priceAsc"
-        ? getAllProducts.sort(
+      popularVariants === "true"
+        ? productsWithPopularity.sort(
+            (a, b) =>
+              b.variants.reduce((sum, v) => sum + v.totalQuantity, 0) -
+              a.variants.reduce((sum, v) => sum + v.totalQuantity, 0)
+          )
+        : sortPrice === "priceAsc"
+        ? productsWithPopularity.sort(
             (a, b) =>
               Math.min(...a.variants.map((v) => v.price)) -
               Math.min(...b.variants.map((v) => v.price))
           )
-        : sortOrder === "priceDesc"
-        ? getAllProducts.sort(
+        : sortPrice === "priceDesc"
+        ? productsWithPopularity.sort(
             (a, b) =>
               Math.max(...b.variants.map((v) => v.price)) -
               Math.max(...a.variants.map((v) => v.price))
           )
-        : getAllProducts;
+        : productsWithPopularity;
 
     return res.status(200).json({
       message: "Successfully retrieved all products",

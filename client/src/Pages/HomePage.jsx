@@ -42,14 +42,62 @@ const HomePage = () => {
 
       <main className="mx-4 md:mx-6 mt-6 mb-8">
         <ul className="flex items-center gap-x-2 mb-4">
-          <li className="py-2 px-4 rounded-xl text-sm font-medium bg-zinc-200">
-            Terkait
+          <li>
+            <button
+              type="button"
+              className="py-2 px-4 rounded-xl text-sm font-medium bg-zinc-200 transitions duration-300 active:scale-90"
+              onClick={(e) => {
+                e.stopPropagation();
+
+                const updatedParams = { ...currentParams };
+
+                if (updatedParams["popularVariants"]) {
+                  delete updatedParams["popularVariants"];
+                }
+
+                if (updatedParams["sortOrder"]) {
+                  delete updatedParams["sortOrder"];
+                }
+
+                setSearchParams(updatedParams);
+              }}
+            >
+              Terkait
+            </button>
           </li>
-          <li className="py-2 px-4 rounded-xl text-sm font-medium bg-zinc-200">
-            Terbaru
+          <li>
+            <button
+              type="button"
+              className="py-2 px-4 rounded-xl text-sm font-medium bg-zinc-200 transitions duration-300 active:scale-90"
+              onClick={() => {
+                const updatedParams = { ...currentParams };
+
+                if (updatedParams["popularVariants"]) {
+                  delete updatedParams["popularVariants"];
+                }
+
+                setSearchParams({ ...updatedParams, sortOrder: "latest" });
+              }}
+            >
+              Terbaru
+            </button>
           </li>
-          <li className="py-2 px-4 rounded-xl text-sm font-medium bg-zinc-200">
-            Terlaris
+          <li>
+            <button
+              type="button"
+              className="py-2 px-4 rounded-xl text-sm font-medium bg-zinc-200 transitions duration-300 active:scale-90"
+              onClick={() => {
+                const updatedParams = { ...currentParams };
+
+                if (updatedParams["sortOrder"]) {
+                  delete updatedParams["sortOrder"];
+                }
+
+                setSearchParams({ ...updatedParams, popularVariants: true });
+              }}
+            >
+              Terlaris
+            </button>
           </li>
         </ul>
 
