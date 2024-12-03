@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { IoCaretDown } from "react-icons/io5";
 import DropdownSelect from "./DropdownSelect";
 import { useSearchParams } from "react-router-dom";
+import { IoMdClose } from "react-icons/io";
 
 const PriceFilter = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -45,10 +46,32 @@ const PriceFilter = () => {
                   type="button"
                   className="flex items-center gap-x-1 hover:bg-black/[.07] py-0.5 px-1 text-xs font-medium"
                 >
-                  Urutkan berdasarkan
-                  <span>
-                    <IoCaretDown />
-                  </span>
+                  {currentParams?.sortOrder
+                    ? currentParams?.sortOrder === "priceAsc"
+                      ? "Rendah ke tinggi"
+                      : "Tinggi ke rendah"
+                    : "Urutkan berdasarkan"}
+
+                  {currentParams?.sortOrder ? (
+                    <span
+                      title="Hapus filter harga"
+                      className="p-0.5 rounded-full bg-black/[.1] ml-2"
+                      onClick={(e) => {
+                        e.stopPropagation();
+
+                        const updatedParams = { ...currentParams };
+                        delete updatedParams["sortOrder"];
+
+                        setSearchParams(updatedParams);
+                      }}
+                    >
+                      <IoMdClose className="text-sm" />
+                    </span>
+                  ) : (
+                    <span>
+                      <IoCaretDown />
+                    </span>
+                  )}
                 </button>
               }
               menuDirection="left"
@@ -56,13 +79,24 @@ const PriceFilter = () => {
               selectMenu={[
                 {
                   label: "Rendah ke tinggi",
-                  value: "",
+                  value: "priceAsc",
+                  handleMenuClicked: () =>
+                    setSearchParams({
+                      ...currentParams,
+                      sortOrder: "priceAsc",
+                    }),
                 },
                 {
                   label: "Tinggi ke rendah",
-                  value: "",
+                  value: "priceDesc",
+                  handleMenuClicked: () =>
+                    setSearchParams({
+                      ...currentParams,
+                      sortOrder: "priceDesc",
+                    }),
                 },
               ]}
+              defaultValue={currentParams?.sortOrder}
             ></DropdownSelect>
           </div>
         </div>

@@ -60,11 +60,16 @@ const getProducts = async (req, res) => {
   const { title, desc, visibility, sortOrder, minPrice, maxPrice } = req.query;
 
   try {
+    // Ambil data dari Prisma
     const getAllProducts = await prisma.product.findMany({
       where: {
         AND: [
-          title ? { name: { contains: title } } : undefined, // Filter name dengan LIKE
-          desc ? { description: { contains: desc } } : undefined, // Filter description dengan LIKE
+          title
+            ? { name: { contains: title, mode: "insensitive" } }
+            : undefined, // Filter name dengan LIKE (case-insensitive)
+          desc
+            ? { description: { contains: desc, mode: "insensitive" } }
+            : undefined, // Filter description dengan LIKE (case-insensitive)
           visibility ? { visibility: { equals: visibility } } : undefined, // Filter visibility
           (minPrice || maxPrice) && {
             variants: {
@@ -82,23 +87,41 @@ const getProducts = async (req, res) => {
         images: true,
         variants: true,
       },
+      // Pengurutan berdasarkan waktu pembuatan (jika diperlukan)
       orderBy:
         sortOrder === "latest"
           ? { createdAt: "desc" }
           : sortOrder === "oldest"
           ? { createdAt: "asc" }
-          : undefined, // Jika sortOrder tidak "latest" atau "oldest", tidak ada pengurutan
+          : undefined,
     });
-    if (!getAllProducts) {
-      return res.status(404).json({ message: "Product not found" });
+
+    if (!getAllProducts || getAllProducts.length === 0) {
+      return res.status(404).json({ message: "No products found" });
     }
 
+    // Urutkan data secara manual berdasarkan harga varian
+    const sortedProducts =
+      sortOrder === "priceAsc"
+        ? getAllProducts.sort(
+            (a, b) =>
+              Math.min(...a.variants.map((v) => v.price)) -
+              Math.min(...b.variants.map((v) => v.price))
+          )
+        : sortOrder === "priceDesc"
+        ? getAllProducts.sort(
+            (a, b) =>
+              Math.max(...b.variants.map((v) => v.price)) -
+              Math.max(...a.variants.map((v) => v.price))
+          )
+        : getAllProducts;
+
     return res.status(200).json({
-      message: "Successfully get all the products",
-      results: getAllProducts,
+      message: "Successfully retrieved all products",
+      results: sortedProducts,
     });
   } catch (err) {
-    console.error("Error :", err);
+    console.error("Error:", err);
     return res.status(500).json({ message: "Internal server error" });
   }
 };
