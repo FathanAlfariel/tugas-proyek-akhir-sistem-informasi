@@ -81,7 +81,7 @@ const ProductNameSearch = () => {
           <div className="w-3/12 absolute top-auto left-auto mt-3 z-[999]">
             <div className="py-3 bg-white shadow-lg rounded-2xl">
               {products?.length > 0 ? (
-                <ul>
+                <ul className="flex flex-col gap-y-0.5">
                   {products?.map((product, key) => {
                     return (
                       <li key={key}>
@@ -89,7 +89,10 @@ const ProductNameSearch = () => {
                           type="button"
                           className="w-full text-left text-sm pl-4 pr-6 py-2 hover:bg-[#1D1B20]/[.08]"
                           onClick={() => {
-                            setSearchParams({ title: product?.name });
+                            setSearchParams({
+                              ...currentParams,
+                              title: product?.name,
+                            });
                             setProductName(product?.name);
 
                             setIsFocused(false);
@@ -114,7 +117,7 @@ const ProductNameSearch = () => {
                 </>
               )}
 
-              <ul>
+              <ul className="flex flex-col gap-y-0.5">
                 {products?.map((product, key) => {
                   return (
                     <li key={key}>

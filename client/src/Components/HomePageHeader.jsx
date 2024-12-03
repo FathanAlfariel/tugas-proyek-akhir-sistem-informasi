@@ -4,6 +4,7 @@ import { IoCaretDown } from "react-icons/io5";
 import DropdownSelect from "./DropdownSelect";
 import ProductNameSearch from "./ProductNameSearch";
 import { useSearchParams } from "react-router-dom";
+import PriceFilter from "./PriceFilter";
 
 const HomePageHeader = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -17,6 +18,20 @@ const HomePageHeader = () => {
     } else {
       const updatedParams = { ...currentParams };
       delete updatedParams["title"];
+
+      setSearchParams(updatedParams);
+    }
+
+    if (e.target.min_price.value || e.target.max_price.value !== "") {
+      setSearchParams({
+        ...currentParams,
+        minPrice: e.target.min_price.value,
+        maxPrice: e.target.max_price.value,
+      });
+    } else {
+      const updatedParams = { ...currentParams };
+      delete updatedParams["minPrice"];
+      delete updatedParams["maxPrice"];
 
       setSearchParams(updatedParams);
     }
@@ -43,42 +58,7 @@ const HomePageHeader = () => {
             <div className="h-full w-px bg-[#CAC4D0]"></div>
 
             {/* Filter by price */}
-            <div className="flex flex-col gap-y-0.5 hover:bg-zinc-100 py-3 px-6 rounded-full cursor-pointer">
-              <p className="text-xs font-semibold">Harga</p>
-
-              <div className="flex items-center">
-                <p className="text-sm text-[#606060]">Rp. Min - Rp. Max</p>
-
-                <div className="ml-4 mr-7">
-                  <DropdownSelect
-                    id="price-filter"
-                    button={
-                      <button
-                        type="button"
-                        className="flex items-center gap-x-1 hover:bg-black/[.07] py-0.5 px-1 text-xs font-medium"
-                      >
-                        Urutkan berdasarkan
-                        <span>
-                          <IoCaretDown />
-                        </span>
-                      </button>
-                    }
-                    menuDirection="left"
-                    menuSize="small"
-                    selectMenu={[
-                      {
-                        label: "Rendah ke tinggi",
-                        value: "",
-                      },
-                      {
-                        label: "Tinggi ke rendah",
-                        value: "",
-                      },
-                    ]}
-                  ></DropdownSelect>
-                </div>
-              </div>
-            </div>
+            <PriceFilter />
 
             <button
               type="submit"

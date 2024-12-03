@@ -57,7 +57,7 @@ const addProduct = async (req, res) => {
 
 // Get all products
 const getProducts = async (req, res) => {
-  const { title, desc, visibility, sortOrder } = req.query;
+  const { title, desc, visibility, sortOrder, minPrice, maxPrice } = req.query;
 
   try {
     const getAllProducts = await prisma.product.findMany({
@@ -66,6 +66,16 @@ const getProducts = async (req, res) => {
           title ? { name: { contains: title } } : undefined, // Filter name dengan LIKE
           desc ? { description: { contains: desc } } : undefined, // Filter description dengan LIKE
           visibility ? { visibility: { equals: visibility } } : undefined, // Filter visibility
+          (minPrice || maxPrice) && {
+            variants: {
+              some: {
+                price: {
+                  ...(minPrice ? { gte: parseInt(minPrice, 10) } : {}),
+                  ...(maxPrice ? { lte: parseInt(maxPrice, 10) } : {}),
+                },
+              },
+            },
+          }, // Filter rentang harga di varian
         ].filter(Boolean), // Hapus elemen kosong
       },
       include: {

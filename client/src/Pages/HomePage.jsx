@@ -33,8 +33,6 @@ const HomePage = () => {
     fetchProducts();
   }, [searchParams]);
 
-  // console.log(productList);
-
   return (
     <>
       {isLoading && <Loader />}
