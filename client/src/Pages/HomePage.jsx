@@ -37,9 +37,6 @@ const HomePage = () => {
     <>
       {isLoading && <Loader />}
 
-      {/* Header */}
-      <HomePageHeader />
-
       <main className="mx-4 md:mx-6 mt-6 mb-8">
         <ul className="flex items-center gap-x-2 mb-4">
           <li>
