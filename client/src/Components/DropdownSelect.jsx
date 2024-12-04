@@ -19,8 +19,10 @@ const DropdownSelect = ({
     const menu = selectMenu?.find((menu) => menu?.value === defaultValue);
     if (menu) {
       setSelectedMenu(menu.value);
+    } else {
+      setSelectedMenu(null);
     }
-  }, [defaultValue, selectMenu]);
+  }, [defaultValue]);
 
   useEffect(() => {
     const handleClickOutside = (e) => {

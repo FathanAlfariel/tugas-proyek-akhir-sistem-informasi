@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IoCaretDown } from "react-icons/io5";
 import DropdownSelect from "./DropdownSelect";
 import Input from "./Input";
@@ -10,8 +10,23 @@ const PriceFilter = ({ showPriceFilter }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const currentParams = Object.fromEntries(searchParams.entries());
 
-  const [minPrice, setMinPrice] = useState(currentParams?.minPrice || "");
-  const [maxPrice, setMaxPrice] = useState(currentParams?.maxPrice || "");
+  const [minPrice, setMinPrice] = useState("");
+  const [maxPrice, setMaxPrice] = useState("");
+  const [sortPrice, setSortPrice] = useState("");
+
+  useEffect(() => {
+    setMinPrice(currentParams?.minPrice);
+  }, [searchParams]);
+
+  useEffect(() => {
+    setMaxPrice(currentParams?.maxPrice);
+  }, [searchParams]);
+
+  useEffect(() => {
+    setSortPrice(currentParams?.sortPrice);
+  }, [searchParams]);
+
+  console.log(sortPrice);
 
   return (
     <>
@@ -49,8 +64,8 @@ const PriceFilter = ({ showPriceFilter }) => {
                   buttonStyle="text-button"
                   className="flex items-center gap-x-2 text-xs"
                 >
-                  {currentParams?.sortPrice
-                    ? currentParams?.sortPrice === "priceAsc"
+                  {sortPrice
+                    ? sortPrice === "priceAsc"
                       ? "Rendah ke tinggi"
                       : "Tinggi ke rendah"
                     : "Urutkan berdasarkan"}
@@ -58,7 +73,7 @@ const PriceFilter = ({ showPriceFilter }) => {
                   {currentParams?.sortPrice ? (
                     <span
                       title="Hapus filter harga"
-                      className="p-0.5 rounded-full bg-black/[.1] ml-2"
+                      className="p-0.5 rounded-full bg-black/[.1]"
                       onClick={(e) => {
                         e.stopPropagation();
 
@@ -68,6 +83,7 @@ const PriceFilter = ({ showPriceFilter }) => {
                         delete updatedParams["sortPrice"];
 
                         setSearchParams(updatedParams);
+                        setSortPrice("");
                       }}
                     >
                       <IoMdClose className="text-sm" />
@@ -101,7 +117,7 @@ const PriceFilter = ({ showPriceFilter }) => {
                     }),
                 },
               ]}
-              defaultValue={currentParams?.sortPrice}
+              defaultValue={sortPrice}
             />
           </div>
         </div>

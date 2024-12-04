@@ -6,9 +6,11 @@ const Layout = () => {
   return (
     <>
       {/* Header */}
-      <HomePageHeader />
+      <header className="sticky top-0 left-0 bg-white py-3 mx-4 md:mx-6 z-10">
+        <HomePageHeader />
+      </header>
 
-      <main className="md:mx-6 mt-6 mb-8">
+      <main className="mx-4 md:mx-6 mt-6 mb-8">
         <Outlet />
       </main>
     </>
