@@ -13,15 +13,11 @@ const DropdownSelect = ({
   minWidth = undefined,
 }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [selectedMenu, setSelectedMenu] = useState(null);
+  const [selectedMenu, setSelectedMenu] = useState(defaultValue); // Inisialisasi dengan defaultValue
 
   useEffect(() => {
-    const menu = selectMenu?.find((menu) => menu?.value === defaultValue);
-    if (menu) {
-      setSelectedMenu(menu.value);
-    } else {
-      setSelectedMenu(null);
-    }
+    // Update selectedMenu saat defaultValue berubah
+    setSelectedMenu(defaultValue);
   }, [defaultValue]);
 
   useEffect(() => {
@@ -78,6 +74,7 @@ const DropdownSelect = ({
                       <button
                         type="button"
                         onClick={() => {
+                          setSelectedMenu(menu.value); // Set nilai yang dipilih
                           menu.handleMenuClicked();
                           setIsDropdownOpen(false);
                         }}
@@ -128,6 +125,7 @@ const DropdownSelect = ({
                         <button
                           type="button"
                           onClick={() => {
+                            setSelectedMenu(menu.value); // Set nilai yang dipilih
                             menu.handleMenuClicked();
                             setIsDropdownOpen(false);
                           }}

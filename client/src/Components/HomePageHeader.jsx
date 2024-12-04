@@ -1,11 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import { IoIosSearch } from "react-icons/io";
 import ProductNameSearch from "./ProductNameSearch";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import PriceFilter from "./PriceFilter";
 import Button from "./Button";
 
 const HomePageHeader = () => {
+  const navigate = useNavigate();
+
   const filterRef = useRef(null);
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -44,6 +46,11 @@ const HomePageHeader = () => {
 
     // Set semua perubahan dalam satu panggilan
     setSearchParams(updatedParams);
+
+    navigate({
+      pathname: "/", // Halaman utama
+      search: `?${new URLSearchParams(updatedParams).toString()}`, // Menambahkan query params
+    });
   };
 
   // Tutup filter saat klik di luar filterRef
@@ -148,25 +155,7 @@ const HomePageHeader = () => {
                     <PriceFilter showPriceFilter={showPriceFilter} />
                   </div>
 
-                  <div className="flex justify-between items-center mt-3">
-                    <Button
-                      type="button"
-                      buttonStyle="text-button"
-                      onClick={() => {
-                        const updatedParams = {
-                          ...currentParams,
-                        };
-                        delete updatedParams["title"];
-                        delete updatedParams["minPrice"];
-                        delete updatedParams["maxPrice"];
-                        delete updatedParams["sortPrice"];
-
-                        setSearchParams(updatedParams);
-                      }}
-                    >
-                      Hapus semua filter
-                    </Button>
-
+                  <div className="flex justify-end items-center mt-3">
                     <Button type="submit" buttonStyle="text-button">
                       Search
                     </Button>

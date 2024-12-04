@@ -33,7 +33,7 @@ const PriceFilter = ({ showPriceFilter }) => {
       {showPriceFilter && (
         <div className="mt-1 px-4 pb-3">
           <div className="flex items-center gap-x-2">
-            <div className="w-full">
+            <div className="flex-1 min-w-0">
               <Input
                 type="text"
                 name="min_price"
@@ -43,7 +43,7 @@ const PriceFilter = ({ showPriceFilter }) => {
               />
             </div>
             <span>-</span>
-            <div className="w-full">
+            <div className="flex-1 min-w-0">
               <Input
                 type="text"
                 name="max_price"
@@ -101,20 +101,12 @@ const PriceFilter = ({ showPriceFilter }) => {
                 {
                   label: "Rendah ke tinggi",
                   value: "priceAsc",
-                  handleMenuClicked: () =>
-                    setSearchParams({
-                      ...currentParams,
-                      sortPrice: "priceAsc",
-                    }),
+                  handleMenuClicked: () => setSortPrice("priceAsc"),
                 },
                 {
                   label: "Tinggi ke rendah",
                   value: "priceDesc",
-                  handleMenuClicked: () =>
-                    setSearchParams({
-                      ...currentParams,
-                      sortPrice: "priceDesc",
-                    }),
+                  handleMenuClicked: () => setSortPrice("priceDesc"),
                 },
               ]}
               defaultValue={sortPrice}

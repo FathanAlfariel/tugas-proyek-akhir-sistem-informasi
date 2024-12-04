@@ -22,7 +22,6 @@ import AddProductCreation from "./Pages/AddProductCreation";
 import HomePage from "./Pages/HomePage";
 import ProductDetail from "./Pages/ProductDetail";
 import AdminLayout from "./AdminLayout";
-import Layout from "./Layout";
 
 axios.defaults.withCredentials = true;
 
@@ -30,10 +29,8 @@ const App = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/*" element={<Layout />}>
-          <Route index element={<HomePage />} />
-          <Route path="products/:id" element={<ProductDetail />} />
-        </Route>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/products/:id" element={<ProductDetail />} />
 
         {/* Admin route */}
         <Route
