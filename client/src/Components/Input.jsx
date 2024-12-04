@@ -60,7 +60,7 @@ const Input = ({
                       : "password"
                     : type
                 }
-                className="outline-none placeholder:text-[#71717a] disabled:cursor-not-allowed"
+                className="outline-none placeholder:text-[#71717a] disabled:cursor-not-allowed bg-transparent"
                 placeholder={placeholder}
                 onChange={onChange}
                 onBlur={onBlur}
@@ -103,7 +103,7 @@ const Input = ({
               step={step}
               min={min}
               placeholder={placeholder}
-              className="outline-none placeholder:text-[#71717a] disabled:cursor-not-allowed"
+              className="outline-none placeholder:text-[#71717a] disabled:cursor-not-allowed bg-transparent"
               onChange={onChange}
               onBlur={onBlur}
               value={value}

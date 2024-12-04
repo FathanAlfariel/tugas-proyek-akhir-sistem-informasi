@@ -1,48 +1,64 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { IoIosSearch } from "react-icons/io";
 import ProductNameSearch from "./ProductNameSearch";
 import { Link, useSearchParams } from "react-router-dom";
 import PriceFilter from "./PriceFilter";
-import axios from "axios";
 import Button from "./Button";
 
 const HomePageHeader = () => {
+  const filterRef = useRef(null);
+
   const [searchParams, setSearchParams] = useSearchParams();
   const currentParams = Object.fromEntries(searchParams.entries());
 
   const [showFilter, setShowFilter] = useState(false);
 
+  const [showProductFilter, setShowProductFilter] = useState(true);
+  const [showPriceFilter, setShowPriceFilter] = useState(false);
+
   const handleSearchSubmit = (e) => {
     e.preventDefault();
-
-    console.log(e.target.product_name.value);
 
     // Buat salinan dari parameter saat ini
     const updatedParams = { ...currentParams };
 
     // Update title jika ada nilai
-    if (e.target.product_name.value !== "") {
+    if (e.target?.product_name?.value) {
       updatedParams.title = e.target.product_name.value;
     } else {
       delete updatedParams.title;
     }
 
     // Update minPrice dan maxPrice jika ada nilai
-    // if (e.target.min_price.value) {
-    //   updatedParams.minPrice = e.target.min_price.value;
-    // } else {
-    //   delete updatedParams.minPrice;
-    // }
+    if (e.target?.min_price?.value) {
+      updatedParams.minPrice = e.target.min_price.value;
+    } else {
+      delete updatedParams.minPrice;
+    }
 
-    // if (e.target.max_price.value) {
-    //   updatedParams.maxPrice = e.target.max_price.value;
-    // } else {
-    //   delete updatedParams.maxPrice;
-    // }
+    if (e.target?.max_price?.value) {
+      updatedParams.maxPrice = e.target.max_price.value;
+    } else {
+      delete updatedParams.maxPrice;
+    }
 
     // Set semua perubahan dalam satu panggilan
     setSearchParams(updatedParams);
   };
+
+  // Tutup filter saat klik di luar filterRef
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (filterRef.current && !filterRef.current.contains(event.target)) {
+        setShowFilter(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <>
@@ -57,7 +73,7 @@ const HomePageHeader = () => {
           </Link>
         </div>
 
-        <div className="hidden md:flex justify-center absolute inset-0">
+        <div className="flex justify-center absolute inset-0">
           <div className="static">
             <div
               onClick={() => setShowFilter((prev) => !prev)}
@@ -83,29 +99,75 @@ const HomePageHeader = () => {
             </div>
 
             {showFilter && (
-              <div className="absolute top-auto left-1/2 transform -translate-x-1/2 w-4/12 p-2 shadow-md rounded-2xl bg-zinc-100 z-[999] mt-2">
+              <div
+                ref={filterRef}
+                className="absolute top-auto left-1/2 transform -translate-x-1/2 w-5/12 p-2 shadow-md rounded-2xl bg-zinc-100 z-[999] mt-2"
+              >
                 <form
                   onSubmit={handleSearchSubmit}
                   className="flex flex-col gap-y-2"
                 >
-                  <div className="bg-white py-3 px-4 rounded-xl">
-                    {/* Search by product's name */}
-                    <ProductNameSearch />
-                  </div>
-
-                  {/* Button show product filter */}
-                  <div className="bg-white py-3 px-4 rounded-xl">
+                  <div className="bg-white rounded-xl">
+                    {/* Button show product filter */}
                     <div
-                      onClick={() => setShowProductFilter((prev) => !prev)}
-                      className="sticky top-0 bg-white flex justify-between items-center cursor-pointer"
+                      className="sticky top-0 flex justify-between items-center py-3 px-4 cursor-pointer"
+                      onClick={() => {
+                        if (showPriceFilter) setShowPriceFilter(false);
+
+                        setShowProductFilter((prev) => !prev);
+                      }}
                     >
                       <p className="text-sm font-medium">Cari produk</p>
 
-                      <div className="text-sm font-medium underline">Lihat</div>
+                      <div className="text-sm font-medium underline">
+                        {!showProductFilter ? "Lihat" : "Sembunyikan"}
+                      </div>
                     </div>
+
+                    {/* Product filter */}
+                    <ProductNameSearch showProductFilter={showProductFilter} />
                   </div>
 
-                  <div className="flex justify-end mt-3">
+                  <div className="bg-white rounded-xl">
+                    {/* Button show price filter */}
+                    <div
+                      className="sticky top-0 flex justify-between items-center py-3 px-4 cursor-pointer"
+                      onClick={() => {
+                        if (showProductFilter) setShowProductFilter(false);
+
+                        setShowPriceFilter((prev) => !prev);
+                      }}
+                    >
+                      <p className="text-sm font-medium">Harga</p>
+
+                      <div className="text-sm font-medium underline">
+                        {!showPriceFilter ? "Lihat" : "Sembunyikan"}
+                      </div>
+                    </div>
+
+                    {/* Price filter */}
+                    <PriceFilter showPriceFilter={showPriceFilter} />
+                  </div>
+
+                  <div className="flex justify-between items-center mt-3">
+                    <Button
+                      type="button"
+                      buttonStyle="text-button"
+                      onClick={() => {
+                        const updatedParams = {
+                          ...currentParams,
+                        };
+                        delete updatedParams["title"];
+                        delete updatedParams["minPrice"];
+                        delete updatedParams["maxPrice"];
+                        delete updatedParams["sortPrice"];
+
+                        setSearchParams(updatedParams);
+                      }}
+                    >
+                      Hapus semua filter
+                    </Button>
+
                     <Button type="submit" buttonStyle="text-button">
                       Search
                     </Button>

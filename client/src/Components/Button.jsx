@@ -7,6 +7,7 @@ const Button = ({
   onClick,
   title,
   disabled = false,
+  className,
 }) => {
   return (
     <>
@@ -16,7 +17,7 @@ const Button = ({
           type={type}
           className={`${
             width === "full" ? "w-full" : "w-auto"
-          } py-2.5 px-6 text-sm text-white font-medium rounded-full transition-all active:scale-90 duration-300 bg-[#6750A4] shadow-none hover:shadow-md disabled:cursor-not-allowed disabled:opacity-60 disabled:shadow-none disabled:scale-100`}
+          } py-2.5 px-6 text-sm text-white font-medium rounded-full transition-all active:scale-90 duration-300 bg-[#6750A4] shadow-none hover:shadow-md disabled:cursor-not-allowed disabled:opacity-60 disabled:shadow-none disabled:scale-100 ${className}`}
           disabled={disabled}
           onClick={onClick}
         >
@@ -28,7 +29,7 @@ const Button = ({
           type={type}
           className={`${
             width === "full" ? "w-full" : "w-auto"
-          } py-2.5 px-3 text-sm text-[#6750A4] font-medium rounded-full transition-all active:scale-90 duration-300 bg-transparent hover:bg-[#6750A4]/[.08] active:bg-[#6750A4]/[.12] disabled:cursor-not-allowed disabled:opacity-60 disabled:shadow-none disabled:scale-100`}
+          } py-2.5 px-3 text-sm text-[#6750A4] font-medium rounded-full transition-all active:scale-90 duration-300 bg-transparent hover:bg-[#6750A4]/[.08] active:bg-[#6750A4]/[.12] disabled:cursor-not-allowed disabled:opacity-60 disabled:shadow-none disabled:scale-100 ${className}`}
           disabled={disabled}
           onClick={onClick}
         >
@@ -40,7 +41,7 @@ const Button = ({
           type={type}
           className={`flex items-center gap-x-2 ${
             width === "full" ? "justify-center w-full" : "w-auto"
-          } py-2.5 px-3 text-sm text-[#6750A4] font-medium rounded-full transition-all active:scale-90 duration-300 bg-transparent hover:bg-[#6750A4]/[.08] active:bg-[#6750A4]/[.12] disabled:cursor-not-allowed disabled:opacity-60 disabled:shadow-none disabled:scale-100`}
+          } py-2.5 px-3 text-sm text-[#6750A4] font-medium rounded-full transition-all active:scale-90 duration-300 bg-transparent hover:bg-[#6750A4]/[.08] active:bg-[#6750A4]/[.12] disabled:cursor-not-allowed disabled:opacity-60 disabled:shadow-none disabled:scale-100 ${className}`}
           disabled={disabled}
           onClick={onClick}
         >
@@ -54,7 +55,7 @@ const Button = ({
           type={type}
           className={`${
             width === "full" ? "w-full" : "w-auto"
-          } py-2.5 px-6 text-sm text-[#1D192B] font-medium rounded-full transition-all active:scale-90 duration-300 bg-[#E8DEF8] shadow-none hover:shadow-md disabled:cursor-not-allowed disabled:opacity-60 disabled:shadow-none disabled:scale-100`}
+          } py-2.5 px-6 text-sm text-[#1D192B] font-medium rounded-full transition-all active:scale-90 duration-300 bg-[#E8DEF8] shadow-none hover:shadow-md disabled:cursor-not-allowed disabled:opacity-60 disabled:shadow-none disabled:scale-100 ${className}`}
           disabled={disabled}
           onClick={onClick}
         >
@@ -66,7 +67,7 @@ const Button = ({
           type={type}
           className={`flex items-center gap-x-2 ${
             width === "full" ? "w-full" : "w-auto"
-          } py-2.5 pl-4 pr-6 text-sm text-[#1D192B] font-medium rounded-full transition-all active:scale-90 duration-300 bg-[#E8DEF8] shadow-none hover:shadow-md disabled:cursor-not-allowed disabled:opacity-60 disabled:shadow-none disabled:scale-100`}
+          } py-2.5 pl-4 pr-6 text-sm text-[#1D192B] font-medium rounded-full transition-all active:scale-90 duration-300 bg-[#E8DEF8] shadow-none hover:shadow-md disabled:cursor-not-allowed disabled:opacity-60 disabled:shadow-none disabled:scale-100 ${className}`}
           disabled={disabled}
           onClick={onClick}
         >
@@ -79,7 +80,7 @@ const Button = ({
           type={type}
           className={`border border-[#79747E] ${
             width === "full" ? "w-full" : "w-auto"
-          } py-2.5 px-6 text-sm text-[#6750A4] font-medium rounded-full transition-all active:scale-90 duration-300 hover:bg-[#6750A4]/[.08] active:bg-[#6750A4]/[.12] disabled:cursor-not-allowed disabled:opacity-60 disabled:shadow-none disabled:scale-100`}
+          } py-2.5 px-6 text-sm text-[#6750A4] font-medium rounded-full transition-all active:scale-90 duration-300 hover:bg-[#6750A4]/[.08] active:bg-[#6750A4]/[.12] disabled:cursor-not-allowed disabled:opacity-60 disabled:shadow-none disabled:scale-100 ${className}`}
           disabled={disabled}
           onClick={onClick}
         >
@@ -91,7 +92,7 @@ const Button = ({
           type={type}
           className={`flex justify-center items-center gap-x-2 border border-[#79747E] ${
             width === "full" ? "w-full" : "w-auto"
-          } py-2.5 px-4 text-sm text-[#6750A4] font-medium rounded-full transition-all active:scale-90 duration-300 hover:bg-[#6750A4]/[.08] active:bg-[#6750A4]/[.12] disabled:cursor-not-allowed disabled:opacity-60 disabled:shadow-none disabled:scale-100`}
+          } py-2.5 px-4 text-sm text-[#6750A4] font-medium rounded-full transition-all active:scale-90 duration-300 hover:bg-[#6750A4]/[.08] active:bg-[#6750A4]/[.12] disabled:cursor-not-allowed disabled:opacity-60 disabled:shadow-none disabled:scale-100 ${className}`}
           disabled={disabled}
           onClick={onClick}
         >

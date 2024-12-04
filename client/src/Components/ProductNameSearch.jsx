@@ -1,14 +1,9 @@
 import axios from "axios";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IoIosSearch } from "react-icons/io";
 import { Link, useSearchParams } from "react-router-dom";
 
-const ProductNameSearch = () => {
-  const parentRef = useRef(null);
-  const productNameInput = useRef(null);
-
-  const [showProductFilter, setShowProductFilter] = useState(true);
-
+const ProductNameSearch = ({ showProductFilter }) => {
   const [products, setIsProducts] = useState([]);
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -37,20 +32,10 @@ const ProductNameSearch = () => {
 
   return (
     <>
-      {/* Button show product filter */}
-      <div
-        onClick={() => setShowProductFilter((prev) => !prev)}
-        className="sticky top-0 bg-white flex justify-between items-center cursor-pointer"
-      >
-        <p className="text-sm font-medium">Cari produk</p>
-
-        <div className="text-sm font-medium underline">Lihat</div>
-      </div>
-
       {showProductFilter && (
-        <>
+        <div className="pb-4 px-4">
           {/* Search input */}
-          <div className="flex items-center gap-x-2 border rounded-lg p-2 mt-4">
+          <div className="flex items-center gap-x-2 border rounded-lg p-2 mt-1">
             <span className="text-xl">
               <IoIosSearch />
             </span>
@@ -142,7 +127,7 @@ const ProductNameSearch = () => {
               })}
             </ul>
           </div>
-        </>
+        </div>
       )}
     </>
   );

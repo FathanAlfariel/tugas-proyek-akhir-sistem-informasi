@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { IoCaretDown } from "react-icons/io5";
 import DropdownSelect from "./DropdownSelect";
+import Input from "./Input";
 import { useSearchParams } from "react-router-dom";
 import { IoMdClose } from "react-icons/io";
+import Button from "./Button";
 
-const PriceFilter = () => {
+const PriceFilter = ({ showPriceFilter }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const currentParams = Object.fromEntries(searchParams.entries());
 
@@ -13,38 +15,39 @@ const PriceFilter = () => {
 
   return (
     <>
-      <div className="flex flex-col gap-y-0.5 hover:bg-zinc-100 py-3 px-6 rounded-full cursor-pointer">
-        <p className="text-xs font-semibold">Harga</p>
-
-        <div className="flex items-center">
+      {showPriceFilter && (
+        <div className="mt-1 px-4 pb-3">
           <div className="flex items-center gap-x-2">
-            <input
-              type="text"
-              name="min_price"
-              className="w-20 outline-none text-sm"
-              placeholder="Rp. Min"
-              value={minPrice}
-              onChange={(e) => setMinPrice(e.target.value)}
-            />
+            <div className="w-full">
+              <Input
+                type="text"
+                name="min_price"
+                placeholder="Rp. Min"
+                value={minPrice}
+                onChange={(e) => setMinPrice(e.target.value)}
+              />
+            </div>
             <span>-</span>
-            <input
-              type="text"
-              name="max_price"
-              min="0"
-              className="w-20 outline-none text-sm"
-              placeholder="Rp. Max"
-              value={maxPrice}
-              onChange={(e) => setMaxPrice(e.target.value)}
-            />
+            <div className="w-full">
+              <Input
+                type="text"
+                name="max_price"
+                min="0"
+                placeholder="Rp. Max"
+                value={maxPrice}
+                onChange={(e) => setMaxPrice(e.target.value)}
+              />
+            </div>
           </div>
 
-          <div className="ml-4 mr-7">
+          <div className="flex justify-end mt-2">
             <DropdownSelect
               id="price-filter"
               button={
-                <button
+                <Button
                   type="button"
-                  className="flex items-center gap-x-1 hover:bg-black/[.07] py-0.5 px-1 text-xs font-medium"
+                  buttonStyle="text-button"
+                  className="flex items-center gap-x-2 text-xs"
                 >
                   {currentParams?.sortPrice
                     ? currentParams?.sortPrice === "priceAsc"
@@ -59,7 +62,9 @@ const PriceFilter = () => {
                       onClick={(e) => {
                         e.stopPropagation();
 
-                        const updatedParams = { ...currentParams };
+                        const updatedParams = {
+                          ...currentParams,
+                        };
                         delete updatedParams["sortPrice"];
 
                         setSearchParams(updatedParams);
@@ -72,7 +77,7 @@ const PriceFilter = () => {
                       <IoCaretDown />
                     </span>
                   )}
-                </button>
+                </Button>
               }
               menuDirection="left"
               menuSize="small"
@@ -100,7 +105,7 @@ const PriceFilter = () => {
             />
           </div>
         </div>
-      </div>
+      )}
     </>
   );
 };
