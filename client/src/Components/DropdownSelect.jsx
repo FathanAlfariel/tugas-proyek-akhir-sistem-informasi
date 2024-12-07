@@ -70,13 +70,13 @@ const DropdownSelect = ({
               <ul className="flex flex-col gap-y-0.5">
                 {selectMenu.map((menu, key) => {
                   return (
-                    <>
+                    <React.Fragment key={key}>
                       {menu.divider && (
                         <li className="w-full h-px bg-[#CAC4D0] my-0.5"></li>
                       )}
 
                       {!menu?.divider && (
-                        <li key={key}>
+                        <li>
                           <button
                             type="button"
                             onClick={() => {
@@ -113,7 +113,7 @@ const DropdownSelect = ({
                           </button>
                         </li>
                       )}
-                    </>
+                    </React.Fragment>
                   );
                 })}
               </ul>
@@ -130,31 +130,41 @@ const DropdownSelect = ({
               ></div>
 
               <div className="bg-white rounded-2xl border border-[#F1F1F1]">
-                <ul className="flex flex-col gap-y-0.5 py-2.5 z-10 max-h-60 overflow-y-auto">
+                <ul className="flex flex-col gap-y-0.5 py-2.5 max-h-60 overflow-y-auto">
                   {selectMenu.map((menu, key) => {
                     return (
-                      <li key={key}>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setSelectedMenu(menu.value); // Set nilai yang dipilih
-                            menu.handleMenuClicked();
-                            setIsDropdownOpen(false);
-                          }}
-                          className="flex items-center gap-x-4 w-full pl-4 pr-6 py-2 text-sm hover:bg-[#1D1B20]/[.08]"
-                        >
-                          {menu?.value === selectedMenu ? (
-                            <span>
-                              <IoCheckmarkSharp className="text-2xl" />
-                            </span>
-                          ) : (
-                            <span>
-                              <IoCheckmarkSharp className="invisible text-2xl" />
-                            </span>
-                          )}
-                          {menu.label}
-                        </button>
-                      </li>
+                      <React.Fragment key={key}>
+                        {menu.divider && (
+                          <li>
+                            <div className="w-full h-px bg-[#CAC4D0] my-1"></div>
+                          </li>
+                        )}
+
+                        {!menu?.divider && (
+                          <li>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setSelectedMenu(menu.value);
+                                menu.handleMenuClicked();
+                                setIsDropdownOpen(false);
+                              }}
+                              className="flex items-center gap-x-4 w-full pl-4 pr-6 py-2 text-sm hover:bg-[#1D1B20]/[.08]"
+                            >
+                              {menu?.value === selectedMenu ? (
+                                <span>
+                                  <IoCheckmarkSharp className="text-2xl" />
+                                </span>
+                              ) : (
+                                <span>
+                                  <IoCheckmarkSharp className="invisible text-2xl" />
+                                </span>
+                              )}
+                              {menu.label}
+                            </button>
+                          </li>
+                        )}
+                      </React.Fragment>
                     );
                   })}
                 </ul>

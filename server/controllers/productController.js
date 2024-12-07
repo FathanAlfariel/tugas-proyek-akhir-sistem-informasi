@@ -55,6 +55,7 @@ const addProduct = async (req, res) => {
   }
 };
 
+// Get all products
 const getProducts = async (req, res) => {
   const {
     title,

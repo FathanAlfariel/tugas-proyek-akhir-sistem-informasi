@@ -12,6 +12,9 @@ import {
   plugins,
 } from "chart.js";
 import DropdownSelect from "../Components/DropdownSelect";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { useLocation, useSearchParams } from "react-router-dom";
 
 // Register the components used
 ChartJS.register(
@@ -24,62 +27,101 @@ ChartJS.register(
   Legend
 );
 
-const data = {
-  labels: [
-    "January",
-    "February",
-    "April",
-    "June",
-    "August",
-    "October",
-    "December",
-  ],
-  datasets: [
-    {
-      label: "Income",
-      data: [65, 59, 80, 81, 56, 55, 40],
-      fill: false,
-      borderColor: "rgb(85, 195, 100)",
-      tension: 0.1,
-    },
-    {
-      label: "Outcome",
-      data: [43, 65, 12, 75, 32, 67, 74],
-      fill: false,
-      borderColor: "rgb(255, 99, 132)",
-      tension: 0.1,
-    },
-  ],
-};
-
+// Chart options
 const options = {
   plugins: {
     legend: {
       display: false,
     },
+    tooltip: {
+      enabled: true, // Enable the tooltip
+      mode: "index", // Set tooltip to show for all datasets on hover
+      intersect: false, // Tooltip will appear when hovering over the chart, not just the points
+      backgroundColor: "rgba(0, 0, 0, 0.7)", // Background color of the tooltip
+      titleColor: "white", // Title text color
+      bodyColor: "white", // Body text color
+      borderColor: "rgba(255, 255, 255, 0.5)", // Border color
+      borderWidth: 1, // Border width
+      displayColors: false, // Do not show color indicators
+      callbacks: {
+        // Customizing the label
+        label: (tooltipItem) => {
+          const label = tooltipItem.dataset.label || "";
+          const value = tooltipItem.raw;
+          return `${label}: ${value.toLocaleString("id-ID", {
+            style: "currency",
+            currency: "IDR",
+          })}`; // Customize this line
+        },
+        // Customizing the title
+        title: (tooltipItem) => {
+          return `Tanggal: ${tooltipItem[0].label}`; // Customize this line
+        },
+      },
+    },
   },
 };
 
 const IncomeAndOutcome = () => {
+  const location = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const currentParams = Object.fromEntries(searchParams.entries());
+
+  const [chartLabel, setChartLabel] = useState([]);
+  const [incomeData, setIncomeData] = useState([]);
+
+  useEffect(() => {
+    // Mengecek apakah sudah ada query di URL
+    const searchParams = new URLSearchParams(location.search);
+
+    // Jika tidak ada query tertentu, set query default
+    if (!searchParams.has("timePeriod")) {
+      searchParams.set("timePeriod", "1-week-period"); // Menambahkan query default
+      setSearchParams({ timePeriod: "1-week-period" });
+    }
+  }, [location]);
+
+  useEffect(() => {
+    axios
+      .get(`http://localhost:5000/api/analysis/income?${searchParams}`)
+      .then(({ data }) => {
+        setChartLabel(data?.results.map((item) => item?.date));
+        setIncomeData(data?.results.map((item) => item?.totalIncome));
+        console.log(data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [searchParams]);
+
+  // Date filter menu
   const dateFilterMenu = () => {
     const currentDate = new Date(); // Tanggal sekarang
 
     const menu = [
       {
         label: "7 hari terakhir",
-        value: "",
+        value: "1-week-period",
+        handleMenuClicked: () =>
+          setSearchParams({ timePeriod: "1-week-period" }),
       },
       {
         label: "28 hari terakhir",
-        value: "",
+        value: "4-week-period",
+        handleMenuClicked: () =>
+          setSearchParams({ timePeriod: "4-week-period" }),
       },
       {
         label: "90 hari terakhir",
-        value: "",
+        value: "90-days-period",
+        handleMenuClicked: () =>
+          setSearchParams({ timePeriod: "90-days-period" }),
       },
       {
         label: "365 hari terakhir",
-        value: "",
+        value: "1-year-period",
+        handleMenuClicked: () =>
+          setSearchParams({ timePeriod: "1-year-period" }),
       },
       { divider: true },
     ];
@@ -108,7 +150,25 @@ const IncomeAndOutcome = () => {
     return menu;
   };
 
-  console.log();
+  const data = {
+    labels: chartLabel,
+    datasets: [
+      {
+        label: "Income",
+        data: incomeData,
+        fill: false,
+        borderColor: "rgb(85, 195, 100)",
+        tension: 0.1,
+      },
+      {
+        label: "Outcome",
+        data: [43, 65, 12, 75, 32, 67, 74],
+        fill: false,
+        borderColor: "rgb(255, 99, 132)",
+        tension: 0.1,
+      },
+    ],
+  };
 
   return (
     <>
@@ -132,10 +192,11 @@ const IncomeAndOutcome = () => {
             </button>
           }
           selectMenu={dateFilterMenu()}
+          defaultValue={currentParams?.timePeriod}
         />
       </div>
 
-      <div>
+      <div className="flex flex-col gap-y-0.5 mt-4">
         {/* Indicator */}
         <div className="flex justify-end items-center gap-x-3">
           <div className="flex items-center gap-x-1.5">

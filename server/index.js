@@ -59,7 +59,7 @@ app.use("/api/estimate", estimateRoute);
 app.use("/api/product-creation", productCreationRoute);
 
 // Product creation route
-app.use("/api/finance", analysisRoute);
+app.use("/api/analysis", analysisRoute);
 
 // Running the server on
 app.listen(PORT, () => {
