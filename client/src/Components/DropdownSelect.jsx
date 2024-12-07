@@ -70,38 +70,50 @@ const DropdownSelect = ({
               <ul className="flex flex-col gap-y-0.5">
                 {selectMenu.map((menu, key) => {
                   return (
-                    <li key={key}>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setSelectedMenu(menu.value); // Set nilai yang dipilih
-                          menu.handleMenuClicked();
-                          setIsDropdownOpen(false);
-                        }}
-                        className={`flex items-center gap-x-4 w-full pl-4 pr-6 py-2 text-left whitespace-nowrap ${
-                          menuSize === "small" ? "text-xs" : "text-sm"
-                        } hover:bg-[#1D1B20]/[.08]`}
-                      >
-                        {menu?.value === selectedMenu ? (
-                          <span>
-                            <IoCheckmarkSharp
-                              className={`${
-                                menuSize === "small" ? "text-base" : "text-xl"
-                              }`}
-                            />
-                          </span>
-                        ) : (
-                          <span>
-                            <IoCheckmarkSharp
-                              className={`invisible ${
-                                menuSize === "small" ? "text-base" : "text-xl"
-                              }`}
-                            />
-                          </span>
-                        )}
-                        {menu.label}
-                      </button>
-                    </li>
+                    <>
+                      {menu.divider && (
+                        <li className="w-full h-px bg-[#CAC4D0] my-0.5"></li>
+                      )}
+
+                      {!menu?.divider && (
+                        <li key={key}>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setSelectedMenu(menu.value); // Set nilai yang dipilih
+                              menu.handleMenuClicked();
+                              setIsDropdownOpen(false);
+                            }}
+                            className={`flex items-center gap-x-4 w-full pl-4 pr-6 py-2 text-left whitespace-nowrap ${
+                              menuSize === "small" ? "text-xs" : "text-sm"
+                            } hover:bg-[#1D1B20]/[.08]`}
+                          >
+                            {menu?.value === selectedMenu ? (
+                              <span>
+                                <IoCheckmarkSharp
+                                  className={`${
+                                    menuSize === "small"
+                                      ? "text-base"
+                                      : "text-xl"
+                                  }`}
+                                />
+                              </span>
+                            ) : (
+                              <span>
+                                <IoCheckmarkSharp
+                                  className={`invisible ${
+                                    menuSize === "small"
+                                      ? "text-base"
+                                      : "text-xl"
+                                  }`}
+                                />
+                              </span>
+                            )}
+                            {menu.label}
+                          </button>
+                        </li>
+                      )}
+                    </>
                   );
                 })}
               </ul>

@@ -18,9 +18,10 @@ const Header = () => {
         </div>
 
         <div className="flex items-center gap-x-1.5 justify-end items-center h-full">
-          <IconButton type="button" buttonType="icon">
+          {/* <IconButton type="button" buttonType="icon">
             <FaRegBell />
-          </IconButton>
+          </IconButton> */}
+
           <UserMenu />
         </div>
       </div>

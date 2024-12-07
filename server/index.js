@@ -10,6 +10,7 @@ const tailorRoute = require("./routes/tailorRoute");
 const orderRoute = require("./routes/orderRoute");
 const estimateRoute = require("./routes/estimateRoute");
 const materialRoute = require("./routes/materialRoute");
+const analysisRoute = require("./routes/analysisRoute");
 const productCreationRoute = require("./routes/productCreationRoute");
 const countryAPIRoute = require("./routes/countryAPIRoute");
 
@@ -56,6 +57,9 @@ app.use("/api/estimate", estimateRoute);
 
 // Product creation route
 app.use("/api/product-creation", productCreationRoute);
+
+// Product creation route
+app.use("/api/finance", analysisRoute);
 
 // Running the server on
 app.listen(PORT, () => {
