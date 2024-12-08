@@ -5,25 +5,31 @@ const getIncome = async (req, res) => {
   const { timePeriod } = req.query;
 
   try {
-    const today = new Date();
+    const today = new Date(); // Tanggal sekarang
+    const startDate = new Date(); // Tanggal awal untuk range
     const dates = [];
-    let date;
+    let dateRange;
 
+    // Tentukan durasi waktu berdasarkan query parameter
     if (timePeriod === "1-week-period") {
-      date = 7;
+      dateRange = 7;
     } else if (timePeriod === "4-week-period") {
-      date = 28;
+      dateRange = 28;
     } else if (timePeriod === "90-days-period") {
-      date = 90;
+      dateRange = 90;
     } else if (timePeriod === "1-year-period") {
-      date = 365;
+      dateRange = 365;
+    } else {
+      return res.status(400).json({ message: "Invalid time period provided" });
     }
 
-    // Generate array of dates for the last `date` days excluding today
-    for (let i = 1; i <= date; i++) {
+    // Atur tanggal awal untuk filter
+    startDate.setDate(today.getDate() - dateRange);
+
+    // Buat array tanggal untuk rentang waktu
+    for (let i = 1; i <= dateRange; i++) {
       const pastDate = new Date(today);
       pastDate.setDate(today.getDate() - i);
-      // Format the date in 'Month Day, Year' format
       const formattedDate = pastDate.toLocaleDateString("en-US", {
         month: "short",
         day: "numeric",
@@ -32,12 +38,12 @@ const getIncome = async (req, res) => {
       dates.push(formattedDate);
     }
 
-    // Fetch orders with their associated products
+    // Ambil data order berdasarkan range waktu
     const getOrder = await prisma.order.findMany({
       where: {
         status: "selesai",
         createdAt: {
-          gte: new Date(today.setDate(today.getDate() - date)), // Filter by past 'date' days
+          gte: startDate, // Gunakan `startDate` yang valid
         },
       },
       include: {
@@ -49,15 +55,14 @@ const getIncome = async (req, res) => {
       },
     });
 
-    // Initialize totalIncome for each date with 0
+    // Inisialisasi totalIncome untuk setiap tanggal
     let incomeByDate = dates.reduce((acc, date) => {
-      acc[date] = 0; // Set initial income as 0 for each date
+      acc[date] = 0;
       return acc;
     }, {});
 
-    // Calculate total income for the orders and assign to corresponding dates
+    // Hitung total income untuk setiap tanggal
     getOrder.forEach((order) => {
-      // Format order date as 'Month Day, Year'
       const orderDate = new Date(order.createdAt).toLocaleDateString("en-US", {
         month: "short",
         day: "numeric",
@@ -66,28 +71,26 @@ const getIncome = async (req, res) => {
 
       let orderTotal = 0;
 
-      // Calculate the total for each product in the order
       order.orderProducts.forEach((orderProduct) => {
         const productTotal =
           orderProduct.quantity * orderProduct.productVariant.price;
         orderTotal += productTotal;
 
-        // Add the shipping fee to the total income for this product
+        // Hitung biaya pengiriman per produk
         const shippingFeePerProduct =
           order.shippingFee / order.orderProducts.length;
         orderTotal -= shippingFeePerProduct;
       });
 
-      // Update the totalIncome for the corresponding order date
       if (incomeByDate[orderDate] !== undefined) {
         incomeByDate[orderDate] += orderTotal;
       }
     });
 
-    // Convert the `incomeByDate` object into an array with correct order
+    // Ubah objek incomeByDate menjadi array dengan urutan yang benar
     const resultArray = dates.map((date) => ({
       date,
-      totalIncome: incomeByDate[date] || 0, // Set totalIncome to 0 if no orders on that date
+      totalIncome: incomeByDate[date] || 0,
     }));
 
     resultArray.reverse();
@@ -100,7 +103,7 @@ const getIncome = async (req, res) => {
     console.error("Error:", err);
     return res
       .status(500)
-      .json({ message: "Internal server error", error: err });
+      .json({ message: "Internal server error", error: err.message });
   }
 };
 

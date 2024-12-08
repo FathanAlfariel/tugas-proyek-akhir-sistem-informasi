@@ -126,7 +126,7 @@ const IncomeAndOutcome = () => {
       { divider: true },
     ];
 
-    for (let i = 1; i <= 3; i++) {
+    for (let i = 0; i <= 2; i++) {
       const tempDate = new Date(currentDate);
 
       tempDate.setMonth(tempDate.getMonth() - i);
@@ -135,7 +135,15 @@ const IncomeAndOutcome = () => {
         label: tempDate.toLocaleString("default", {
           month: "long",
         }),
-        value: "",
+        value: `${
+          i === 0 ? "period-current_month" : `period-minus_${i}_month`
+        }`,
+        handleMenuClicked: () =>
+          setSearchParams({
+            timePeriod: `${
+              i === 0 ? "period-current_month" : `period-minus_${i}_month`
+            }`,
+          }),
       });
     }
 
