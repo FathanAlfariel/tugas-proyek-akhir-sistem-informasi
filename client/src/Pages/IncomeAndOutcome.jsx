@@ -62,6 +62,8 @@ const options = {
         },
       },
     },
+    maintainAspectRatio: false, // Allow resizing independently of aspect ratio
+    aspectRatio: 1,
   },
 };
 
@@ -263,7 +265,13 @@ const IncomeAndOutcome = () => {
           </div>
         </div>
 
-        <Line options={options} data={data} height={50} />
+        <div className="block lg:hidden">
+          <Line options={options} data={data} height={250} />
+        </div>
+
+        <div className="hidden lg:block">
+          <Line options={options} data={data} height={105} />
+        </div>
       </div>
     </>
   );
