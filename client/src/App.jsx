@@ -22,6 +22,7 @@ import AddProductCreation from "./Pages/AddProductCreation";
 import HomePage from "./Pages/HomePage";
 import ProductDetail from "./Pages/ProductDetail";
 import AdminLayout from "./AdminLayout";
+import IncomeAndOutcome from "./Pages/IncomeAndOutcome";
 
 axios.defaults.withCredentials = true;
 
@@ -42,7 +43,9 @@ const App = () => {
           }
         >
           <Route index element={<Dashboard />} />
-          <Route path="analysis" element={<Analysis />} />
+          <Route path="analysis/*" element={<Analysis />}>
+            <Route path="income-outcome" element={<IncomeAndOutcome />} />
+          </Route>
           <Route path="product" element={<Product />} />
           <Route path="order" element={<Order />} />
           <Route path="order/detail/:id" element={<OrderDetail />} />
