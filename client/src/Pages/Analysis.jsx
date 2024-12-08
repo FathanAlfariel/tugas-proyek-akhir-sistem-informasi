@@ -5,8 +5,8 @@ const Analysis = () => {
   const location = useLocation();
   const pathname = location.pathname.split("/");
 
-  const [isSelected, setIsSelected] = useState(null); // State untuk memonitor item yang dipilih
-  const navigate = useNavigate(); // Hook untuk navigasi
+  const [isSelected, setIsSelected] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (pathname[3] === undefined || pathname[4] === undefined) {
