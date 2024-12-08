@@ -2,40 +2,83 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 const getIncome = async (req, res) => {
-  const { timePeriod } = req.query;
+  const {
+    timePeriod,
+    startDate: startDateQuery,
+    endDate: endDateQuery,
+  } = req.query;
 
   try {
     const today = new Date(); // Tanggal sekarang
-    const startDate = new Date(); // Tanggal awal untuk range
+    let startDate = new Date(); // Tanggal awal untuk range
+    let endDate = new Date(); // Tanggal akhir untuk range
     const dates = [];
-    let dateRange;
+    let isMonthlyFilter = false;
 
-    // Tentukan durasi waktu berdasarkan query parameter
-    if (timePeriod === "1-week-period") {
-      dateRange = 7;
-    } else if (timePeriod === "4-week-period") {
-      dateRange = 28;
-    } else if (timePeriod === "90-days-period") {
-      dateRange = 90;
-    } else if (timePeriod === "1-year-period") {
-      dateRange = 365;
+    // Cek apakah user memberikan tanggal mulai dan tanggal akhir
+    if (startDateQuery && endDateQuery) {
+      startDate = new Date(startDateQuery);
+      endDate = new Date(endDateQuery);
     } else {
-      return res.status(400).json({ message: "Invalid time period provided" });
+      // Tentukan range waktu berdasarkan query parameter
+      if (timePeriod === "1-week-period") {
+        startDate.setDate(today.getDate() - 7);
+      } else if (timePeriod === "4-week-period") {
+        startDate.setDate(today.getDate() - 28);
+      } else if (timePeriod === "90-days-period") {
+        startDate.setDate(today.getDate() - 90);
+      } else if (timePeriod === "1-year-period") {
+        startDate.setDate(today.getDate() - 365);
+      } else if (timePeriod === "period-current_month") {
+        isMonthlyFilter = true;
+        startDate.setDate(1); // Awal bulan ini
+        endDate.setMonth(startDate.getMonth() + 1, 0); // Akhir bulan ini
+      } else if (timePeriod === "period-minus_1_month") {
+        isMonthlyFilter = true;
+        startDate.setMonth(today.getMonth() - 1, 1); // Awal bulan sebelumnya
+        endDate.setMonth(today.getMonth(), 0); // Akhir bulan sebelumnya
+      } else if (timePeriod === "period-minus_2_month") {
+        isMonthlyFilter = true;
+        startDate.setMonth(today.getMonth() - 2, 1); // Awal 2 bulan sebelumnya
+        endDate.setMonth(today.getMonth() - 1, 0); // Akhir 2 bulan sebelumnya
+      } else {
+        return res
+          .status(400)
+          .json({ message: "Invalid time period provided" });
+      }
     }
 
-    // Atur tanggal awal untuk filter
-    startDate.setDate(today.getDate() - dateRange);
-
-    // Buat array tanggal untuk rentang waktu
-    for (let i = 1; i <= dateRange; i++) {
-      const pastDate = new Date(today);
-      pastDate.setDate(today.getDate() - i);
-      const formattedDate = pastDate.toLocaleDateString("en-US", {
-        month: "short",
-        day: "numeric",
-        year: "numeric",
-      });
-      dates.push(formattedDate);
+    // Buat array tanggal untuk rentang waktu jika filter bulanan atau berdasarkan startDate dan endDate
+    if (isMonthlyFilter) {
+      for (
+        let d = new Date(startDate);
+        d <= endDate;
+        d.setDate(d.getDate() + 1)
+      ) {
+        dates.push(
+          new Date(d).toLocaleDateString("en-US", {
+            month: "short",
+            day: "numeric",
+            year: "numeric",
+          })
+        );
+      }
+    } else {
+      // Pastikan rentang dari startDate sampai endDate, bukan hanya berdasarkan today
+      const dateRange = Math.ceil(
+        (endDate - startDate) / (1000 * 60 * 60 * 24)
+      ); // Menghitung jumlah hari
+      for (let i = 0; i <= dateRange; i++) {
+        const pastDate = new Date(startDate);
+        pastDate.setDate(startDate.getDate() + i); // Mulai dari startDate dan tambahkan hari
+        dates.push(
+          pastDate.toLocaleDateString("en-US", {
+            month: "short",
+            day: "numeric",
+            year: "numeric",
+          })
+        );
+      }
     }
 
     // Ambil data order berdasarkan range waktu
@@ -43,7 +86,8 @@ const getIncome = async (req, res) => {
       where: {
         status: "selesai",
         createdAt: {
-          gte: startDate, // Gunakan `startDate` yang valid
+          gte: startDate,
+          lte: endDate, // Gunakan endDate yang telah ditentukan
         },
       },
       include: {
@@ -93,11 +137,9 @@ const getIncome = async (req, res) => {
       totalIncome: incomeByDate[date] || 0,
     }));
 
-    resultArray.reverse();
-
     res.status(200).json({
       message: "Successfully retrieved income data",
-      results: resultArray,
+      results: timePeriod === "1-week-period" ? resultArray : resultArray,
     });
   } catch (err) {
     console.error("Error:", err);

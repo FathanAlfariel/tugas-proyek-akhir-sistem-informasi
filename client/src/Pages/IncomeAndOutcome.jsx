@@ -9,12 +9,15 @@ import {
   Title,
   Tooltip,
   Legend,
-  plugins,
 } from "chart.js";
 import DropdownSelect from "../Components/DropdownSelect";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useLocation, useSearchParams } from "react-router-dom";
+import DateRangePicker from "@wojtekmaj/react-daterange-picker";
+import "@wojtekmaj/react-daterange-picker/dist/DateRangePicker.css";
+import "react-calendar/dist/Calendar.css";
+import Filter from "../Components/Filter";
 
 // Register the components used
 ChartJS.register(
@@ -75,7 +78,7 @@ const IncomeAndOutcome = () => {
     const searchParams = new URLSearchParams(location.search);
 
     // Jika tidak ada query tertentu, set query default
-    if (!searchParams.has("timePeriod")) {
+    if (!searchParams.has("timePeriod") && !searchParams.has("startDate")) {
       searchParams.set("timePeriod", "1-week-period"); // Menambahkan query default
       setSearchParams({ timePeriod: "1-week-period" });
     }
@@ -147,14 +150,6 @@ const IncomeAndOutcome = () => {
       });
     }
 
-    menu.push(
-      { divider: true },
-      {
-        label: "Kustom",
-        value: "",
-      }
-    );
-
     return menu;
   };
 
@@ -178,9 +173,60 @@ const IncomeAndOutcome = () => {
     ],
   };
 
+  const [dateRange, setDateRange] = useState([]);
+  const startDate = dateRange.length > 0 && new Date(dateRange[0]);
+  const endDate = dateRange.length > 1 && new Date(dateRange[1]);
+
+  const formattedStartDate =
+    dateRange.length > 0 &&
+    `${startDate?.getFullYear()}-${(startDate?.getMonth() + 1)
+      .toString()
+      .padStart(2, "0")}-${startDate?.getDate().toString().padStart(2, "0")}`;
+  const formattedEndDate =
+    dateRange.length > 1 &&
+    `${endDate?.getFullYear()}-${(endDate?.getMonth() + 1)
+      .toString()
+      .padStart(2, "0")}-${endDate?.getDate().toString().padStart(2, "0")}`;
+
   return (
     <>
       <div className="flex justify-end">
+        {/* Title Filter */}
+        <Filter
+          id="custom-date-filter"
+          headerTitle="Tanggal kustom"
+          menuDirection="right"
+          button={
+            <button
+              type="button"
+              className="flex items-center gap-x-4 py-2 px-4 rounded-xl transition-all active:scale-90 duration-300 bg-transparent hover:bg-[#6750A4]/[.08] active:bg-[#6750A4]/[.12]"
+            >
+              <div className="flex flex-col items-start">
+                <span className="text-xs text-[#606060]">7 hari terakhir</span>
+                <span className="text-sm">Kustom tanggal</span>
+              </div>
+
+              <span className="text-lg">
+                <IoIosArrowDown />
+              </span>
+            </button>
+          }
+          onClick={() =>
+            setSearchParams({
+              startDate: formattedStartDate,
+              endDate: formattedEndDate,
+            })
+          }
+          disabledButton={dateRange === null ? true : false}
+        >
+          <DateRangePicker
+            calendarIcon={null}
+            onChange={setDateRange}
+            value={dateRange}
+            locale={"id-ID"}
+          />
+        </Filter>
+
         <DropdownSelect
           id="date-filter"
           menuDirection="right"
@@ -189,9 +235,9 @@ const IncomeAndOutcome = () => {
               type="button"
               className="flex items-center gap-x-4 py-2 px-4 rounded-xl transition-all active:scale-90 duration-300 bg-transparent hover:bg-[#6750A4]/[.08] active:bg-[#6750A4]/[.12]"
             >
-              <div className="flex flex-col">
-                <span className="text-xs text-[#606060]">Nov 1 – 30, 2024</span>
-                <span className="text-sm">7 hari terakhir</span>
+              <div className="flex flex-col items-start">
+                <span className="text-xs text-[#606060]">7 hari terakhir</span>
+                <span className="text-sm">Pilih tanggal</span>
               </div>
 
               <span className="text-lg">

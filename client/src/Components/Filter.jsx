@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import IconButton from "./IconButton";
 import { IoMdClose } from "react-icons/io";
 import Button from "./Button";
@@ -12,6 +12,7 @@ const Filter = ({
   onClick,
   disabledButton = false,
 }) => {
+  const parentRef = useRef(null);
   const [showFilterMenu, setShowFilterMenu] = useState(false);
 
   const menuPosition =
@@ -21,9 +22,26 @@ const Filter = ({
       ? "right-0 md:left-auto"
       : null;
 
+  const handleClickOutside = (event) => {
+    // Cek apakah klik terjadi di luar parentRef
+    if (parentRef.current && !parentRef.current.contains(event.target)) {
+      setShowFilterMenu(false); // Menutup menu jika klik di luar
+    }
+  };
+
+  useEffect(() => {
+    // Menambahkan event listener ketika komponen pertama kali dimounting
+    document.addEventListener("mousedown", handleClickOutside);
+
+    // Membersihkan event listener ketika komponen di-unmount
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
     <>
-      <div id={id} className="relative">
+      <div ref={parentRef} id={id} className="relative">
         <div
           onClick={() => setShowFilterMenu((prev) => !prev)}
           className="whitespace-nowrap"
