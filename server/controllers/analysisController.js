@@ -116,7 +116,6 @@ const getIncome = async (req, res) => {
       let orderTotal = 0;
 
       order.orderProducts.forEach((orderProduct) => {
-        console.log(order);
         const productTotal =
           orderProduct.quantity * orderProduct.productVariant.price;
         orderTotal += productTotal;
@@ -140,7 +139,7 @@ const getIncome = async (req, res) => {
 
     res.status(200).json({
       message: "Successfully retrieved income data",
-      results: timePeriod === "1-week-period" ? resultArray : resultArray,
+      results: resultArray,
     });
   } catch (err) {
     console.error("Error:", err);
@@ -150,4 +149,98 @@ const getIncome = async (req, res) => {
   }
 };
 
-module.exports = { getIncome };
+const getExpense = async (req, res) => {
+  const {
+    timePeriod,
+    startDate: startDateQuery,
+    endDate: endDateQuery,
+  } = req.query;
+
+  try {
+    const today = new Date();
+    let startDate = new Date();
+    let endDate = new Date();
+
+    if (startDateQuery && endDateQuery) {
+      startDate = new Date(startDateQuery);
+      endDate = new Date(endDateQuery);
+    } else {
+      if (timePeriod === "1-week-period") {
+        startDate.setDate(today.getDate() - 7);
+      } else if (timePeriod === "4-week-period") {
+        startDate.setDate(today.getDate() - 28);
+      } else if (timePeriod === "90-days-period") {
+        startDate.setDate(today.getDate() - 90);
+      } else if (timePeriod === "1-year-period") {
+        startDate.setDate(today.getDate() - 365);
+      } else if (timePeriod === "period-current_month") {
+        startDate.setDate(1);
+        endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+      } else if (timePeriod === "period-minus_1_month") {
+        startDate = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+        endDate = new Date(today.getFullYear(), today.getMonth(), 0);
+      } else if (timePeriod === "period-minus_2_month") {
+        startDate = new Date(today.getFullYear(), today.getMonth() - 2, 1);
+        endDate = new Date(today.getFullYear(), today.getMonth() - 1, 0);
+      } else {
+        return res
+          .status(400)
+          .json({ message: "Invalid time period provided" });
+      }
+    }
+
+    // Generate array tanggal dari startDate ke endDate
+    const dates = [];
+    for (
+      let d = new Date(startDate);
+      d <= endDate;
+      d.setDate(d.getDate() + 1)
+    ) {
+      dates.push(
+        new Date(d).toLocaleDateString("en-US", {
+          month: "short",
+          day: "numeric",
+          year: "numeric",
+        })
+      );
+    }
+
+    // Ambil data pengeluaran dari database
+    const expenses = await prisma.expense.findMany({
+      where: {
+        createdAt: {
+          gte: startDate,
+          lte: endDate,
+        },
+      },
+    });
+
+    // Hitung totalExpense berdasarkan tanggal
+    const incomeByDate = expenses.reduce((acc, expense) => {
+      const formattedDate = new Date(expense.createdAt).toLocaleDateString(
+        "en-US",
+        { month: "short", day: "numeric", year: "numeric" }
+      );
+      acc[formattedDate] = (acc[formattedDate] || 0) + expense.price;
+      return acc;
+    }, {});
+
+    // Buat array hasil dengan memastikan setiap tanggal memiliki totalExpense
+    const resultArray = dates.map((date) => ({
+      date,
+      totalExpense: incomeByDate[date] || 0,
+    }));
+
+    res.status(200).json({
+      message: "Successfully retrieved expense data",
+      results: resultArray,
+    });
+  } catch (err) {
+    console.error("Error:", err);
+    return res
+      .status(500)
+      .json({ message: "Internal server error", error: err.message });
+  }
+};
+
+module.exports = { getIncome, getExpense };

@@ -74,6 +74,7 @@ const IncomeAndOutcome = () => {
 
   const [chartLabel, setChartLabel] = useState([]);
   const [incomeData, setIncomeData] = useState([]);
+  const [expenseData, setExpenseData] = useState([]);
 
   useEffect(() => {
     // Mengecek apakah sudah ada query di URL
@@ -86,6 +87,7 @@ const IncomeAndOutcome = () => {
     }
   }, [location]);
 
+  // Get income data
   useEffect(() => {
     axios
       .get(
@@ -96,6 +98,22 @@ const IncomeAndOutcome = () => {
       .then(({ data }) => {
         setChartLabel(data?.results.map((item) => item?.date));
         setIncomeData(data?.results.map((item) => item?.totalIncome));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [searchParams]);
+
+  // Get expense data
+  useEffect(() => {
+    axios
+      .get(
+        `${
+          import.meta.env.VITE_API_BASE_URL
+        }/api/analysis/expense?${searchParams}`
+      )
+      .then(({ data }) => {
+        setExpenseData(data?.results.map((item) => item?.totalExpense));
       })
       .catch((err) => {
         console.log(err);
@@ -170,7 +188,7 @@ const IncomeAndOutcome = () => {
       },
       {
         label: "Outcome",
-        data: [43, 65, 12, 75, 32, 67, 74],
+        data: expenseData,
         fill: false,
         borderColor: "rgb(255, 99, 132)",
         tension: 0.1,
