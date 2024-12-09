@@ -366,7 +366,7 @@ const Product = () => {
       </div>
 
       {/* Products list for tablet and desktop */}
-      <div className="hidden md:block overflow-x-auto md:overflow-visible">
+      <div className="hidden md:block overflow-x-auto">
         <table className="w-full">
           <thead>
             <tr className="border-b">
@@ -389,13 +389,13 @@ const Product = () => {
               products.map((product, key) => {
                 return (
                   <tr key={key} className="border-b">
-                    <td className="flex gap-x-4 pl-0 md:pl-6 py-3 whitespace-nowrap">
+                    <td className="flex gap-x-4 pl-0 md:pl-6 py-3 min-w-[30%]">
                       <img
                         src={`${
                           import.meta.env.VITE_API_BASE_URL
                         }/public/images/${product?.images[0]?.name}`}
                         alt={product?.images[0]}
-                        className="w-16 h-16 object-cover rounded-xl"
+                        className="min-w-16 w-16 min-h-16 h-16 object-cover rounded-xl"
                       />
 
                       <div className="grow">

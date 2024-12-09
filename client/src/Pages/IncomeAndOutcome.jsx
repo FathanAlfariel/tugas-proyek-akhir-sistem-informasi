@@ -96,7 +96,6 @@ const IncomeAndOutcome = () => {
       .then(({ data }) => {
         setChartLabel(data?.results.map((item) => item?.date));
         setIncomeData(data?.results.map((item) => item?.totalIncome));
-        console.log(data);
       })
       .catch((err) => {
         console.log(err);

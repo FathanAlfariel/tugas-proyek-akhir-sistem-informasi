@@ -116,6 +116,7 @@ const getIncome = async (req, res) => {
       let orderTotal = 0;
 
       order.orderProducts.forEach((orderProduct) => {
+        console.log(order);
         const productTotal =
           orderProduct.quantity * orderProduct.productVariant.price;
         orderTotal += productTotal;
@@ -123,7 +124,7 @@ const getIncome = async (req, res) => {
         // Hitung biaya pengiriman per produk
         const shippingFeePerProduct =
           order.shippingFee / order.orderProducts.length;
-        orderTotal -= shippingFeePerProduct;
+        orderTotal -= shippingFeePerProduct + order.discount;
       });
 
       if (incomeByDate[orderDate] !== undefined) {
