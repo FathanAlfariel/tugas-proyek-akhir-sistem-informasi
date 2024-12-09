@@ -34,7 +34,7 @@ const Order = () => {
 
     const getAllOrders = async () => {
       await axios
-        .get(`http://localhost:5000/api/order?${searchParams}`)
+        .get(`${import.meta.env.VITE_API_BASE_URL}/api/order?${searchParams}`)
         .then(({ data }) => {
           setOrders(data.results);
         })
@@ -53,7 +53,7 @@ const Order = () => {
     setIsLoading(true);
 
     const { data } = await axios.put(
-      `http://localhost:5000/api/order/status/${id}`,
+      `${import.meta.env.VITE_API_BASE_URL}/api/order/status/${id}`,
       {
         status: status,
       }
@@ -72,7 +72,7 @@ const Order = () => {
     setIsLoading(true);
 
     await axios
-      .put(`http://localhost:5000/api/order/cancel/${id}`)
+      .put(`${import.meta.env.VITE_API_BASE_URL}/api/order/cancel/${id}`)
       .then(({ data }) => {})
       .catch((err) => {
         console.log(err);
@@ -460,7 +460,11 @@ const Order = () => {
                     return (
                       <div key={key} className="flex items-start gap-x-3 py-4">
                         <img
-                          src={`http://localhost:5000/public/images/${prod?.productVariant?.product?.images[0]?.name}`}
+                          src={`${
+                            import.meta.env.VITE_API_BASE_URL
+                          }/public/images/${
+                            prod?.productVariant?.product?.images[0]?.name
+                          }`}
                           alt={prod?.productVariant?.product?.images[0]?.name}
                           className="w-20 h-20 md:w-28 md:h-28 object-contain rounded-xl"
                         />

@@ -36,7 +36,7 @@ const Product = () => {
 
     const fetchProducts = async () => {
       await axios
-        .get(`http://localhost:5000/api/product?${searchParams}`)
+        .get(`${import.meta.env.VITE_API_BASE_URL}/api/product?${searchParams}`)
         .then(({ data }) => {
           setProducts(data.results);
         })
@@ -57,7 +57,7 @@ const Product = () => {
 
     try {
       const { data } = await axios.put(
-        `http://localhost:5000/api/product/visibility/${id}`,
+        `${import.meta.env.VITE_API_BASE_URL}/api/product/visibility/${id}`,
         {
           visibility: visibility,
         }
@@ -84,7 +84,7 @@ const Product = () => {
 
     try {
       const { data } = await axios.delete(
-        `http://localhost:5000/api/product/${id}`
+        `${import.meta.env.VITE_API_BASE_URL}/api/product/${id}`
       );
 
       // Update data products
@@ -391,7 +391,9 @@ const Product = () => {
                   <tr key={key} className="border-b">
                     <td className="flex gap-x-4 pl-0 md:pl-6 py-3 whitespace-nowrap">
                       <img
-                        src={`http://localhost:5000/public/images/${product?.images[0]?.name}`}
+                        src={`${
+                          import.meta.env.VITE_API_BASE_URL
+                        }/public/images/${product?.images[0]?.name}`}
                         alt={product?.images[0]}
                         className="w-16 h-16 object-cover rounded-xl"
                       />
@@ -513,7 +515,9 @@ const Product = () => {
             return (
               <div key={key} className="flex item-start gap-x-3">
                 <img
-                  src={`http://localhost:5000/public/images/${product.images[0]?.name}`}
+                  src={`${import.meta.env.VITE_API_BASE_URL}/public/images/${
+                    product.images[0]?.name
+                  }`}
                   alt={product.images[0]}
                   className="h-20 w-20 object-contain rounded-lg"
                 />

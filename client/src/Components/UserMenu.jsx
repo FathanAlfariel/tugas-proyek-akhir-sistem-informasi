@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Loader from "./Loader";
 import Dropdown from "./Dropdown";
+import { IoChevronBack } from "react-icons/io5";
 
 const UserMenu = () => {
   const navigate = useNavigate();
@@ -28,7 +29,7 @@ const UserMenu = () => {
     setIsLoading(true);
 
     await axios
-      .post("http://localhost:5000/api/auth/logout")
+      .post(`${import.meta.env.VITE_API_BASE_URL}/api/auth/logout`)
       .then(({ data }) => {
         navigate("/login");
       })
@@ -62,6 +63,12 @@ const UserMenu = () => {
           </button>
         }
         selectMenu={[
+          {
+            icon: <IoChevronBack />,
+            label: "Kembali ke halaman utama",
+
+            handleMenuClicked: () => navigate("/"),
+          },
           {
             icon: <MdLogout />,
             label: "Logout",

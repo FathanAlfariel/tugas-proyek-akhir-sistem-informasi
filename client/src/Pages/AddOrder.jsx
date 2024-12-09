@@ -97,7 +97,7 @@ const AddOrder = () => {
       );
 
       await axios
-        .post("http://localhost:5000/api/order", {
+        .post(`${import.meta.env.VITE_API_BASE_URL}/api/order`, {
           variantId: values.variantId,
           name: values.name,
           phone: values.phone,
@@ -132,7 +132,7 @@ const AddOrder = () => {
   useEffect(() => {
     const getProductsOrderList = async () => {
       await axios
-        .post("http://localhost:5000/api/product/variant", {
+        .post(`${import.meta.env.VITE_API_BASE_URL}/api/product/variant`, {
           data: formik.values.variantId,
         })
         .then(({ data }) => {
@@ -168,7 +168,7 @@ const AddOrder = () => {
   useEffect(() => {
     const getCountries = async () => {
       await axios
-        .get("http://localhost:5000/api/country")
+        .get(`${import.meta.env.VITE_API_BASE_URL}/api/country`)
         .then(({ data }) => {
           setCountries(data.results);
         })
@@ -185,7 +185,9 @@ const AddOrder = () => {
     const getStates = async () => {
       await axios
         .get(
-          `http://localhost:5000/api/country/states?country=${selectedCountry}`
+          `${
+            import.meta.env.VITE_API_BASE_URL
+          }/api/country/states?country=${selectedCountry}`
         )
         .then(({ data }) => {
           setStates(data.results);
@@ -203,7 +205,9 @@ const AddOrder = () => {
     const getCities = async () => {
       await axios
         .get(
-          `http://localhost:5000/api/country/cities?countryCode=${selectedCountry}&stateCode=${selectedState}`
+          `${
+            import.meta.env.VITE_API_BASE_URL
+          }/api/country/cities?countryCode=${selectedCountry}&stateCode=${selectedState}`
         )
         .then(({ data }) => {
           setCities(data.results);

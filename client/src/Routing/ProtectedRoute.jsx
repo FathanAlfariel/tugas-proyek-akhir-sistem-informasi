@@ -11,7 +11,7 @@ const ProtectedRoute = ({ children }) => {
     const fetchToken = async () => {
       try {
         const { data } = await axios.get(
-          "http://localhost:5000/api/auth/getToken"
+          `${import.meta.env.VITE_API_BASE_URL}/api/auth/getToken`
         );
         setToken(data.token);
       } catch (err) {

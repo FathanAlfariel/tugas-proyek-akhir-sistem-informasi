@@ -14,7 +14,7 @@ const Tailor = () => {
 
     const getAllTailors = async () => {
       await axios
-        .get("http://localhost:5000/api/tailor")
+        .get(`${import.meta.env.VITE_API_BASE_URL}/api/tailor`)
         .then(({ data }) => {
           setTailors(data.results);
         })
@@ -33,7 +33,7 @@ const Tailor = () => {
     setIsLoading(true);
 
     await axios
-      .delete(`http://localhost:5000/api/tailor/${id}`)
+      .delete(`${import.meta.env.VITE_API_BASE_URL}/api/tailor/${id}`)
       .then(({ data }) => {
         setTailors((prev) => prev.filter((tailor) => tailor.id !== id));
       })

@@ -26,7 +26,7 @@ const AddProductOrder = ({ formik, productsOrderList }) => {
   useEffect(() => {
     const getAllProducts = async () => {
       await axios
-        .get("http://localhost:5000/api/product")
+        .get(`${import.meta.env.VITE_API_BASE_URL}/api/product`)
         .then(({ data }) => {
           setProducts(data.results);
         })
@@ -71,7 +71,9 @@ const AddProductOrder = ({ formik, productsOrderList }) => {
                   <li key={key} className="pb-4 border-b overflow-x-auto">
                     <div className="flex items-start gap-x-3 mb-2">
                       <img
-                        src={`http://localhost:5000/public/images/${product?.images[0]?.name}`}
+                        src={`${
+                          import.meta.env.VITE_API_BASE_URL
+                        }/public/images/${product?.images[0]?.name}`}
                         alt={product?.images[0]?.name}
                         className="h-16 w-16 object-cover rounded-xl"
                       />
@@ -226,7 +228,9 @@ const AddProductOrder = ({ formik, productsOrderList }) => {
                 >
                   <div className="grow flex items-center gap-x-3">
                     <img
-                      src={`http://localhost:5000/public/images/${item?.product?.images[0]?.name}`}
+                      src={`${
+                        import.meta.env.VITE_API_BASE_URL
+                      }/public/images/${item?.product?.images[0]?.name}`}
                       alt={item?.product?.images[0]?.name}
                       className="w-16 h-16 object-cover rounded-xl"
                     />

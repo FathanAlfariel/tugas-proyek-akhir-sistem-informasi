@@ -18,7 +18,7 @@ const HomePage = () => {
 
     const fetchProducts = async () => {
       await axios
-        .get(`http://localhost:5000/api/product?${searchParams}`)
+        .get(`${import.meta.env.VITE_API_BASE_URL}/api/product?${searchParams}`)
         .then(({ data }) => {
           setProductList(data.results);
         })

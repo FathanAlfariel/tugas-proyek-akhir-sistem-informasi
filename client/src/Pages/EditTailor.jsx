@@ -19,7 +19,7 @@ const EditTailor = () => {
 
     const getTailorDataById = async () => {
       await axios
-        .get(`http://localhost:5000/api/tailor/${id}`)
+        .get(`${import.meta.env.VITE_API_BASE_URL}/api/tailor/${id}`)
         .then(({ data }) => {
           formik.setFieldValue("name", data.results.name);
           formik.setFieldValue("available", data.results.available);
@@ -48,7 +48,7 @@ const EditTailor = () => {
       setIsLoading(true);
 
       await axios
-        .put(`http://localhost:5000/api/tailor/${id}`, {
+        .put(`${import.meta.env.VITE_API_BASE_URL}/api/tailor/${id}`, {
           name: values.name,
           available: values.available,
         })

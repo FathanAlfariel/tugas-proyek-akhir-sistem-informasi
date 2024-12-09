@@ -34,7 +34,7 @@ const AddProduct = () => {
     setIsLoading(true);
 
     await axios
-      .post("http://localhost:5000/api/product/images", data, {
+      .post(`${import.meta.env.VITE_API_BASE_URL}/api/product/images`, data, {
         "Content-Type": "multipart/form-data",
       })
       .then(({ data }) => {
@@ -70,7 +70,7 @@ const AddProduct = () => {
       setIsLoading(true);
 
       await axios
-        .post("http://localhost:5000/api/product", {
+        .post(`${import.meta.env.VITE_API_BASE_URL}/api/product`, {
           images: values.images,
           name: values.name,
           description: values.description,
@@ -198,7 +198,9 @@ const AddProduct = () => {
                       return (
                         <li key={key} className="shrink-0 relative">
                           <img
-                            src={`http://localhost:5000/public/images/${name}`}
+                            src={`${
+                              import.meta.env.VITE_API_BASE_URL
+                            }/public/images/${name}`}
                             alt={name}
                             className="h-20 w-20 object-cover rounded-xl"
                           />

@@ -14,7 +14,7 @@ export const UserContextProvider = ({ children }) => {
 
     if (!user) {
       axios
-        .get("http://localhost:5000/api/auth/getUser")
+        .get(`${import.meta.env.VITE_API_BASE_URL}/api/auth/getUser`)
         .then(({ data }) => {
           setUser(data);
         })

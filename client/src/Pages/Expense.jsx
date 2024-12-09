@@ -28,7 +28,7 @@ const Expense = () => {
 
     const getAllExpenses = async () => {
       await axios
-        .get(`http://localhost:5000/api/expense?${searchParams}`)
+        .get(`${import.meta.env.VITE_API_BASE_URL}/api/expense?${searchParams}`)
         .then(({ data }) => {
           setExpenses(data.results);
         })
@@ -47,7 +47,7 @@ const Expense = () => {
     setIsLoading(true);
 
     await axios
-      .delete(`http://localhost:5000/api/expense/${id}`)
+      .delete(`${import.meta.env.VITE_API_BASE_URL}/api/expense/${id}`)
       .then(({ data }) => {
         setExpenses((prev) => prev.filter((expense) => expense.id !== id));
       })

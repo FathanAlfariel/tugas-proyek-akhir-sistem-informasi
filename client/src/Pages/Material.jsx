@@ -18,7 +18,7 @@ const Material = () => {
     setIsLoading(true);
 
     await axios
-      .get("http://localhost:5000/api/material")
+      .get(`${import.meta.env.VITE_API_BASE_URL}/api/material`)
       .then(({ data }) => {
         setMaterials(data.results);
       })
@@ -82,7 +82,7 @@ const Material = () => {
       setIsLoading(true);
 
       await axios
-        .post("http://localhost:5000/api/material", {
+        .post(`${import.meta.env.VITE_API_BASE_URL}/api/material`, {
           name: values.name,
           complexity: parseFloat(values.complexity),
           cuttingTime: parseFloat(values.cuttingTime),
@@ -106,7 +106,7 @@ const Material = () => {
     setIsLoading(true);
 
     await axios
-      .delete(`http://localhost:5000/api/material/${id}`)
+      .delete(`${import.meta.env.VITE_API_BASE_URL}/api/material/${id}`)
       .then(({ data }) => {
         getAllMaterials();
       })

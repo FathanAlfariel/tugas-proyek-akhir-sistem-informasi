@@ -88,7 +88,11 @@ const IncomeAndOutcome = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/api/analysis/income?${searchParams}`)
+      .get(
+        `${
+          import.meta.env.VITE_API_BASE_URL
+        }/api/analysis/income?${searchParams}`
+      )
       .then(({ data }) => {
         setChartLabel(data?.results.map((item) => item?.date));
         setIncomeData(data?.results.map((item) => item?.totalIncome));

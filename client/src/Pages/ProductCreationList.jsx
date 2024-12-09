@@ -29,7 +29,11 @@ const ProductCreationList = () => {
 
     const fetchProducts = async () => {
       await axios
-        .get(`http://localhost:5000/api/product-creation?${searchParams}`)
+        .get(
+          `${
+            import.meta.env.VITE_API_BASE_URL
+          }/api/product-creation?${searchParams}`
+        )
         .then(({ data }) => {
           setProducts(data.results);
         })
@@ -53,7 +57,7 @@ const ProductCreationList = () => {
   useEffect(() => {
     const fetchTailors = async () => {
       await axios
-        .get("http://localhost:5000/api/tailor")
+        .get(`${import.meta.env.VITE_API_BASE_URL}/api/tailor`)
         .then(({ data }) => {
           setTailors(data.results);
         })
@@ -68,7 +72,9 @@ const ProductCreationList = () => {
   // Updated status
   useEffect(() => {
     const interval = setInterval(async () => {
-      await axios.put("http://localhost:5000/api/product-creation/statuses");
+      await axios.put(
+        `${import.meta.env.VITE_API_BASE_URL}/api/product-creation/statuses`
+      );
     }, 1000); // Setiap 1 detik
 
     return () => clearInterval(interval);
@@ -79,7 +85,7 @@ const ProductCreationList = () => {
     setIsLoading(true);
 
     await axios
-      .delete(`http://localhost:5000/api/product-creation/${id}`)
+      .delete(`${import.meta.env.VITE_API_BASE_URL}/api/product-creation/${id}`)
       .then(({ data }) => {
         const updateData = products.filter((item) => item.id !== id);
 
@@ -98,7 +104,9 @@ const ProductCreationList = () => {
     setIsLoading(true);
 
     await axios
-      .put(`http://localhost:5000/api/product-creation/cancel/${id}`)
+      .put(
+        `${import.meta.env.VITE_API_BASE_URL}/api/product-creation/cancel/${id}`
+      )
       .then(({ data }) => {
         console.log(data);
       })

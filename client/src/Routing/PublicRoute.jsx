@@ -12,7 +12,7 @@ const PublicRoute = ({ children }) => {
 
     const fetchToken = async () => {
       await axios
-        .get("http://localhost:5000/api/auth/getToken")
+        .get(`${import.meta.env.VITE_API_BASE_URL}/api/auth/getToken`)
         .then(({ data }) => {
           setToken(data.token);
         })

@@ -27,7 +27,7 @@ const AddExpense = () => {
       setIsLoading(true);
 
       await axios
-        .post("http://localhost:5000/api/expense", {
+        .post(`${import.meta.env.VITE_API_BASE_URL}/api/expense`, {
           name: values.name,
           price: values.price,
         })

@@ -28,7 +28,7 @@ const ProductDetail = () => {
 
     const fetchProductById = async () => {
       await axios
-        .get(`http://localhost:5000/api/product/${id}`)
+        .get(`${import.meta.env.VITE_API_BASE_URL}/api/product/${id}`)
         .then(({ data }) => {
           setProduct(data.results);
           setSelectedVariant(data.results.variants[0]);
@@ -91,7 +91,9 @@ const ProductDetail = () => {
                     } ring-offset-2 rounded-lg`}
                   >
                     <img
-                      src={`http://localhost:5000/public/images/${img?.name}`}
+                      src={`${
+                        import.meta.env.VITE_API_BASE_URL
+                      }/public/images/${img?.name}`}
                       alt={img?.name}
                       className="min-w-14 lg:min-w-12 w-14 lg:w-12 min-h-14 lg:min-h-12 h-14 lg:h-12 rounded-lg object-cover"
                     />
@@ -102,7 +104,9 @@ const ProductDetail = () => {
 
             <div className="order-first lg:order-none w-full h-80 lg:h-[34rem]">
               <img
-                src={`http://localhost:5000/public/images/${product?.images[selectedImage]?.name}`}
+                src={`${import.meta.env.VITE_API_BASE_URL}/public/images/${
+                  product?.images[selectedImage]?.name
+                }`}
                 alt={product?.images[selectedImage]?.name}
                 className="w-full h-full object-cover"
               />

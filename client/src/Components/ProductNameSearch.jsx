@@ -14,7 +14,9 @@ const ProductNameSearch = ({ showProductFilter }) => {
   // Get all products
   const fetchProducts = async () => {
     await axios
-      .get(`http://localhost:5000/api/product?title=${productName}`)
+      .get(
+        `${import.meta.env.VITE_API_BASE_URL}/api/product?title=${productName}`
+      )
       .then(({ data }) => {
         const shuffled = [...data.results].sort(() => 0.5 - Math.random()); // Acak array
         const selected = shuffled.slice(0, 3); // Ambil 3 data pertama
@@ -99,7 +101,9 @@ const ProductNameSearch = ({ showProductFilter }) => {
                         className="flex items-center gap-x-4 w-full text-left text-sm pl-4 pr-6 py-2 hover:bg-[#1D1B20]/[.08] rounded-md"
                       >
                         <img
-                          src={`http://localhost:5000/public/images/${product?.images[0]?.name}`}
+                          src={`${
+                            import.meta.env.VITE_API_BASE_URL
+                          }/public/images/${product?.images[0]?.name}`}
                           alt={product?.images[0]?.name}
                           className="w-12 h-12 rounded-lg object-cover"
                         />

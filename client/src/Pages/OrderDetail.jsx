@@ -19,7 +19,7 @@ const OrderDetail = () => {
 
     const getOrderDataById = async () => {
       await axios
-        .get(`http://localhost:5000/api/order/${id}`)
+        .get(`${import.meta.env.VITE_API_BASE_URL}/api/order/${id}`)
         .then(({ data }) => {
           setOrderDetail(data.results);
         })
@@ -103,7 +103,11 @@ const OrderDetail = () => {
                   <div key={key} className="flex items-start gap-x-3">
                     <div className="shrink-0">
                       <img
-                        src={`http://localhost:5000/public/images/${prod?.productVariant?.product?.images[0]?.name}`}
+                        src={`${
+                          import.meta.env.VITE_API_BASE_URL
+                        }/public/images/${
+                          prod?.productVariant?.product?.images[0]?.name
+                        }`}
                         alt={prod?.productVariant?.product?.images[0]?.name}
                         className="w-16 h-16 md:w-20 md:h-20 rounded-xl object-cover"
                       />

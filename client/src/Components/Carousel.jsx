@@ -35,7 +35,9 @@ const Carousel = ({ images, className }) => {
             return (
               <img
                 key={key}
-                src={`http://localhost:5000/public/images/${img?.name}`}
+                src={`${import.meta.env.VITE_API_BASE_URL}/public/images/${
+                  img?.name
+                }`}
                 alt={img?.name}
                 className={className}
               />

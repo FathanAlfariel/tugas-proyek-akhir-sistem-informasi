@@ -26,7 +26,7 @@ const AddTailor = () => {
       setIsLoading(true);
 
       await axios
-        .post("http://localhost:5000/api/tailor", {
+        .post(`${import.meta.env.VITE_API_BASE_URL}/api/tailor`, {
           name: values.name,
           available: values.available,
         })

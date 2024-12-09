@@ -16,7 +16,7 @@ const EditMaterial = ({ id, onUpdate }) => {
 
     const getMaterialById = async () => {
       await axios
-        .get(`http://localhost:5000/api/material/${id}`)
+        .get(`${import.meta.env.VITE_API_BASE_URL}/api/material/${id}`)
         .then(({ data }) => {
           formik.setFieldValue("name", data?.results?.name);
           formik.setFieldValue("complexity", data?.results?.complexity);
@@ -72,7 +72,7 @@ const EditMaterial = ({ id, onUpdate }) => {
       setIsLoading(true);
 
       await axios
-        .put(`http://localhost:5000/api/material/${id}`, {
+        .put(`${import.meta.env.VITE_API_BASE_URL}/api/material/${id}`, {
           name: values.name,
           complexity: parseFloat(values.complexity),
           cuttingTime: parseFloat(values.cuttingTime),

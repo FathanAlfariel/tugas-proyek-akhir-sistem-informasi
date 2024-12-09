@@ -31,7 +31,7 @@ const EditProduct = () => {
 
     const fetchProductData = async () => {
       await axios
-        .get(`http://localhost:5000/api/product/${id}`)
+        .get(`${import.meta.env.VITE_API_BASE_URL}/api/product/${id}`)
         .then(({ data }) => {
           formik.setFieldValue(
             "images",
@@ -78,7 +78,7 @@ const EditProduct = () => {
     setIsLoading(true);
 
     await axios
-      .post("http://localhost:5000/api/product/images", data, {
+      .post(`${import.meta.env.VITE_API_BASE_URL}/api/product/images`, data, {
         "Content-Type": "multipart/form-data",
       })
       .then(({ data }) => {
@@ -114,7 +114,7 @@ const EditProduct = () => {
       setIsLoading(true);
 
       await axios
-        .put(`http://localhost:5000/api/product/${id}`, {
+        .put(`${import.meta.env.VITE_API_BASE_URL}/api/product/${id}`, {
           images: values.images,
           name: values.name,
           description: values.description,
@@ -242,7 +242,9 @@ const EditProduct = () => {
                       return (
                         <li key={key} className="shrink-0 relative">
                           <img
-                            src={`http://localhost:5000/public/images/${image.name}`}
+                            src={`${
+                              import.meta.env.VITE_API_BASE_URL
+                            }/public/images/${image.name}`}
                             alt={image.name}
                             className="h-20 w-20 object-cover rounded-xl"
                           />

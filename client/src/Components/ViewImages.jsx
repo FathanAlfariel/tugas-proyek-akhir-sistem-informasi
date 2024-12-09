@@ -20,7 +20,9 @@ const ViewImages = ({ filename, onClose }) => {
           onClick={onClose}
         >
           <img
-            src={`http://localhost:5000/public/images/${filename}`}
+            src={`${
+              import.meta.env.VITE_API_BASE_URL
+            }/public/images/${filename}`}
             alt={filename}
             className="w-full h-full object-contain"
           />

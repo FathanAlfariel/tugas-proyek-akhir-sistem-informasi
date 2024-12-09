@@ -35,7 +35,7 @@ const AddProductCreation = () => {
   useEffect(() => {
     const getAvailableTailors = async () => {
       await axios
-        .get("http://localhost:5000/api/tailor")
+        .get(`${import.meta.env.VITE_API_BASE_URL}/api/tailor`)
         .then(({ data }) => {
           setAvailableTailors(
             data.results.filter((item) => item.available === true)
@@ -52,7 +52,7 @@ const AddProductCreation = () => {
   useEffect(() => {
     const getMaterials = async () => {
       await axios
-        .get("http://localhost:5000/api/material")
+        .get(`${import.meta.env.VITE_API_BASE_URL}/api/material`)
         .then(({ data }) => {
           setMaterials(data.results);
         })
@@ -102,7 +102,7 @@ const AddProductCreation = () => {
       // setIsLoading(true);
 
       await axios
-        .post("http://localhost:5000/api/product-creation", {
+        .post(`${import.meta.env.VITE_API_BASE_URL}/api/product-creation`, {
           name: values.name,
           tailor: values.tailor,
           materials: values.materials,
@@ -125,7 +125,7 @@ const AddProductCreation = () => {
 
   const estimate = async () => {
     await axios
-      .post("http://localhost:5000/api/estimate", {
+      .post(`${import.meta.env.VITE_API_BASE_URL}/api/estimate`, {
         materials: formik.values.materials.map((item) => ({
           material: item.material,
           quantity: parseInt(item.quantity),

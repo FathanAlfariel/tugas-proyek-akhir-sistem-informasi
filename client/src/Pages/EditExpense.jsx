@@ -18,7 +18,7 @@ const AddExpense = () => {
 
     const getExpenseDataById = async () => {
       await axios
-        .get(`http://localhost:5000/api/expense/${id}`)
+        .get(`${import.meta.env.VITE_API_BASE_URL}/api/expense/${id}`)
         .then(({ data }) => {
           formik.setFieldValue("name", data.results.name);
           formik.setFieldValue("price", data.results.price);
@@ -50,7 +50,7 @@ const AddExpense = () => {
       setIsLoading(true);
 
       await axios
-        .put(`http://localhost:5000/api/expense/${id}`, {
+        .put(`${import.meta.env.VITE_API_BASE_URL}/api/expense/${id}`, {
           name: values.name,
           price: values.price,
         })
