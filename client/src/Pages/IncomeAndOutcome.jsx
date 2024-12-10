@@ -13,7 +13,7 @@ import {
 import DropdownSelect from "../Components/DropdownSelect";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useLocation, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import DateRangePicker from "@wojtekmaj/react-daterange-picker";
 import "@wojtekmaj/react-daterange-picker/dist/DateRangePicker.css";
 import "react-calendar/dist/Calendar.css";
@@ -69,6 +69,7 @@ const options = {
 
 const IncomeAndOutcome = () => {
   const location = useLocation();
+  const navigate = useNavigate();
 
   const [searchParams, setSearchParams] = useSearchParams();
   const currentParams = Object.fromEntries(searchParams.entries());
@@ -77,18 +78,23 @@ const IncomeAndOutcome = () => {
   const [incomeData, setIncomeData] = useState([]);
   const [expenseData, setExpenseData] = useState([]);
 
-  const addQuery = () => {
-    setSearchParams(
-      {
-        ...currentParams,
-        timePeriod: "1-week-period",
-      },
-      { replace: true }
-    );
-  };
-
   useEffect(() => {
-    addQuery();
+    const query = new URLSearchParams(location.search);
+    const timePeriodURLQuery = query.has("timePeriod");
+    const startDateURLQuery = query.has("startDate");
+    const endDateURLQuery = query.has("endDate");
+
+    if (!timePeriodURLQuery) {
+      navigate("/admin/analysis/income-outcome?timePeriod=1-week-period");
+    } else if (!timePeriodURLQuery && startDateURLQuery && endDateURLQuery) {
+      navigate(`/admin/analysis/income-outcome${location.search}`);
+    } else if (!timePeriodURLQuery) {
+      navigate("/admin/analysis/income-outcome?timePeriod=1-week-period");
+    } else if (timePeriodURLQuery) {
+      navigate(`/admin/analysis/income-outcome${location.search}`);
+    } else {
+      navigate("/admin/analysis/income-outcome?timePeriod=1-week-period");
+    }
   }, []);
 
   // Get income data

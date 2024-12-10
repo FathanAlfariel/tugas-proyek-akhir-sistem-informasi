@@ -10,25 +10,8 @@ const Analysis = () => {
 
   useEffect(() => {
     const pathname = location.pathname.split("/");
-    const query = new URLSearchParams(location.search);
-    const timePeriodURLQuery = query.has("timePeriod");
-    const startDateURLQuery = query.has("startDate");
-    const endDateURLQuery = query.has("endDate");
 
-    if (pathname[3] === undefined && !timePeriodURLQuery) {
-      navigate("/admin/analysis/income-outcome?timePeriod=1-week-period");
-    } else if (
-      pathname[3] &&
-      !timePeriodURLQuery &&
-      startDateURLQuery &&
-      endDateURLQuery
-    ) {
-      navigate(`/admin/analysis/income-outcome${location.search}`);
-    } else if (pathname[3] && !timePeriodURLQuery) {
-      navigate("/admin/analysis/income-outcome?timePeriod=1-week-period");
-    } else if (pathname[3] && timePeriodURLQuery) {
-      navigate(`/admin/analysis/income-outcome${location.search}`);
-    } else {
+    if (pathname[3] === undefined) {
       navigate("/admin/analysis/income-outcome?timePeriod=1-week-period");
     }
   }, []);
