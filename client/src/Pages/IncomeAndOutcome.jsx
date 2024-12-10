@@ -69,6 +69,7 @@ const options = {
 
 const IncomeAndOutcome = () => {
   const location = useLocation();
+
   const [searchParams, setSearchParams] = useSearchParams();
   const currentParams = Object.fromEntries(searchParams.entries());
 
@@ -76,16 +77,19 @@ const IncomeAndOutcome = () => {
   const [incomeData, setIncomeData] = useState([]);
   const [expenseData, setExpenseData] = useState([]);
 
-  useEffect(() => {
-    // Mengecek apakah sudah ada query di URL
-    const searchParams = new URLSearchParams(location.search);
+  const addQuery = () => {
+    setSearchParams(
+      {
+        ...currentParams,
+        timePeriod: "1-week-period",
+      },
+      { replace: true }
+    );
+  };
 
-    // Jika tidak ada query tertentu, set query default
-    if (!searchParams.has("timePeriod") && !searchParams.has("startDate")) {
-      searchParams.set("timePeriod", "1-week-period"); // Menambahkan query default
-      setSearchParams({ timePeriod: "1-week-period" });
-    }
-  }, [location]);
+  useEffect(() => {
+    addQuery();
+  }, []);
 
   // Get income data
   useEffect(() => {
@@ -214,7 +218,7 @@ const IncomeAndOutcome = () => {
   return (
     <>
       <div className="flex justify-end">
-        {/* Title Filter */}
+        {/* Custom date Filter */}
         <Filter
           id="custom-date-filter"
           headerTitle="Tanggal kustom"
@@ -250,6 +254,7 @@ const IncomeAndOutcome = () => {
           />
         </Filter>
 
+        {/* Date Filter */}
         <DropdownSelect
           id="date-filter"
           menuDirection="right"
@@ -259,7 +264,17 @@ const IncomeAndOutcome = () => {
               className="flex items-center gap-x-4 py-2 px-4 rounded-xl transition-all active:scale-90 duration-300 bg-transparent hover:bg-[#6750A4]/[.08] active:bg-[#6750A4]/[.12]"
             >
               <div className="flex flex-col items-start">
-                <span className="text-xs text-[#606060]">7 hari terakhir</span>
+                <span className="text-xs text-[#606060]">
+                  {currentParams.timePeriod === "1-week-period"
+                    ? "7 hari terakhir"
+                    : currentParams.timePeriod === "4-week-period"
+                    ? "28 hari terakhir"
+                    : currentParams.timePeriod === "90-days-period"
+                    ? "90 hari terakhir"
+                    : currentParams.timePeriod === "1-year-period"
+                    ? "365 hari terakhir"
+                    : null}
+                </span>
                 <span className="text-sm">Pilih tanggal</span>
               </div>
 
