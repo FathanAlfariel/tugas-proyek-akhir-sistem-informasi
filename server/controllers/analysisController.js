@@ -1,7 +1,7 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
-const getIncome = async (req, res) => {
+const getIncomes = async (req, res) => {
   const {
     timePeriod,
     startDate: startDateQuery,
@@ -149,7 +149,7 @@ const getIncome = async (req, res) => {
   }
 };
 
-const getExpense = async (req, res) => {
+const getExpenses = async (req, res) => {
   const {
     timePeriod,
     startDate: startDateQuery,
@@ -243,4 +243,98 @@ const getExpense = async (req, res) => {
   }
 };
 
-module.exports = { getIncome, getExpense };
+const getOrders = async (req, res) => {
+  const {
+    timePeriod,
+    startDate: startDateQuery,
+    endDate: endDateQuery,
+  } = req.query;
+
+  try {
+    const today = new Date();
+    let startDate = new Date();
+    let endDate = new Date();
+
+    if (startDateQuery && endDateQuery) {
+      startDate = new Date(startDateQuery);
+      endDate = new Date(endDateQuery);
+    } else {
+      if (timePeriod === "1-week-period") {
+        startDate.setDate(today.getDate() - 7);
+      } else if (timePeriod === "4-week-period") {
+        startDate.setDate(today.getDate() - 28);
+      } else if (timePeriod === "90-days-period") {
+        startDate.setDate(today.getDate() - 90);
+      } else if (timePeriod === "1-year-period") {
+        startDate.setDate(today.getDate() - 365);
+      } else if (timePeriod === "period-current_month") {
+        startDate.setDate(1);
+        endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+      } else if (timePeriod === "period-minus_1_month") {
+        startDate = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+        endDate = new Date(today.getFullYear(), today.getMonth(), 0);
+      } else if (timePeriod === "period-minus_2_month") {
+        startDate = new Date(today.getFullYear(), today.getMonth() - 2, 1);
+        endDate = new Date(today.getFullYear(), today.getMonth() - 1, 0);
+      } else {
+        return res
+          .status(400)
+          .json({ message: "Invalid time period provided" });
+      }
+    }
+
+    // Generate array tanggal dari startDate ke endDate
+    const dates = [];
+    for (
+      let d = new Date(startDate);
+      d <= endDate;
+      d.setDate(d.getDate() + 1)
+    ) {
+      dates.push(
+        new Date(d).toLocaleDateString("en-US", {
+          month: "short",
+          day: "numeric",
+          year: "numeric",
+        })
+      );
+    }
+
+    // Ambil data pesanan dari database
+    const orders = await prisma.order.findMany({
+      where: {
+        createdAt: {
+          gte: startDate,
+          lte: endDate,
+        },
+      },
+    });
+
+    // Hitung jumlah penjualan berdasarkan tanggal
+    const ordersByDate = orders.reduce((acc, order) => {
+      const formattedDate = new Date(order.createdAt).toLocaleDateString(
+        "en-US",
+        { month: "short", day: "numeric", year: "numeric" }
+      );
+      acc[formattedDate] = (acc[formattedDate] || 0) + 1; // Menambahkan 1 untuk setiap pesanan
+      return acc;
+    }, {});
+
+    // Buat array hasil dengan memastikan setiap tanggal memiliki totalOrders
+    const resultArray = dates.map((date) => ({
+      date,
+      totalOrders: ordersByDate[date] || 0,
+    }));
+
+    res.status(200).json({
+      message: "Successfully retrieved order data",
+      results: resultArray,
+    });
+  } catch (err) {
+    console.error("Error:", err);
+    return res
+      .status(500)
+      .json({ message: "Internal server error", error: err.message });
+  }
+};
+
+module.exports = { getIncomes, getExpenses, getOrders };

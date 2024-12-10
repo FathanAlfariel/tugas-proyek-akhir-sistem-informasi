@@ -46,28 +46,18 @@ const options = {
       borderColor: "rgba(255, 255, 255, 0.5)", // Border color
       borderWidth: 1, // Border width
       displayColors: false, // Do not show color indicators
-      callbacks: {
-        // Customizing the label
-        label: (tooltipItem) => {
-          const label = tooltipItem.dataset.label || "";
-          const value = tooltipItem.raw;
-          return `${label}: ${value.toLocaleString("id-ID", {
-            style: "currency",
-            currency: "IDR",
-          })}`; // Customize this line
-        },
-        // Customizing the title
-        title: (tooltipItem) => {
-          return `Tanggal: ${tooltipItem[0].label}`; // Customize this line
-        },
-      },
     },
     maintainAspectRatio: false, // Allow resizing independently of aspect ratio
     aspectRatio: 1,
   },
+  scales: {
+    y: {
+      min: 0, // Mengatur nilai minimum sumbu Y
+    },
+  },
 };
 
-const IncomeAndOutcome = () => {
+const OrderAnalysis = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -75,8 +65,7 @@ const IncomeAndOutcome = () => {
   const currentParams = Object.fromEntries(searchParams.entries());
 
   const [chartLabel, setChartLabel] = useState([]);
-  const [incomeData, setIncomeData] = useState([]);
-  const [expenseData, setExpenseData] = useState([]);
+  const [orderData, setOrderData] = useState([]);
 
   useEffect(() => {
     const query = new URLSearchParams(location.search);
@@ -84,16 +73,16 @@ const IncomeAndOutcome = () => {
     const startDateURLQuery = query.has("startDate");
     const endDateURLQuery = query.has("endDate");
 
-    if (!timePeriodURLQuery) {
-      navigate("/admin/analysis/income-outcome?timePeriod=1-week-period");
+    if (!timePeriodURLQuery && !startDateURLQuery && !endDateURLQuery) {
+      navigate("/admin/analysis/order?timePeriod=1-week-period");
     } else if (!timePeriodURLQuery && startDateURLQuery && endDateURLQuery) {
-      navigate(`/admin/analysis/income-outcome${location.search}`);
+      navigate(`/admin/analysis/order${location.search}`);
     } else if (!timePeriodURLQuery) {
-      navigate("/admin/analysis/income-outcome?timePeriod=1-week-period");
+      navigate("/admin/analysis/order?timePeriod=1-week-period");
     } else if (timePeriodURLQuery) {
-      navigate(`/admin/analysis/income-outcome${location.search}`);
+      navigate(`/admin/analysis/order${location.search}`);
     } else {
-      navigate("/admin/analysis/income-outcome?timePeriod=1-week-period");
+      navigate("/admin/analysis/order?timePeriod=1-week-period");
     }
   }, []);
 
@@ -103,27 +92,11 @@ const IncomeAndOutcome = () => {
       .get(
         `${
           import.meta.env.VITE_API_BASE_URL
-        }/api/analysis/income?${searchParams}`
+        }/api/analysis/order?${searchParams}`
       )
       .then(({ data }) => {
         setChartLabel(data?.results.map((item) => item?.date));
-        setIncomeData(data?.results.map((item) => item?.totalIncome));
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, [searchParams]);
-
-  // Get expense data
-  useEffect(() => {
-    axios
-      .get(
-        `${
-          import.meta.env.VITE_API_BASE_URL
-        }/api/analysis/expense?${searchParams}`
-      )
-      .then(({ data }) => {
-        setExpenseData(data?.results.map((item) => item?.totalExpense));
+        setOrderData(data?.results.map((item) => item?.totalOrders));
       })
       .catch((err) => {
         console.log(err);
@@ -190,17 +163,10 @@ const IncomeAndOutcome = () => {
     labels: chartLabel,
     datasets: [
       {
-        label: "Income",
-        data: incomeData,
+        label: "Order",
+        data: orderData,
         fill: false,
-        borderColor: "rgb(85, 195, 100)",
-        tension: 0.1,
-      },
-      {
-        label: "Outcome",
-        data: expenseData,
-        fill: false,
-        borderColor: "rgb(255, 99, 132)",
+        borderColor: "#4A90E2",
         tension: 0.1,
       },
     ],
@@ -220,7 +186,6 @@ const IncomeAndOutcome = () => {
     `${endDate?.getFullYear()}-${(endDate?.getMonth() + 1)
       .toString()
       .padStart(2, "0")}-${endDate?.getDate().toString().padStart(2, "0")}`;
-
   return (
     <>
       <div className="flex justify-end">
@@ -235,8 +200,12 @@ const IncomeAndOutcome = () => {
               className="flex items-center gap-x-4 py-2 px-4 rounded-xl transition-all active:scale-90 duration-300 bg-transparent hover:bg-[#6750A4]/[.08] active:bg-[#6750A4]/[.12]"
             >
               <div className="flex flex-col items-start">
-                <span className="text-xs text-[#606060]">7 hari terakhir</span>
-                <span className="text-sm">Kustom tanggal</span>
+                <span className="text-xs text-[#606060]">
+                  {currentParams.startDate && currentParams.endDate
+                    ? currentParams.startDate + " - " + currentParams.endDate
+                    : "Kustom tanggal"}
+                </span>
+                <span className="text-sm">Kustom</span>
               </div>
 
               <span className="text-lg">
@@ -250,13 +219,14 @@ const IncomeAndOutcome = () => {
               endDate: formattedEndDate,
             })
           }
-          disabledButton={dateRange === null ? true : false}
+          disabledButton={dateRange.length === 0 ? true : false}
         >
           <DateRangePicker
             calendarIcon={null}
             onChange={setDateRange}
             value={dateRange}
             locale={"id-ID"}
+            clearIcon={null}
           />
         </Filter>
 
@@ -269,8 +239,13 @@ const IncomeAndOutcome = () => {
               type="button"
               className="flex items-center gap-x-4 py-2 px-4 rounded-xl transition-all active:scale-90 duration-300 bg-transparent hover:bg-[#6750A4]/[.08] active:bg-[#6750A4]/[.12]"
             >
-              <div className="flex flex-col items-start">
+              <div className="flex flex-col items-start gap-y-0.5">
                 <span className="text-xs text-[#606060]">
+                  {currentParams.timePeriod
+                    ? chartLabel[0] + " - " + chartLabel[chartLabel.length - 1]
+                    : "Pilih tanggal"}
+                </span>
+                <span className="text-sm">
                   {currentParams.timePeriod === "1-week-period"
                     ? "7 hari terakhir"
                     : currentParams.timePeriod === "4-week-period"
@@ -279,9 +254,8 @@ const IncomeAndOutcome = () => {
                     ? "90 hari terakhir"
                     : currentParams.timePeriod === "1-year-period"
                     ? "365 hari terakhir"
-                    : null}
+                    : "Pilih tanggal"}
                 </span>
-                <span className="text-sm">Pilih tanggal</span>
               </div>
 
               <span className="text-lg">
@@ -294,19 +268,7 @@ const IncomeAndOutcome = () => {
         />
       </div>
 
-      <div className="flex flex-col gap-y-0.5 mt-4">
-        {/* Indicator */}
-        <div className="flex justify-end items-center gap-x-3">
-          <div className="flex items-center gap-x-1.5">
-            <div className="h-2 w-2 rounded-full bg-[rgb(85,195,100)]"></div>
-            <span className="text-sm">Pemasukan</span>
-          </div>
-          <div className="flex items-center gap-x-1.5">
-            <div className="h-2 w-2 rounded-full bg-[rgb(255,99,132)]"></div>
-            <span className="text-sm">Pengeluaran</span>
-          </div>
-        </div>
-
+      <div className="mt-4">
         <div className="block lg:hidden">
           <Line options={options} data={data} height={250} />
         </div>
@@ -319,4 +281,4 @@ const IncomeAndOutcome = () => {
   );
 };
 
-export default IncomeAndOutcome;
+export default OrderAnalysis;

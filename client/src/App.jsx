@@ -22,7 +22,8 @@ import AddProductCreation from "./Pages/AddProductCreation";
 import HomePage from "./Pages/HomePage";
 import ProductDetail from "./Pages/ProductDetail";
 import AdminLayout from "./AdminLayout";
-import IncomeAndOutcome from "./Pages/IncomeAndOutcome";
+import IncomeAndOutcomeAnalysis from "./Pages/IncomeAndOutcomeAnalysis";
+import OrderAnalysis from "./Pages/OrderAnalysis";
 
 axios.defaults.withCredentials = true;
 
@@ -44,7 +45,11 @@ const App = () => {
         >
           <Route index element={<Dashboard />} />
           <Route path="analysis/*" element={<Analysis />}>
-            <Route path="income-outcome" element={<IncomeAndOutcome />} />
+            <Route
+              path="income-outcome"
+              element={<IncomeAndOutcomeAnalysis />}
+            />
+            <Route path="order" element={<OrderAnalysis />} />
           </Route>
           <Route path="product" element={<Product />} />
           <Route path="order" element={<Order />} />

@@ -25,8 +25,8 @@ const Navigation = () => {
       icon: <VscGraphLine />,
       iconSelected: <VscGraphLine className="stroke-1" />,
       label: "Analisis",
-      link: "/admin/analysis/income-outcome",
-      end: true,
+      link: "/admin/analysis",
+      end: false,
     },
     {
       icon: <MdOutlineShoppingBag />,

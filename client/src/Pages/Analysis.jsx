@@ -21,8 +21,8 @@ const Analysis = () => {
       setIsSelected("income-outcome");
     } else if (pathname[3] === "profit") {
       setIsSelected("profit");
-    } else if (pathname[3] === "purchase") {
-      setIsSelected("purchase");
+    } else if (pathname[3] === "order") {
+      setIsSelected("order");
     }
   }, [pathname]);
 
@@ -35,8 +35,8 @@ const Analysis = () => {
       navigate("/admin/analysis/income-outcome");
     } else if (key === "profit") {
       navigate("/admin/analysis/profit");
-    } else if (key === "purchase") {
-      navigate("/admin/analysis/purchase");
+    } else if (key === "order") {
+      navigate("/admin/analysis/order");
     }
   };
 
@@ -86,16 +86,16 @@ const Analysis = () => {
         <li className="group relative">
           <button
             type="button"
-            onClick={() => handleIsSelected("purchase")}
+            onClick={() => handleIsSelected("order")}
             className={`flex items-center gap-x-2 px-4 py-4 text-sm font-medium ${
-              isSelected === "purchase"
+              isSelected === "order"
                 ? "text-[#6750A4] hover:text-[#6750A4]"
                 : "text-[#5F6368] hover:text-[#6750A4]"
             } transition-all active:scale-90 duration-300 text-nowrap`}
           >
             Pembelian
           </button>
-          {isSelected === "purchase" ? (
+          {isSelected === "order" ? (
             <div className="absolute bottom-0 left-0 w-full border-2 border-[#6750A4] rounded-t-full"></div>
           ) : (
             <div className="hidden group-hover:block absolute bottom-0 left-0 w-full border-2 rounded-t-full bg-[#49454F]/[.08]"></div>
