@@ -337,4 +337,120 @@ const getOrders = async (req, res) => {
   }
 };
 
-module.exports = { getIncomes, getExpenses, getOrders };
+const getProfits = async (req, res) => {
+  const { month, year } = req.query;
+
+  try {
+    if (!month || !year) {
+      return res.status(400).json({
+        message: "Please provide both month and year parameters",
+      });
+    }
+
+    const startDate = new Date(year, month - 1, 1); // Awal bulan
+    const endDate = new Date(year, month, 0); // Akhir bulan
+
+    // Buat array tanggal mingguan dalam bulan tersebut
+    const weeks = [];
+    let weekStart = new Date(startDate);
+
+    while (weekStart <= endDate) {
+      const weekEnd = new Date(weekStart);
+      weekEnd.setDate(weekStart.getDate() + 6);
+      weeks.push({
+        start: new Date(weekStart),
+        end: weekEnd > endDate ? new Date(endDate) : new Date(weekEnd),
+      });
+      weekStart.setDate(weekStart.getDate() + 7);
+    }
+
+    // Ambil data order dalam range bulan dan tahun
+    const orders = await prisma.order.findMany({
+      where: {
+        status: "selesai",
+        createdAt: {
+          gte: startDate,
+          lte: endDate,
+        },
+      },
+      include: {
+        orderProducts: {
+          include: {
+            productVariant: true,
+          },
+        },
+      },
+    });
+
+    // Ambil data expense dalam range bulan dan tahun
+    const expenses = await prisma.expense.findMany({
+      where: {
+        createdAt: {
+          gte: startDate,
+          lte: endDate,
+        },
+      },
+    });
+
+    // Hitung laba per minggu
+    const weeklyProfits = weeks.map(({ start, end }) => {
+      // Format tanggal untuk hasil
+      const formattedWeek = `${start.toLocaleDateString("en-US", {
+        day: "numeric",
+        month: "short",
+      })} - ${end.toLocaleDateString("en-US", {
+        day: "numeric",
+        month: "short",
+      })}`;
+
+      // Hitung income per minggu
+      const weeklyIncome = orders.reduce((total, order) => {
+        const orderDate = new Date(order.createdAt);
+        if (orderDate >= start && orderDate <= end) {
+          let orderTotal = 0;
+          order.orderProducts.forEach((orderProduct) => {
+            const productTotal =
+              orderProduct.quantity * orderProduct.productVariant.price;
+            orderTotal += productTotal;
+          });
+
+          const shippingFeePerProduct =
+            order.shippingFee / order.orderProducts.length;
+          orderTotal -= shippingFeePerProduct + order.discount;
+
+          total += orderTotal;
+        }
+        return total;
+      }, 0);
+
+      // Hitung expense per minggu
+      const weeklyExpense = expenses.reduce((total, expense) => {
+        const expenseDate = new Date(expense.createdAt);
+        if (expenseDate >= start && expenseDate <= end) {
+          total += expense.price;
+        }
+        return total;
+      }, 0);
+
+      // Hitung laba
+      const profit = weeklyIncome - weeklyExpense;
+
+      return {
+        week: formattedWeek,
+        profit,
+      };
+    });
+
+    res.status(200).json({
+      message: "Successfully retrieved weekly profits",
+      results: weeklyProfits,
+    });
+  } catch (err) {
+    console.error("Error:", err);
+    return res
+      .status(500)
+      .json({ message: "Internal server error", error: err.message });
+  }
+};
+
+module.exports = { getIncomes, getExpenses, getOrders, getProfits };
