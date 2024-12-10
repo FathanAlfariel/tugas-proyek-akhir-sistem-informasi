@@ -245,7 +245,15 @@ const IncomeAndOutcomeAnalysis = () => {
             >
               <div className="flex flex-col items-start gap-y-0.5">
                 <span className="text-xs text-[#606060]">Pilih data</span>
-                <span className="text-sm">Lihat semua</span>
+                <span className="text-sm">
+                  {showData === "all"
+                    ? "Lihat semua"
+                    : showData === "income-only"
+                    ? "Lihat hanya pemasukan"
+                    : showData === "outcome-only"
+                    ? "Lihat hanya pengeluaran"
+                    : null}
+                </span>
               </div>
 
               <span className="text-lg">
