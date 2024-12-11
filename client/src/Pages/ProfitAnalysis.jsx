@@ -36,6 +36,7 @@ const options = {
     legend: {
       display: false,
     },
+
     tooltip: {
       enabled: true, // Enable the tooltip
       mode: "index", // Set tooltip to show for all datasets on hover
@@ -46,6 +47,21 @@ const options = {
       borderColor: "rgba(255, 255, 255, 0.5)", // Border color
       borderWidth: 1, // Border width
       displayColors: false, // Do not show color indicators
+      callbacks: {
+        // Customizing the label
+        label: (tooltipItem) => {
+          const label = tooltipItem.dataset.label || "";
+          const value = tooltipItem.raw;
+          return `${label}: ${value.toLocaleString("id-ID", {
+            style: "currency",
+            currency: "IDR",
+          })}`; // Customize this line
+        },
+        // Customizing the title
+        title: (tooltipItem) => {
+          return `Tanggal: ${tooltipItem[0].label}`; // Customize this line
+        },
+      },
     },
     maintainAspectRatio: false, // Allow resizing independently of aspect ratio
     aspectRatio: 1,
@@ -69,33 +85,30 @@ const ProfitAnalysis = () => {
 
   useEffect(() => {
     const query = new URLSearchParams(location.search);
-    const timePeriodURLQuery = query.has("timePeriod");
-    const startDateURLQuery = query.has("startDate");
-    const endDateURLQuery = query.has("endDate");
+    const monthURLQuery = query.has("month");
+    const yearURLQuery = query.has("year");
     const date = new Date();
 
-    if (!timePeriodURLQuery && !startDateURLQuery && !endDateURLQuery) {
+    if (!monthURLQuery && !yearURLQuery) {
       navigate(
         `/admin/analysis/profit?month=${
           date.getMonth() + 1
         }&year=${date.getFullYear()}`
       );
-    } else if (!timePeriodURLQuery && startDateURLQuery && endDateURLQuery) {
-      navigate(`/admin/analysis/profit${location.search}`);
-    } else if (!timePeriodURLQuery) {
+    } else if (!monthURLQuery && yearURLQuery) {
       navigate(
         `/admin/analysis/profit?month=${
           date.getMonth() + 1
         }&year=${date.getFullYear()}`
       );
-    } else if (timePeriodURLQuery) {
-      navigate(`/admin/analysis/profit${location.search}`);
+    } else if (monthURLQuery && !yearURLQuery) {
+      navigate(
+        `/admin/analysis/profit?month=${
+          date.getMonth() + 1
+        }&year=${date.getFullYear()}`
+      );
     } else {
-      navigate(
-        `/admin/analysis/profit?month=${
-          date.getMonth() + 1
-        }&year=${date.getFullYear()}`
-      );
+      navigate(`/admin/analysis/profit${location.search}`);
     }
   }, []);
 
@@ -123,73 +136,73 @@ const ProfitAnalysis = () => {
     const menu = [
       {
         label: "Januari",
-        value: `january${currentDate.getFullYear()}`,
+        value: 1,
         handleMenuClicked: () =>
           setSearchParams({ month: 1, year: currentDate.getFullYear() }),
       },
       {
         label: "Februari",
-        value: `february${currentDate.getFullYear()}`,
+        value: 2,
         handleMenuClicked: () =>
           setSearchParams({ month: 2, year: currentDate.getFullYear() }),
       },
       {
         label: "Maret",
-        value: `march${currentDate.getFullYear()}`,
+        value: 3,
         handleMenuClicked: () =>
           setSearchParams({ month: 3, year: currentDate.getFullYear() }),
       },
       {
         label: "April",
-        value: `april${currentDate.getFullYear()}`,
+        value: 4,
         handleMenuClicked: () =>
           setSearchParams({ month: 4, year: currentDate.getFullYear() }),
       },
       {
         label: "Mei",
-        value: `may${currentDate.getFullYear()}`,
+        value: 5,
         handleMenuClicked: () =>
           setSearchParams({ month: 5, year: currentDate.getFullYear() }),
       },
       {
         label: "Juni",
-        value: `june${currentDate.getFullYear()}`,
+        value: 6,
         handleMenuClicked: () =>
           setSearchParams({ month: 6, year: currentDate.getFullYear() }),
       },
       {
         label: "Juli",
-        value: `july${currentDate.getFullYear()}`,
+        value: 7,
         handleMenuClicked: () =>
           setSearchParams({ month: 7, year: currentDate.getFullYear() }),
       },
       {
         label: "Agustus",
-        value: `august${currentDate.getFullYear()}`,
+        value: 8,
         handleMenuClicked: () =>
           setSearchParams({ month: 8, year: currentDate.getFullYear() }),
       },
       {
         label: "September",
-        value: `september${currentDate.getFullYear()}`,
+        value: 9,
         handleMenuClicked: () =>
           setSearchParams({ month: 9, year: currentDate.getFullYear() }),
       },
       {
         label: "Oktober",
-        value: `october${currentDate.getFullYear()}`,
+        value: 10,
         handleMenuClicked: () =>
           setSearchParams({ month: 10, year: currentDate.getFullYear() }),
       },
       {
         label: "November",
-        value: `november${currentDate.getFullYear()}`,
+        value: 11,
         handleMenuClicked: () =>
           setSearchParams({ month: 11, year: currentDate.getFullYear() }),
       },
       {
         label: "Desember",
-        value: `december${currentDate.getFullYear()}`,
+        value: 12,
         handleMenuClicked: () =>
           setSearchParams({ month: 12, year: currentDate.getFullYear() }),
       },
@@ -280,21 +293,27 @@ const ProfitAnalysis = () => {
               className="flex items-center gap-x-4 py-2 px-4 rounded-xl transition-all active:scale-90 duration-300 bg-transparent hover:bg-[#6750A4]/[.08] active:bg-[#6750A4]/[.12]"
             >
               <div className="flex flex-col items-start gap-y-0.5">
-                <span className="text-xs text-[#606060]">
-                  {currentParams.timePeriod
-                    ? chartLabel[0] + " - " + chartLabel[chartLabel.length - 1]
-                    : "Pilih tanggal"}
-                </span>
+                <span className="text-xs text-[#606060]">Pilih bulan</span>
                 <span className="text-sm">
-                  {currentParams.timePeriod === "1-week-period"
-                    ? "7 hari terakhir"
-                    : currentParams.timePeriod === "4-week-period"
-                    ? "28 hari terakhir"
-                    : currentParams.timePeriod === "90-days-period"
-                    ? "90 hari terakhir"
-                    : currentParams.timePeriod === "1-year-period"
-                    ? "365 hari terakhir"
-                    : "Pilih tanggal"}
+                  {(() => {
+                    const monthArray = [
+                      "Januari",
+                      "Februari",
+                      "Maret",
+                      "April",
+                      "Mei",
+                      "Juni",
+                      "Juli",
+                      "Agustus",
+                      "September",
+                      "Oktober",
+                      "November",
+                      "Desember",
+                    ];
+                    const month = parseInt(currentParams?.month);
+
+                    return monthArray[month - 1];
+                  })()}
                 </span>
               </div>
 
@@ -304,7 +323,7 @@ const ProfitAnalysis = () => {
             </button>
           }
           selectMenu={dateFilterMenu()}
-          defaultValue={currentParams?.timePeriod}
+          defaultValue={parseInt(currentParams?.month)}
         />
       </div>
 
