@@ -38,7 +38,7 @@ const Product = () => {
       await axios
         .get(`${import.meta.env.VITE_API_BASE_URL}/api/product?${searchParams}`)
         .then(({ data }) => {
-          setProducts(data.results);
+          setProducts(data?.results);
         })
         .catch((err) => {
           console.log(err);
@@ -597,6 +597,12 @@ const Product = () => {
             );
           })}
       </div>
+
+      {products?.length === 0 && (
+        <div className="text-sm text-center py-6 text-[#606060]">
+          Tidak ada data yang ditemukan
+        </div>
+      )}
     </>
   );
 };

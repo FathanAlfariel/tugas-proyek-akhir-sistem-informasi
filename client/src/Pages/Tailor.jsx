@@ -125,6 +125,12 @@ const Tailor = () => {
           </tbody>
         </table>
       </div>
+
+      {tailors?.length === 0 && (
+        <div className="text-sm text-center py-6 text-[#606060]">
+          Tidak ada data yang ditemukan
+        </div>
+      )}
     </>
   );
 };
