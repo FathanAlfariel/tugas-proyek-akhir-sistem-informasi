@@ -296,7 +296,7 @@ const ProductDetail = () => {
                   type="button"
                   buttonStyle="filled"
                   width="full"
-                  className="text-xs whitespace-nowrap"
+                  className="text-xs "
                   onClick={() => handleShareToWhatsApp(product)}
                 >
                   Beli dan bagikan ke WhatsApp
