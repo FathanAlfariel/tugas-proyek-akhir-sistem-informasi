@@ -30,7 +30,7 @@ axios.defaults.withCredentials = true;
 
 const App = () => {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/warnisys">
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/products/:id" element={<ProductDetail />} />
