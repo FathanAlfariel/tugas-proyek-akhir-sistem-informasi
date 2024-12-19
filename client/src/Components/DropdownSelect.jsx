@@ -67,7 +67,7 @@ const DropdownSelect = ({
                 menuSize === "small" ? "max-h-36" : ""
               } overflow-y-auto`}
             >
-              <ul className="flex flex-col gap-y-0.5">
+              <ul className="flex flex-col gap-y-0.5 max-h-72 overflow-y-auto">
                 {selectMenu.map((menu, key) => {
                   return (
                     <React.Fragment key={key}>
