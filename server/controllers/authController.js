@@ -29,6 +29,8 @@ const login = async (req, res) => {
         .cookie("token", token, {
           httpOnly: true,
           maxAge: 30 * 24 * 60 * 60 * 1000,
+          sameSite: "None",
+          secure: true,
         })
         .json({ message: "Login successfully", data: findUser });
     });

@@ -14,9 +14,6 @@ import DropdownSelect from "../Components/DropdownSelect";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
-import DateRangePicker from "@wojtekmaj/react-daterange-picker";
-import "@wojtekmaj/react-daterange-picker/dist/DateRangePicker.css";
-import "react-calendar/dist/Calendar.css";
 import Filter from "../Components/Filter";
 
 // Register the components used
@@ -79,6 +76,9 @@ const ProfitAnalysis = () => {
 
   const [searchParams, setSearchParams] = useSearchParams();
   const currentParams = Object.fromEntries(searchParams.entries());
+
+  const [monthFilter, setMonthFilter] = useState("");
+  const [yearFilter, setYearFilter] = useState("");
 
   const [chartLabel, setChartLabel] = useState([]);
   const [profitData, setProfitData] = useState([]);
@@ -224,21 +224,6 @@ const ProfitAnalysis = () => {
     ],
   };
 
-  const [dateRange, setDateRange] = useState([]);
-  const startDate = dateRange.length > 0 && new Date(dateRange[0]);
-  const endDate = dateRange.length > 1 && new Date(dateRange[1]);
-
-  const formattedStartDate =
-    dateRange.length > 0 &&
-    `${startDate?.getFullYear()}-${(startDate?.getMonth() + 1)
-      .toString()
-      .padStart(2, "0")}-${startDate?.getDate().toString().padStart(2, "0")}`;
-  const formattedEndDate =
-    dateRange.length > 1 &&
-    `${endDate?.getFullYear()}-${(endDate?.getMonth() + 1)
-      .toString()
-      .padStart(2, "0")}-${endDate?.getDate().toString().padStart(2, "0")}`;
-
   return (
     <>
       <div className="flex justify-end">
@@ -254,8 +239,12 @@ const ProfitAnalysis = () => {
             >
               <div className="flex flex-col items-start">
                 <span className="text-xs text-[#606060]">
-                  {currentParams.startDate && currentParams.endDate
-                    ? currentParams.startDate + " - " + currentParams.endDate
+                  {currentParams.month && currentParams.year
+                    ? Intl.DateTimeFormat("id", { month: "long" }).format(
+                        new Date(currentParams.month)
+                      ) +
+                      " " +
+                      currentParams.year
                     : "Kustom tanggal"}
                 </span>
                 <span className="text-sm">Kustom</span>
@@ -268,18 +257,35 @@ const ProfitAnalysis = () => {
           }
           onClick={() =>
             setSearchParams({
-              startDate: formattedStartDate,
-              endDate: formattedEndDate,
+              month: monthFilter,
+              year: yearFilter,
             })
           }
-          disabledButton={dateRange.length === 0 ? true : false}
+          disabledButton={
+            monthFilter === "" && yearFilter === "" ? true : false
+          }
         >
-          <DateRangePicker
-            calendarIcon={null}
-            onChange={setDateRange}
-            value={dateRange}
-            locale={"id-ID"}
-            clearIcon={null}
+          <input
+            id="month-filter"
+            type="month"
+            name="month-filter"
+            className="w-full text-sm"
+            defaultValue={`${currentParams.year}-${
+              currentParams?.month?.length === 1
+                ? `0${currentParams.month}`
+                : currentParams.month
+            }`}
+            onChange={(e) => {
+              const value = e.target.value;
+              const month = value.split("-")[1];
+              const year = value.split("-")[0];
+
+              month.startsWith("0")
+                ? setMonthFilter(month.split("")[1])
+                : setMonthFilter(month);
+
+              setYearFilter(year);
+            }}
           />
         </Filter>
 
