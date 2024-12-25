@@ -1,3 +1,5 @@
+import DashboardStats from "../Components/DashboardStats";
+
 const Dashboard = () => {
   return (
     <>
@@ -5,12 +7,12 @@ const Dashboard = () => {
         Dashboard
       </h1>
 
-      <div className="h-screen w-full flex flex-col justify-center items-center gap-y-4">
-        <h1 className="text-5xl font-light">Under Maintenance</h1>
-        <h5 className="text-sm">
-          Electrical and Informatics Engineering Department UM
-        </h5>
-      </div>
+      <ul className="flex gap-x-6">
+        <DashboardStats />
+
+        {/* Notification */}
+        <div></div>
+      </ul>
     </>
   );
 };
