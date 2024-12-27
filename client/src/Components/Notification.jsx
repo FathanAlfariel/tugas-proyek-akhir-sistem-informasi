@@ -66,7 +66,7 @@ const Notification = () => {
     <>
       {isLoading && <Loader />}
 
-      <li className="min-w-full md:min-w-96 py-4 border border-black/[.1] rounded-2xl">
+      <li className="max-h-[30rem] min-w-full md:min-w-96 py-4 border border-black/[.1] rounded-2xl overflow-y-auto">
         <h5 className="px-5 text-lg font-semibold">Notifikasi</h5>
 
         <div className="mt-2.5">
