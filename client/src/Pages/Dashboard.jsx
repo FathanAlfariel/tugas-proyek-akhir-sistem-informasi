@@ -8,7 +8,7 @@ const Dashboard = () => {
         Dashboard
       </h1>
 
-      <ul className="flex gap-x-6">
+      <ul className="flex flex-col md:flex-row items-start gap-x-6">
         {/* Dashboard Stats */}
         <DashboardStats />
 

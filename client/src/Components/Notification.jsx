@@ -55,23 +55,28 @@ const Notification = () => {
     };
 
     fetchProducts();
+
+    // Mengupdate countdown setiap detik
+    const interval = setInterval(fetchProducts, 1000);
+
+    return () => clearInterval(interval);
   }, []);
 
   return (
     <>
       {isLoading && <Loader />}
 
-      <li className="min-w-full md:min-w-96 py-4 px-5 border border-black/[.1] rounded-2xl">
-        <h5 className="text-lg font-semibold">Notifikasi</h5>
+      <li className="min-w-full md:min-w-96 py-4 border border-black/[.1] rounded-2xl">
+        <h5 className="px-5 text-lg font-semibold">Notifikasi</h5>
 
-        <div className="mt-5">
-          <ul className="flex flex-col gap-y-4">
+        <div className="mt-2.5">
+          <ul className="flex flex-col">
             {products?.map((prod) =>
-              prod?.variants.map((variant, key) => (
+              prod?.variants?.map((variant, key) => (
                 <li
-                  title={`Stok produk tersisa ${variant?.stock}. Silahkan tambah stok produk`}
+                  title={`Pengingat: Stok produk tersisa ${variant?.stock}. Silahkan tambahkan stok produk`}
                   key={key}
-                  className="flex items-start gap-x-2"
+                  className="py-2.5 px-5 flex items-start gap-x-2 hover:bg-[#1D1B20]/[.08]"
                 >
                   <img
                     src={`${import.meta.env.VITE_API_BASE_URL}/public/images/${
@@ -93,6 +98,56 @@ const Notification = () => {
                 </li>
               ))
             )}
+
+            {productCreations?.map((prod, key) => {
+              return (
+                <li
+                  key={key}
+                  title="Pengingat: Produk Anda akan segera selesai"
+                  className="py-2.5 px-5 flex justify-between items-start hover:bg-[#1D1B20]/[.08]"
+                >
+                  <div className="flex flex-col gap-y-0.5">
+                    <p className="text-sm line-clamp-2">
+                      Pembuatan produk:{" "}
+                      <span className="font-medium">{prod?.name}</span>
+                    </p>
+                    <p className="text-xs text-[#52525B] line-clamp-1">
+                      Total: {prod?.total}
+                    </p>
+                    <p className="text-xs text-[#52525B] line-clamp-1">
+                      Penjahit: {prod?.tailor?.name}
+                    </p>
+                  </div>
+
+                  <div className="px-3 py-1.5 bg-[#C62E2E]/[.12] rounded-full text-xs text-[#C62E2E] font-medium">
+                    {prod?.status === "belum_dimulai" ||
+                    prod?.status === "selesai" ||
+                    prod?.status === "dibatalkan" ? (
+                      "00:00:00:00"
+                    ) : prod?.status === "dalam_proses" ? (
+                      <>
+                        <span title="Hari" className="after:content-[':']">
+                          {prod?.countdown?.days?.toString().padStart(2, "0")}
+                        </span>
+                        <span title="Jam" className="after:content-[':']">
+                          {prod?.countdown?.hours?.toString().padStart(2, "0")}
+                        </span>
+                        <span title="Menit" className="after:content-[':']">
+                          {prod?.countdown?.minutes
+                            ?.toString()
+                            .padStart(2, "0")}
+                        </span>
+                        <span title="Detik">
+                          {prod?.countdown?.seconds
+                            ?.toString()
+                            .padStart(2, "0")}
+                        </span>
+                      </>
+                    ) : null}
+                  </div>
+                </li>
+              );
+            })}
           </ul>
         </div>
       </li>
