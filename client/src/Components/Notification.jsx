@@ -6,6 +6,7 @@ const Notification = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const [products, setProducts] = useState([]);
+  const [productCreations, setProductCreations] = useState([]);
 
   useEffect(() => {
     setIsLoading(true);
@@ -29,6 +30,31 @@ const Notification = () => {
     };
 
     getProductsWithLowStock();
+  }, []);
+
+  useEffect(() => {
+    setIsLoading(true);
+
+    const fetchProducts = async () => {
+      await axios
+        .get(`${import.meta.env.VITE_API_BASE_URL}/api/product-creation`)
+        .then(({ data }) => {
+          setProductCreations(
+            data.results.filter(
+              (item) =>
+                item?.countdown?.days === 0 && item?.countdown?.hours <= 24
+            )
+          );
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    };
+
+    fetchProducts();
   }, []);
 
   return (

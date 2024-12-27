@@ -14,6 +14,8 @@ const ProductCreationList = () => {
   const [products, setProducts] = useState([]);
   const [tailors, setTailors] = useState([]);
 
+  console.log(products);
+
   const [searchParams, setSearchParams] = useSearchParams();
   const currentParams = Object.fromEntries(searchParams.entries());
 
