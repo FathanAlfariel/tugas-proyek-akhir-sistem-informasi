@@ -96,8 +96,6 @@ const Product = () => {
     }
   };
 
-  console.log(products);
-
   return (
     <>
       {isLoading && <Loader />}

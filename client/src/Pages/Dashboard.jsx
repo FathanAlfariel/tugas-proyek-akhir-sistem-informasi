@@ -1,4 +1,5 @@
 import DashboardStats from "../Components/DashboardStats";
+import Notification from "../Components/Notification";
 
 const Dashboard = () => {
   return (
@@ -8,10 +9,11 @@ const Dashboard = () => {
       </h1>
 
       <ul className="flex gap-x-6">
+        {/* Dashboard Stats */}
         <DashboardStats />
 
         {/* Notification */}
-        <div></div>
+        <Notification />
       </ul>
     </>
   );
