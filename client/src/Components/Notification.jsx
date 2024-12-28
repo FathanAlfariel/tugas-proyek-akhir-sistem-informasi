@@ -40,10 +40,14 @@ const Notification = () => {
         .get(`${import.meta.env.VITE_API_BASE_URL}/api/product-creation`)
         .then(({ data }) => {
           setProductCreations(
-            data.results.filter(
-              (item) =>
-                item?.countdown?.days === 0 && item?.countdown?.hours <= 24
-            )
+            data.results.filter((item) => {
+              const { days, hours, minutes, seconds } = item?.countdown || {};
+              return (
+                (days > 0 || hours > 0 || minutes > 0 || seconds > 0) &&
+                days === 0 &&
+                hours <= 24
+              );
+            })
           );
         })
         .catch((err) => {
@@ -150,6 +154,12 @@ const Notification = () => {
             })}
           </ul>
         </div>
+
+        {products?.length === 0 && productCreations.length === 0 && (
+          <div className="text-sm text-center py-6 text-[#606060]">
+            Tidak ada notifikasi
+          </div>
+        )}
       </li>
     </>
   );
