@@ -1,9 +1,68 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Button from "./Button";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 const DashboardStats = () => {
   const date = new Date();
+
+  const [income, setIncome] = useState(0);
+  const [expense, setExpense] = useState(0);
+  const [order, setOrder] = useState(0);
+
+  // Get income data
+  useEffect(() => {
+    axios
+      .get(
+        `${
+          import.meta.env.VITE_API_BASE_URL
+        }/api/analysis/income?timePeriod=period-current_month`
+      )
+      .then(({ data }) => {
+        for (const item of data?.results) {
+          setIncome((prev) => (prev += item?.totalIncome));
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
+  // Get expense data
+  useEffect(() => {
+    axios
+      .get(
+        `${
+          import.meta.env.VITE_API_BASE_URL
+        }/api/analysis/expense?timePeriod=period-current_month`
+      )
+      .then(({ data }) => {
+        for (const item of data?.results) {
+          setExpense((prev) => (prev += item?.totalExpense));
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
+  // Get income data
+  useEffect(() => {
+    axios
+      .get(
+        `${
+          import.meta.env.VITE_API_BASE_URL
+        }/api/analysis/order?timePeriod=period-current_month`
+      )
+      .then(({ data }) => {
+        for (const item of data?.results) {
+          setOrder((prev) => (prev += item?.totalOrders));
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
   return (
     <>
@@ -21,7 +80,10 @@ const DashboardStats = () => {
             </p>
 
             <h2 className="mt-1 text-2xl font-medium text-nowrap">
-              Rp 1.000.000
+              {income.toLocaleString("id", {
+                style: "currency",
+                currency: "IDR",
+              })}
             </h2>
           </div>
 
@@ -35,7 +97,10 @@ const DashboardStats = () => {
             </p>
 
             <h2 className="mt-1 text-2xl font-medium text-nowrap">
-              Rp 1.000.000
+              {expense.toLocaleString("id", {
+                style: "currency",
+                currency: "IDR",
+              })}
             </h2>
           </div>
 
@@ -48,7 +113,7 @@ const DashboardStats = () => {
               </span>
             </p>
 
-            <h2 className="mt-1 text-2xl font-medium text-nowrap">100</h2>
+            <h2 className="mt-1 text-2xl font-medium text-nowrap">{order}</h2>
           </div>
         </div>
 
