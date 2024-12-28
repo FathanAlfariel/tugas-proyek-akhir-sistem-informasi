@@ -1,5 +1,6 @@
 import React from "react";
 import Button from "./Button";
+import { Link } from "react-router-dom";
 
 const DashboardStats = () => {
   const date = new Date();
@@ -52,9 +53,11 @@ const DashboardStats = () => {
         </div>
 
         <div className="mt-8">
-          <Button type="button" buttonStyle="tonal-button">
-            Pergi ke halaman analisis
-          </Button>
+          <Link to="/admin/analysis">
+            <Button type="button" buttonStyle="tonal-button">
+              Pergi ke halaman analisis
+            </Button>
+          </Link>
         </div>
       </li>
     </>
