@@ -475,6 +475,7 @@ const Product = () => {
                         defaultValue={product?.visibility}
                       />
                     </td>
+
                     <td className="pl-6 py-3 whitespace-nowrap">
                       <p className="text-xs">
                         {new Date(product?.createdAt).toLocaleDateString(
@@ -484,6 +485,7 @@ const Product = () => {
                       </p>
                       <p className="text-xs font-medium">Ditambahkan</p>
                     </td>
+
                     <td className="pl-6 py-3 w-auto">
                       {product?.variants?.map((variant, key) => {
                         return (

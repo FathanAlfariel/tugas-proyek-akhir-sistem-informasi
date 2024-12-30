@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 import { GoPerson } from "react-icons/go";
 import { IoCallOutline } from "react-icons/io5";
@@ -75,9 +75,15 @@ const OrderDetail = () => {
         </div>
 
         {/* Print receipt button */}
-        <IconButton type="button" buttonType="primary">
-          <TiPrinter />
-        </IconButton>
+        <Link to={`/admin/order/receipt/${orderDetail?.id}`} target="_blank">
+          <IconButton
+            type="button"
+            buttonType="primary"
+            title="Cetak resi pengiriman"
+          >
+            <TiPrinter />
+          </IconButton>
+        </Link>
       </div>
 
       {/* Tanggal pemesanan dilakukan */}
@@ -174,7 +180,7 @@ const OrderDetail = () => {
                 </span>
               </div>
 
-              {/* Subtotal */}
+              {/* Discount */}
               <div className="flex justify-between items-center text-sm">
                 Discount
                 <span>

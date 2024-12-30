@@ -25,6 +25,7 @@ import AdminLayout from "./AdminLayout";
 import IncomeAndOutcomeAnalysis from "./Pages/IncomeAndOutcomeAnalysis";
 import OrderAnalysis from "./Pages/OrderAnalysis";
 import ProfitAnalysis from "./Pages/ProfitAnalysis";
+import ShipmentReceipt from "./Pages/ShipmentReceipt";
 
 axios.defaults.withCredentials = true;
 
@@ -68,6 +69,15 @@ const App = () => {
           <Route path="product/add" element={<AddProduct />} />
           <Route path="product/edit/:id" element={<EditProduct />} />
         </Route>
+        <Route
+          path="/admin/order/receipt/:id"
+          element={
+            <ProtectedRoute>
+              <ShipmentReceipt />
+            </ProtectedRoute>
+          }
+        />
+
         <Route
           path="/login"
           element={
