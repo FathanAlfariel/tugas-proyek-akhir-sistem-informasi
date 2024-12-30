@@ -2,13 +2,14 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Loader from "../Components/Loader";
+import { QRCodeSVG } from "qrcode.react";
 
 const ShipmentReceipt = () => {
   const { id } = useParams();
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const [orderDetail, setOrderDetail] = useState([]);
+  const [orderDetail, setOrderDetail] = useState({});
 
   useEffect(() => {
     setIsLoading(true);
@@ -39,16 +40,27 @@ const ShipmentReceipt = () => {
       <div className="flex justify-center">
         <div className="border border-black pb-5">
           {/* Logo */}
-          <div className="px-6">
+          <div className="flex justify-between items-center px-6">
             <img
               src="/logo.png"
               alt="logo"
               className="w-20 h-20 object-contain"
             />
+
+            <div className="py-0.5 px-4 flex justify-center text-base font-bold border border-black">
+              No. Resi: {orderDetail?.trackingReceipt}
+            </div>
+          </div>
+
+          {/* QR Code and tracking receipt */}
+          <div className="px-6 flex flex-col items-start gap-x-6 border-t border-dashed border-black pt-4">
+            <div className="w-full flex justify-center">
+              <QRCodeSVG value="https://reactjs.org/" />
+            </div>
           </div>
 
           {/* Buyer and Seller Address */}
-          <div className="px-6 flex items-start gap-x-6 border-t border-dashed border-black pt-4">
+          <div className="px-6 flex items-start gap-x-6 border-t border-dashed border-black pt-4 mt-4">
             {/* Buyer Address */}
             <div>
               <p className="text-sm font-medium">
