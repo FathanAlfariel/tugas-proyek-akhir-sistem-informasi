@@ -44,6 +44,9 @@ const addOrder = async (req, res) => {
         paymentMethod: paymentMethod,
         additionalNotes: additionalNotes,
         status: status,
+        orderStatus: {
+          create: { status: status },
+        },
       },
     });
 
@@ -162,6 +165,15 @@ const updateOrderStatus = async (req, res) => {
     if (!query) {
       return res.status(404).json({ message: "Order not found" });
     }
+
+    await prisma.orderStatus.create({
+      data: {
+        status: status,
+        order: {
+          connect: { id: id }, // Menghubungkan dengan entri Order yang sudah ada
+        },
+      },
+    });
 
     return res
       .status(200)
