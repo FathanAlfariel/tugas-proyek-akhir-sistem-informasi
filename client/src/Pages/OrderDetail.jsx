@@ -6,13 +6,20 @@ import { IoCallOutline } from "react-icons/io5";
 import { TiPrinter } from "react-icons/ti";
 import IconButton from "../Components/IconButton";
 import Loader from "../Components/Loader";
+import { BsFileText } from "react-icons/bs";
+import { MdMoneyOff } from "react-icons/md";
+import { PiPackage } from "react-icons/pi";
+import { AiOutlineTruck } from "react-icons/ai";
+import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
 const OrderDetail = () => {
   const { id } = useParams();
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const [orderDetail, setOrderDetail] = useState([]);
+  const [orderDetail, setOrderDetail] = useState({});
+
+  console.log(orderDetail);
 
   useEffect(() => {
     setIsLoading(true);
@@ -294,6 +301,122 @@ const OrderDetail = () => {
                 ? orderDetail?.additionalNotes
                 : "Tidak ada catatan"}
             </p>
+          </div>
+
+          {/* Order history*/}
+          <div className="flex flex-col gap-y-2.5 p-4 rounded-2xl border border-black/[.1]">
+            {/* Title */}
+            <h5 className="text-lg font-semibold">Riwayat pesanan</h5>
+
+            <ul className="flex flex-col gap-y-4">
+              {orderDetail?.orderStatus?.map((status, key) => {
+                const order_status = status?.status?.split("_").join(" ");
+
+                return (
+                  <li key={key} className="flex items-start gap-x-3">
+                    <div className="mt-0.5">
+                      {status?.status === "belum_bayar" ? (
+                        <MdMoneyOff
+                          className={`text-lg ${
+                            status?.status === orderDetail?.status
+                              ? "text-green-500"
+                              : "text-zinc-500"
+                          }`}
+                        />
+                      ) : status?.status === "sedang_dikemas" ? (
+                        <PiPackage
+                          className={`text-lg ${
+                            status?.status === orderDetail?.status
+                              ? "text-green-500"
+                              : "text-zinc-500"
+                          }`}
+                        />
+                      ) : status?.status === "dikirim" ? (
+                        <AiOutlineTruck
+                          className={`text-lg ${
+                            status?.status === orderDetail?.status
+                              ? "text-green-500"
+                              : "text-zinc-500"
+                          }`}
+                        />
+                      ) : status?.status === "selesai" ? (
+                        <IoIosCheckmarkCircleOutline
+                          className={`text-lg ${
+                            status?.status === orderDetail?.status
+                              ? "text-green-500"
+                              : "text-zinc-500"
+                          }`}
+                        />
+                      ) : null}
+                    </div>
+
+                    <div>
+                      <p
+                        className={`capitalize text-xs md:text-sm font-medium ${
+                          status?.status === orderDetail?.status
+                            ? "text-green-500"
+                            : "text-zinc-500"
+                        }`}
+                      >
+                        {order_status}
+                      </p>
+                      <p
+                        className={`text-xs md:text-sm ${
+                          status?.status === orderDetail?.status
+                            ? "text-green-500"
+                            : "text-zinc-500"
+                        }`}
+                      >
+                        {status?.status === "belum_bayar"
+                          ? "Pesanan Anda belum diproses. Silakan selesaikan pembayaran agar pesanan dapat segera diproses."
+                          : status?.status === "sedang_dikemas"
+                          ? "Pesanan Anda sedang diproses dan dikemas."
+                          : status?.status === "dikirim"
+                          ? "Pesanan Anda sedang dalam perjalanan menuju alamat tujuan."
+                          : status?.status === "selesai"
+                          ? "Pesanan Anda telah berhasil diterima."
+                          : null}
+                      </p>
+                      <p
+                        className={`text-xs md:text-sm mt-0.5 ${
+                          status?.status === orderDetail?.status
+                            ? "text-green-500"
+                            : "text-zinc-500"
+                        }`}
+                      >
+                        {new Date(orderDetail?.createdAt).toLocaleString(
+                          "id-ID",
+                          {
+                            dateStyle: "full",
+                            timeStyle: "short",
+                          }
+                        )}
+                      </p>
+                    </div>
+                  </li>
+                );
+              })}
+              <li className="flex items-start gap-x-3">
+                <div className="mt-0.5">
+                  <BsFileText className="text-lg text-zinc-500" />
+                </div>
+
+                <div>
+                  <p className="text-xs md:text-sm text-zinc-500 font-medium">
+                    Pesanan Dibuat
+                  </p>
+                  <p className="text-xs md:text-sm text-zinc-500">
+                    Pesanan Dibuat
+                  </p>
+                  <p className="text-xs md:text-sm text-zinc-500 mt-0.5">
+                    {new Date(orderDetail?.createdAt).toLocaleString("id-ID", {
+                      dateStyle: "full",
+                      timeStyle: "short",
+                    })}
+                  </p>
+                </div>
+              </li>
+            </ul>
           </div>
         </div>
       </div>

@@ -208,6 +208,9 @@ const getOrderDetailById = async (req, res) => {
           },
         },
         address: true,
+        orderStatus: {
+          orderBy: { createdAt: "desc" },
+        },
       },
     });
 
