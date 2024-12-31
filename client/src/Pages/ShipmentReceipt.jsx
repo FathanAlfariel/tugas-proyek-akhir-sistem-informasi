@@ -31,8 +31,6 @@ const ShipmentReceipt = () => {
     getOrderDataById();
   }, []);
 
-  console.log(orderDetail);
-
   return (
     <>
       {isLoading && <Loader />}
@@ -55,7 +53,9 @@ const ShipmentReceipt = () => {
           {/* QR Code and tracking receipt */}
           <div className="px-6 flex flex-col items-start gap-x-6 border-t border-dashed border-black pt-4">
             <div className="w-full flex justify-center">
-              <QRCodeSVG value="https://reactjs.org/" />
+              <QRCodeSVG
+                value={`https://k801c8kb-5173.asse.devtunnels.ms/order-detail/${id}`}
+              />
             </div>
           </div>
 

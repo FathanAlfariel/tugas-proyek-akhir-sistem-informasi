@@ -26,6 +26,7 @@ import IncomeAndOutcomeAnalysis from "./Pages/IncomeAndOutcomeAnalysis";
 import OrderAnalysis from "./Pages/OrderAnalysis";
 import ProfitAnalysis from "./Pages/ProfitAnalysis";
 import ShipmentReceipt from "./Pages/ShipmentReceipt";
+import DetailOrder from "./Pages/DetailOrder";
 
 axios.defaults.withCredentials = true;
 
@@ -35,6 +36,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/products/:id" element={<ProductDetail />} />
+        <Route path="/order-detail/:id" element={<DetailOrder />} />
 
         {/* Admin route */}
         <Route

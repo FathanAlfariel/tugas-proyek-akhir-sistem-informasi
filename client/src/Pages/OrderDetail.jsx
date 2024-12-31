@@ -19,8 +19,6 @@ const OrderDetail = () => {
 
   const [orderDetail, setOrderDetail] = useState({});
 
-  console.log(orderDetail);
-
   useEffect(() => {
     setIsLoading(true);
 
@@ -384,13 +382,10 @@ const OrderDetail = () => {
                             : "text-zinc-500"
                         }`}
                       >
-                        {new Date(orderDetail?.createdAt).toLocaleString(
-                          "id-ID",
-                          {
-                            dateStyle: "full",
-                            timeStyle: "short",
-                          }
-                        )}
+                        {new Date(status?.createdAt).toLocaleString("id-ID", {
+                          dateStyle: "full",
+                          timeStyle: "short",
+                        })}
                       </p>
                     </div>
                   </li>
