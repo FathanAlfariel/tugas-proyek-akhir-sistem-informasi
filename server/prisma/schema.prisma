@@ -71,6 +71,7 @@ model Order {
   paymentMethod     String
   additionalNotes   String?
   status            Status          @default(belum_bayar)
+  orderStatus       OrderStatus[]
   createdAt         DateTime        @default(now())
 }
 
@@ -103,6 +104,15 @@ model OrderAddress {
   postalCode    String
 
   order         Order     @relation(fields: [orderId], references: [id])
+}
+
+model OrderStatus {
+  id              String              @id @unique @default(uuid())
+  orderId         String
+  status          Status              @default(belum_bayar)
+  createdAt       DateTime            @default(now())
+
+  order           Order               @relation(fields: [orderId], references: [id])
 }
 
 model Expense {

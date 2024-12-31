@@ -97,6 +97,57 @@ const OrderDetail = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 mt-5">
         <div className="flex flex-col gap-y-4">
+          <div className="p-4 rounded-2xl border border-black/[.1]">
+            {/* Orderer's name */}
+            <div className="flex flex-col gap-y-2.5">
+              {/* Title */}
+              <h5 className="text-lg font-semibold">Pemesan</h5>
+
+              <div className="flex items-center gap-x-2">
+                <span>
+                  <GoPerson className="text-lg" />
+                </span>
+                <p className="text-sm">{orderDetail?.name}</p>
+              </div>
+            </div>
+
+            {/* Orderer's contact */}
+            <div className="flex flex-col gap-y-2.5 mt-5">
+              {/* Title */}
+              <h5 className="text-lg font-semibold">Informasi kontak</h5>
+
+              <div className="flex items-center gap-x-2">
+                <span>
+                  <IoCallOutline className="text-lg" />
+                </span>
+                <p className="text-sm">{orderDetail?.phone}</p>
+              </div>
+            </div>
+
+            {/* Shipping address */}
+            <div className="flex flex-col gap-y-2.5 mt-5">
+              {/* Title */}
+              <h5 className="text-lg font-semibold">Alamat pengiriman</h5>
+
+              <div className="flex flex-col gap-y-0.5">
+                <p className="text-sm">
+                  {orderDetail?.address?.address}{" "}
+                  {orderDetail?.address?.otherDetails !== ""
+                    ? orderDetail?.address?.otherDetails
+                    : null}
+                </p>
+                <p className="text-sm">
+                  {orderDetail?.address?.city},{" "}
+                  {orderDetail?.address?.postalCode}
+                </p>
+                <p className="text-sm">
+                  {orderDetail?.address?.province},{" "}
+                  {orderDetail?.address?.country}
+                </p>
+              </div>
+            </div>
+          </div>
+
           {/* Ordered products */}
           <div className="flex flex-col gap-y-4 p-4 rounded-2xl border border-black/[.1]">
             {/* Title */}
@@ -243,54 +294,6 @@ const OrderDetail = () => {
                 ? orderDetail?.additionalNotes
                 : "Tidak ada catatan"}
             </p>
-          </div>
-
-          {/* Orderer's name */}
-          <div className="flex flex-col gap-y-2.5 p-4 rounded-2xl border border-black/[.1]">
-            {/* Title */}
-            <h5 className="text-lg font-semibold">Pemesan</h5>
-
-            <div className="flex items-center gap-x-2">
-              <span>
-                <GoPerson className="text-lg" />
-              </span>
-              <p className="text-sm">{orderDetail?.name}</p>
-            </div>
-          </div>
-
-          {/* Orderer's contact */}
-          <div className="flex flex-col gap-y-2.5 p-4 rounded-2xl border border-black/[.1]">
-            {/* Title */}
-            <h5 className="text-lg font-semibold">Informasi kontak</h5>
-
-            <div className="flex items-center gap-x-2">
-              <span>
-                <IoCallOutline className="text-lg" />
-              </span>
-              <p className="text-sm">{orderDetail?.phone}</p>
-            </div>
-          </div>
-
-          {/* Shipping address */}
-          <div className="flex flex-col gap-y-2.5 p-4 rounded-2xl border border-black/[.1]">
-            {/* Title */}
-            <h5 className="text-lg font-semibold">Alamat pengiriman</h5>
-
-            <div className="flex flex-col gap-y-0.5">
-              <p className="text-sm">
-                {orderDetail?.address?.address}{" "}
-                {orderDetail?.address?.otherDetails !== ""
-                  ? orderDetail?.address?.otherDetails
-                  : null}
-              </p>
-              <p className="text-sm">
-                {orderDetail?.address?.city}, {orderDetail?.address?.postalCode}
-              </p>
-              <p className="text-sm">
-                {orderDetail?.address?.province},{" "}
-                {orderDetail?.address?.country}
-              </p>
-            </div>
           </div>
         </div>
       </div>
